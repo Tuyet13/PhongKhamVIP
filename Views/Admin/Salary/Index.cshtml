@@ -1,0 +1,304 @@
+﻿@model IEnumerable<PhongKhamVIP.Models.Finance.Salary>
+
+@{
+    Layout = "_AdminLayout";
+    ViewData["Title"] = "Quản lý Lương";
+}
+
+<style>
+    .page-header {
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        margin-bottom: 25px;
+    }
+
+    .page-title {
+        font-size: 32px;
+        font-weight: 700;
+        color: #0d6efd;
+    }
+
+    .btn-add {
+        background: linear-gradient(135deg,#0d6efd,#4f8cff);
+        color: white;
+        text-decoration: none;
+        padding: 12px 20px;
+        border-radius: 12px;
+        font-weight: 600;
+    }
+
+    .search-container {
+        display: flex;
+        gap: 10px;
+        margin-bottom: 20px;
+    }
+
+    .search-box {
+        flex: 1;
+        padding: 12px;
+        border: 1px solid #ddd;
+        border-radius: 10px;
+    }
+
+    .btn-search {
+        background: #198754;
+        color: white;
+        border: none;
+        border-radius: 10px;
+        padding: 12px 20px;
+    }
+
+    .salary-card {
+        background: white;
+        border-radius: 15px;
+        padding: 25px;
+        box-shadow: 0 5px 20px rgba(0,0,0,.08);
+    }
+
+    .salary-table {
+        width: 100%;
+        border-collapse: collapse;
+    }
+
+        .salary-table thead {
+            background: #0d6efd;
+            color: white;
+        }
+
+        .salary-table th,
+        .salary-table td {
+            padding: 15px;
+            text-align: center;
+            border-bottom: 1px solid #eee;
+        }
+
+        .salary-table tbody tr:hover {
+            background: #f8fbff;
+        }
+
+    .salary-badge {
+        background: #198754;
+        color: white;
+        padding: 7px 12px;
+        border-radius: 20px;
+        font-weight: 600;
+        font-size: 13px;
+    }
+
+    .paid {
+        background: #198754;
+    }
+
+    .pending {
+        background: #ffc107;
+        color: black;
+    }
+
+    .action-buttons {
+        display: flex;
+        justify-content: center;
+        gap: 5px;
+        flex-wrap: wrap;
+    }
+
+    .btn-action {
+        width: 42px;
+        height: 42px;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        border-radius: 10px;
+        color: white;
+        text-decoration: none;
+        border: none;
+        cursor: pointer;
+    }
+
+    .btn-detail {
+        background: #0dcaf0;
+    }
+
+    .btn-edit {
+        background: #ffc107;
+        color: black;
+    }
+
+    .btn-delete {
+        background: #dc3545;
+    }
+
+    .btn-complete {
+        background: #198754;
+    }
+</style>
+
+<div class="page-header">
+
+    <h2 class="page-title">
+        <i class="bi bi-cash-stack"></i>
+        Quản lý Lương
+    </h2>
+
+    <a asp-action="Create" class="btn-add">
+        <i class="bi bi-plus-circle-fill"></i>
+        Thêm Bảng Lương
+    </a>
+
+</div>
+
+@if (TempData["Success"] != null)
+{
+    <div class="alert-success" id="successMessage">
+        @TempData["Success"]
+    </div>
+}
+
+<form asp-action="Index" method="get">
+    <div class="search-container">
+
+        <input type="text"
+               name="searchString"
+               value="@ViewBag.SearchString"
+               class="search-box"
+               placeholder="Tìm theo tên nhân viên..." />
+
+        <button class="btn-search" type="submit">
+            Tìm kiếm
+        </button>
+
+    </div>
+</form>
+
+<div class="salary-card">
+
+    <table class="salary-table">
+
+        <thead>
+            <tr>
+                <th>STT</th>
+                <th>Nhân viên</th>
+                <th>Tháng/Năm</th>
+                <th>Lương thực nhận</th>
+                <th>Ngày trả</th>
+                <th>Trạng thái</th>
+                <th>Thao tác</th>
+            </tr>
+        </thead>
+
+        <tbody>
+
+            @{
+                int stt = 1;
+            }
+
+            @foreach (var item in Model)
+            {
+                <tr>
+
+                    <td>@stt</td>
+
+                    <td>@item.User?.FullName</td>
+
+                    <td>@item.Month / @item.Year</td>
+
+                    <td>
+                        <span class="salary-badge">
+                            @item.NetSalary.ToString("N0") VNĐ
+                        </span>
+                    </td>
+
+                    <td>
+                        @if (item.PaidDate != null)
+                        {
+                            @item.PaidDate.ToString("dd/MM/yyyy")
+                        }
+                        else
+                        {
+                            <span>-</span>
+                        }
+                    </td>
+
+                    <td>
+                        @if (item.Status == "Paid")
+                        {
+                            <span class="salary-badge paid">
+                                Đã thanh toán
+                            </span>
+                        }
+                        else
+                        {
+                            <span class="salary-badge pending">
+                                Chưa thanh toán
+                            </span>
+                        }
+                    </td>
+
+                    <td>
+                        <div class="action-buttons">
+
+                            <a asp-action="Details"
+                               asp-route-id="@item.Id"
+                               class="btn-action btn-detail"
+                               title="Chi tiết">
+                                <i class="bi bi-eye-fill"></i>
+                            </a>
+
+                            @* CHỈ HIỂN THỊ KHI CHƯA THANH TOÁN *@
+                            @if (item.Status != "Paid")
+                            {
+                                <form asp-action="Complete" method="post" style="display:inline;">
+                                    <input type="hidden" name="id" value="@item.Id" />
+
+                                    <button type="submit"
+                                            class="btn-action btn-complete"
+                                            title="Hoàn thành">
+                                        <i class="bi bi-check-circle-fill"></i>
+                                    </button>
+                                </form>
+
+                                <a asp-action="Edit"
+                                   asp-route-id="@item.Id"
+                                   class="btn-action btn-edit"
+                                   title="Sửa">
+                                    <i class="bi bi-pencil-square"></i>
+                                </a>
+                            }
+
+                            <a asp-action="Delete"
+                               asp-route-id="@item.Id"
+                               class="btn-action btn-delete"
+                               title="Xóa">
+                                <i class="bi bi-trash-fill"></i>
+                            </a>
+
+                        </div>
+                    </td>
+
+                </tr>
+
+                stt++;
+            }
+
+        </tbody>
+
+    </table>
+
+</div>
+
+@section Scripts {
+    <script>
+        setTimeout(() => {
+
+            let msg = document.getElementById("successMessage");
+
+            if (msg) {
+                msg.style.transition = "all .5s ease";
+                msg.style.opacity = "0";
+
+                setTimeout(() => msg.remove(), 500);
+            }
+
+        }, 3000);
+    </script>
+}

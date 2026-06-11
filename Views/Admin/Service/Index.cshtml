@@ -1,0 +1,321 @@
+﻿@model IEnumerable<PhongKhamVIP.Models.Finance.Service>
+
+@{
+    Layout = "_AdminLayout";
+    ViewData["Title"] = "Quản lý Dịch vụ";
+}
+
+<style>
+    .page-header {
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        margin-bottom: 25px;
+    }
+
+    .page-title {
+        font-size: 30px;
+        font-weight: 700;
+        color: #0d6efd;
+        margin: 0;
+    }
+
+    .btn-add {
+        background: linear-gradient(135deg,#0d6efd,#4f8cff);
+        color: white;
+        text-decoration: none;
+        padding: 12px 18px;
+        border-radius: 10px;
+        font-weight: 600;
+        transition: .3s;
+    }
+
+    .btn-add:hover {
+        color: white;
+        transform: translateY(-2px);
+        box-shadow: 0 6px 15px rgba(13,110,253,.3);
+    }
+
+    .search-container {
+        display: flex;
+        gap: 10px;
+        margin-bottom: 20px;
+    }
+
+    .search-box {
+        flex: 1;
+        padding: 12px;
+        border: 1px solid #ddd;
+        border-radius: 10px;
+        outline: none;
+    }
+
+    .search-box:focus {
+        border-color: #0d6efd;
+        box-shadow: 0 0 8px rgba(13,110,253,.2);
+    }
+
+    .btn-search {
+        background: #198754;
+        color: white;
+        border: none;
+        padding: 12px 20px;
+        border-radius: 10px;
+        font-weight: 600;
+        cursor: pointer;
+    }
+
+    .service-card {
+        background: white;
+        border-radius: 15px;
+        padding: 20px;
+        box-shadow: 0 5px 20px rgba(0,0,0,.08);
+    }
+
+    .service-table {
+        width: 100%;
+        border-collapse: collapse;
+    }
+
+    .service-table thead {
+        background: #0d6efd;
+        color: white;
+    }
+
+    .service-table th {
+        padding: 15px;
+        text-align: center;
+    }
+
+    .service-table td {
+        padding: 14px;
+        text-align: center;
+        border-bottom: 1px solid #eee;
+        vertical-align: middle;
+    }
+
+    .service-table tbody tr:hover {
+        background: #f5faff;
+    }
+
+    .price-badge {
+        background: #198754;
+        color: white;
+        padding: 6px 12px;
+        border-radius: 20px;
+        font-size: 13px;
+        font-weight: 600;
+    }
+
+    .action-buttons {
+        display: flex;
+        justify-content: center;
+        gap: 6px;
+    }
+
+    .btn-action {
+        padding: 8px 12px;
+        border-radius: 8px;
+        text-decoration: none;
+        font-size: 13px;
+        font-weight: 600;
+        transition: .3s;
+    }
+
+    .btn-detail {
+        background: linear-gradient(135deg,#17a2b8,#0dcaf0);
+        color: white;
+    }
+
+    .btn-edit {
+        background: linear-gradient(135deg,#ffc107,#ffd95e);
+        color: black;
+    }
+
+    .btn-delete {
+        background: linear-gradient(135deg,#dc3545,#ff6b81);
+        color: white;
+    }
+
+    .btn-action:hover {
+        transform: translateY(-2px);
+    }
+
+    .total-box {
+        margin-bottom: 15px;
+        font-weight: 600;
+        color: #666;
+    }
+
+    .empty-row {
+        padding: 30px;
+        text-align: center;
+        color: #888;
+    }
+
+    .alert-success {
+        background: #d1e7dd;
+        color: #0f5132;
+        padding: 12px;
+        border-radius: 10px;
+        margin-bottom: 15px;
+    }
+</style>
+
+<div class="page-header">
+
+    <h2 class="page-title">
+        <i class="bi bi-clipboard2-pulse-fill"></i>
+        Quản lý Dịch vụ
+    </h2>
+
+    <a asp-action="Create" class="btn-add">
+        <i class="bi bi-plus-circle-fill"></i>
+        Thêm Dịch vụ
+    </a>
+
+</div>
+
+@if (TempData["Success"] != null)
+{
+    <div class="alert-success" id="successMessage">
+        <i class="bi bi-check-circle-fill"></i>
+        @TempData["Success"]
+    </div>
+}
+
+<form asp-action="Index" method="get">
+
+    <div class="search-container">
+
+        <input type="text"
+               name="searchString"
+               value="@ViewBag.SearchString"
+               class="search-box"
+               placeholder="Tìm theo tên hoặc mô tả dịch vụ..." />
+
+        <button type="submit" class="btn-search">
+            <i class="bi bi-search"></i>
+            Tìm kiếm
+        </button>
+
+    </div>
+
+</form>
+
+<div class="total-box">
+    <i class="bi bi-list-check"></i>
+    Tổng số dịch vụ: @Model.Count()
+</div>
+
+<div class="service-card">
+
+    <table class="service-table">
+
+        <thead>
+            <tr>
+                <th>STT</th>
+                <th>Tên dịch vụ</th>
+                <th>Giá dịch vụ</th>
+                <th>Mô tả</th>
+                <th width="250">Thao tác</th>
+            </tr>
+        </thead>
+
+        <tbody>
+
+            @{
+                int stt = 1;
+            }
+
+            @if (Model.Any())
+            {
+                @foreach (var item in Model)
+                {
+                    <tr>
+
+                        <td>@stt</td>
+
+                        <td>
+                            <strong>@item.Name</strong>
+                        </td>
+
+                        <td>
+                            <span class="price-badge">
+                                @item.BasePrice.ToString("N0") VNĐ
+                            </span>
+                        </td>
+
+                        <td>
+                            @(string.IsNullOrEmpty(item.Description)
+                                ? "Không có mô tả"
+                                : item.Description)
+                        </td>
+
+                        <td>
+
+                            <div class="action-buttons">
+
+                                <a asp-action="Details"
+                                   asp-route-id="@item.Id"
+                                   class="btn-action btn-detail">
+                                    <i class="bi bi-eye-fill"></i>
+                                </a>
+
+                                <a asp-action="Edit"
+                                   asp-route-id="@item.Id"
+                                   class="btn-action btn-edit">
+                                    <i class="bi bi-pencil-square"></i>
+                                </a>
+
+                                <a asp-action="Delete"
+                                   asp-route-id="@item.Id"
+                                   class="btn-action btn-delete">
+                                    <i class="bi bi-trash3-fill"></i>
+                                </a>
+
+                            </div>
+
+                        </td>
+
+                    </tr>
+
+                    stt++;
+                }
+            }
+            else
+            {
+                <tr>
+                    <td colspan="5" class="empty-row">
+                        <i class="bi bi-inbox"></i>
+                        Chưa có dịch vụ nào
+                    </td>
+                </tr>
+            }
+
+        </tbody>
+
+    </table>
+
+</div>
+
+@section Scripts {
+    <script>
+        setTimeout(() => {
+
+            const alertBox = document.getElementById("successMessage");
+
+            if (alertBox) {
+
+                alertBox.style.transition = "all .6s ease";
+                alertBox.style.opacity = "0";
+                alertBox.style.transform = "translateY(-20px)";
+
+                setTimeout(() => {
+                    alertBox.remove();
+                }, 600);
+            }
+
+        }, 3000);
+    </script>
+}

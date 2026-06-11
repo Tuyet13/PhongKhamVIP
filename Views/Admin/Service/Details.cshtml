@@ -1,0 +1,169 @@
+﻿@model PhongKhamVIP.Models.Finance.Service
+
+@{
+    Layout = "_AdminLayout";
+    ViewData["Title"] = "Chi tiết Dịch vụ";
+}
+
+<style>
+    .details-container {
+        max-width: 900px;
+        margin: auto;
+    }
+
+    .details-card {
+        background: white;
+        border-radius: 15px;
+        padding: 30px;
+        box-shadow: 0 5px 20px rgba(0,0,0,.08);
+    }
+
+    .page-title {
+        color: #0dcaf0;
+        font-size: 28px;
+        font-weight: 700;
+        margin-bottom: 25px;
+    }
+
+    .service-info {
+        background: #f8f9fa;
+        border-radius: 12px;
+        padding: 25px;
+    }
+
+    .info-row {
+        display: flex;
+        border-bottom: 1px solid #e9ecef;
+        padding: 15px 0;
+    }
+
+    .info-row:last-child {
+        border-bottom: none;
+    }
+
+    .info-label {
+        width: 220px;
+        font-weight: 600;
+        color: #555;
+    }
+
+    .info-value {
+        flex: 1;
+        color: #222;
+    }
+
+    .price-badge {
+        background: #198754;
+        color: white;
+        padding: 8px 14px;
+        border-radius: 20px;
+        font-weight: 600;
+    }
+
+    .btn-group {
+        margin-top: 25px;
+    }
+
+    .btn-edit {
+        background: linear-gradient(135deg,#ffc107,#ffda6a);
+        color: black;
+        text-decoration: none;
+        padding: 12px 18px;
+        border-radius: 10px;
+        font-weight: 600;
+        margin-right: 10px;
+    }
+
+    .btn-back {
+        background: #6c757d;
+        color: white;
+        text-decoration: none;
+        padding: 12px 18px;
+        border-radius: 10px;
+        font-weight: 600;
+    }
+
+    .btn-edit:hover,
+    .btn-back:hover {
+        opacity: .9;
+        color: inherit;
+    }
+</style>
+
+<div class="details-container">
+
+    <div class="details-card">
+
+        <h2 class="page-title">
+            <i class="bi bi-eye-fill"></i>
+            Chi tiết Dịch vụ
+        </h2>
+
+        <div class="service-info">
+
+            <div class="info-row">
+                <div class="info-label">
+                    <i class="bi bi-hash"></i>
+                    Mã dịch vụ
+                </div>
+                <div class="info-value">
+                    @Model.Id
+                </div>
+            </div>
+
+            <div class="info-row">
+                <div class="info-label">
+                    <i class="bi bi-clipboard2-pulse-fill"></i>
+                    Tên dịch vụ
+                </div>
+                <div class="info-value">
+                    @Model.Name
+                </div>
+            </div>
+
+            <div class="info-row">
+                <div class="info-label">
+                    <i class="bi bi-cash-stack"></i>
+                    Giá dịch vụ
+                </div>
+                <div class="info-value">
+                    <span class="price-badge">
+                        @Model.BasePrice.ToString("N0") VNĐ
+                    </span>
+                </div>
+            </div>
+
+            <div class="info-row">
+                <div class="info-label">
+                    <i class="bi bi-card-text"></i>
+                    Mô tả
+                </div>
+                <div class="info-value">
+                    @(string.IsNullOrWhiteSpace(Model.Description)
+                        ? "Không có mô tả"
+                        : Model.Description)
+                </div>
+            </div>
+
+        </div>
+
+        <div class="btn-group">
+
+            <a asp-action="Edit"
+               asp-route-id="@Model.Id"
+               class="btn-edit">
+                <i class="bi bi-pencil-square"></i>
+                Chỉnh sửa
+            </a>
+
+            <a asp-action="Index"
+               class="btn-back">
+                <i class="bi bi-arrow-left-circle-fill"></i>
+                Quay lại
+            </a>
+
+        </div>
+
+    </div>
+
+</div>

@@ -1,0 +1,137 @@
+﻿@model PhongKhamVIP.Models.Users.User
+
+@{
+    Layout = "_AdminLayout";
+    ViewData["Title"] = "Xóa nhân viên";
+}
+
+<style>
+    .delete-container {
+        max-width: 700px;
+        margin: 30px auto;
+    }
+
+    .delete-card {
+        background: white;
+        border-radius: 15px;
+        padding: 30px;
+        box-shadow: 0 5px 20px rgba(0,0,0,.08);
+        text-align: center;
+    }
+
+    .warning-icon {
+        font-size: 70px;
+        color: #dc3545;
+        margin-bottom: 15px;
+    }
+
+    .title {
+        color: #dc3545;
+        font-size: 28px;
+        font-weight: 700;
+        margin-bottom: 15px;
+    }
+
+    .subtitle {
+        color: #666;
+        margin-bottom: 25px;
+    }
+
+    .employee-info {
+        background: #f8f9fa;
+        border-radius: 10px;
+        padding: 20px;
+        text-align: left;
+        margin-bottom: 25px;
+    }
+
+    .info-row {
+        margin-bottom: 10px;
+    }
+
+    .label {
+        font-weight: bold;
+        color: #555;
+    }
+
+    .btn-delete {
+        background: #dc3545;
+        color: white;
+        border: none;
+        padding: 10px 20px;
+        border-radius: 8px;
+        cursor: pointer;
+    }
+
+    .btn-back {
+        background: #6c757d;
+        color: white;
+        text-decoration: none;
+        padding: 10px 20px;
+        border-radius: 8px;
+        margin-left: 10px;
+    }
+</style>
+
+<div class="delete-container">
+
+    <div class="delete-card">
+
+        <div class="warning-icon">
+            ⚠️
+        </div>
+
+        <h2 class="title">
+            Xóa nhân viên
+        </h2>
+
+        <p class="subtitle">
+            Bạn có chắc chắn muốn xóa nhân viên này không?
+        </p>
+
+        <div class="employee-info">
+
+            <div class="info-row">
+                <span class="label">Họ tên:</span>
+                @Model.FullName
+            </div>
+
+            <div class="info-row">
+                <span class="label">Tên đăng nhập:</span>
+                @Model.Username
+            </div>
+
+            <div class="info-row">
+                <span class="label">Email:</span>
+                @Model.Email
+            </div>
+
+            <div class="info-row">
+                <span class="label">Số điện thoại:</span>
+                @Model.Phone
+            </div>
+
+            <div class="info-row">
+                <span class="label">Vai trò:</span>
+                @Model.Role
+            </div>
+
+        </div>
+
+        <form asp-action="DeleteConfirmed" method="post">
+
+            <input type="hidden" asp-for="Id" />
+
+            <button type="submit" class="btn-delete">
+                🗑 Xác nhận xóa
+            </button>
+
+            <a asp-action="Index" class="btn-back">
+                ← Quay lại
+            </a>
+
+        </form>
+
+    </div>
+
+</div>

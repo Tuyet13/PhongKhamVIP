@@ -1,0 +1,369 @@
+﻿@{
+    ViewData["Title"] = "Dịch vụ y tế - Bệnh viện AM2T";
+}
+
+<style>
+    /* --- BIẾN MÀU SẮC & SETUP --- */
+    :root {
+        --text-main: #1a202c;
+        --text-muted: #5a6a85;
+        --cyan-am2t: #00bcd4;
+        --blue-am2t: #008ca3;
+    }
+
+    .section-padding {
+        padding: 80px 0;
+    }
+
+    .heading-title {
+        font-weight: 800;
+        font-size: 2.8rem;
+        color: var(--text-main);
+        margin-bottom: 20px;
+    }
+
+    .sub-heading {
+        color: var(--text-muted);
+        font-size: 1.15rem;
+        max-width: 750px;
+        margin: 0 auto 60px;
+        line-height: 1.6;
+    }
+
+    /* --- CSS CHO CARD DỊCH VỤ (GIỐNG FIGMA) --- */
+    .service-card-v2 {
+        border: none;
+        border-radius: 25px; /* Bo góc lớn như thiết kế */
+        overflow: hidden;
+        background: #fff;
+        box-shadow: 0 10px 30px rgba(0,0,0,0.05); /* Đổ bóng mờ shadow-sm */
+        transition: 0.3s;
+        height: 100%;
+        display: flex;
+        flex-direction: column;
+    }
+
+        .service-card-v2:hover {
+            transform: translateY(-10px);
+            box-shadow: 0 15px 40px rgba(0,0,0,0.1);
+        }
+
+    /* Header của Card với Gradient */
+    .card-head-grad {
+        height: 160px;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        font-size: 60px;
+        color: white;
+    }
+    /* Các màu Gradient */
+    .bg-pink-grad {
+        background: linear-gradient(135deg, #ff758c 0%, #ff7eb3 100%);
+    }
+
+    .bg-purple-grad {
+        background: linear-gradient(135deg, #a18cd1 0%, #fbc2eb 100%);
+    }
+
+    .bg-blue-grad {
+        background: linear-gradient(135deg, #4facfe 0%, #00f2fe 100%);
+    }
+
+    .bg-orange-grad {
+        background: linear-gradient(135deg, #f6d365 0%, #fda085 100%);
+    }
+
+    .bg-teal-grad {
+        background: linear-gradient(135deg, #02aab0 0%, #00cdac 100%);
+    }
+
+    .bg-green-grad {
+        background: linear-gradient(135deg, #d4fc79 0%, #96e6a1 100%);
+    }
+
+    .card-body-content {
+        padding: 30px;
+        flex-grow: 1;
+        display: flex;
+        flex-direction: column;
+    }
+
+        .card-body-content h4 {
+            font-weight: 700;
+            margin-bottom: 15px;
+            color: var(--text-main);
+        }
+
+    /* Danh sách dịch vụ nhỏ bên trong Card */
+    .service-sub-list {
+        list-style: none;
+        padding: 0;
+        margin-bottom: 20px;
+        flex-grow: 1;
+    }
+
+        .service-sub-list li {
+            font-size: 0.95rem;
+            color: #718096;
+            margin-bottom: 8px;
+            display: flex;
+            align-items: center;
+        }
+
+            .service-sub-list li::before {
+                content: "•";
+                color: #cbd5e0;
+                margin-right: 8px;
+                font-size: 1.2rem;
+            }
+
+    /* Nút Đặt lịch */
+    .btn-book-card {
+        background-color: #00bcd4;
+        color: white !important;
+        border-radius: 10px;
+        padding: 12px;
+        width: 100%;
+        font-weight: 700;
+        border: none;
+        transition: 0.3s;
+    }
+
+        .btn-book-card:hover {
+            background-color: #00acc1;
+            transform: scale(1.02);
+        }
+
+    /* --- CSS CHO QUY TRÌNH --- */
+    .process-step {
+        position: relative;
+        text-align: center;
+    }
+
+    .step-number {
+        width: 70px;
+        height: 70px;
+        border-radius: 50%;
+        background: #00bcd4;
+        color: white;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        font-size: 28px;
+        font-weight: 800;
+        margin: 0 auto 20px;
+        box-shadow: 0 5px 15px rgba(0,188,212,0.3);
+    }
+
+    /* --- CSS CHO TẠI SAO CHỌN --- */
+    .why-icon-box {
+        width: 70px;
+        height: 70px;
+        border-radius: 50%;
+        background: #e0f7fa;
+        color: #00bcd4;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        font-size: 30px;
+        margin: 0 auto 20px;
+    }
+</style>
+
+<section class="section-padding text-center">
+    <div class="container">
+        <h1 class="heading-title">Dịch vụ y tế</h1>
+        <p class="sub-heading">Chúng tôi cung cấp đầy đủ các dịch vụ y tế chuyên khoa với đội ngũ bác sĩ giàu kinh nghiệm và trang thiết bị hiện đại.</p>
+
+        <div class="row g-4 text-start">
+            <div class="col-lg-3 col-md-6">
+                <div class="service-card-v2">
+                    <div class="card-head-grad bg-pink-grad"><i class="fa-solid fa-heart-pulse"></i></div>
+                    <div class="card-body-content">
+                        <h4>Tim mạch</h4>
+                        <p class="small text-muted">Khám và điều trị các bệnh lý tim mạch, đo điện tâm đồ...</p>
+                        <ul class="service-sub-list">
+                            <li>Khám bệnh tim mạch</li>
+                            <li>Điện tâm đồ</li>
+                            <li>Siêu âm tim</li>
+                            <li>Test gắng sức</li>
+                        </ul>
+                        <button class="btn-book-card">Đặt lịch khám</button>
+                    </div>
+                </div>
+            </div>
+            <div class="col-lg-3 col-md-6">
+                <div class="service-card-v2">
+                    <div class="card-head-grad bg-purple-grad"><i class="fa-solid fa-brain"></i></div>
+                    <div class="card-body-content">
+                        <h4>Thần kinh</h4>
+                        <p class="small text-muted">Chẩn đoán và điều trị các bệnh lý về thần kinh, đau đầu...</p>
+                        <ul class="service-sub-list">
+                            <li>Khám thần kinh</li>
+                            <li>Điện não đồ</li>
+                            <li>Siêu âm Doppler</li>
+                            <li>Điều trị đau đầu</li>
+                        </ul>
+                        <button class="btn-book-card">Đặt lịch khám</button>
+                    </div>
+                </div>
+            </div>
+            <div class="col-lg-3 col-md-6">
+                <div class="service-card-v2">
+                    <div class="card-head-grad bg-blue-grad"><i class="fa-solid fa-wave-square"></i></div>
+                    <div class="card-body-content">
+                        <h4>Nội tiết</h4>
+                        <p class="small text-muted">Điều trị các bệnh lý nội tiết như tiểu đường, tuyến giáp...</p>
+                        <ul class="service-sub-list">
+                            <li>Khám nội tiết</li>
+                            <li>Xét nghiệm đường huyết</li>
+                            <li>Siêu âm tuyến giáp</li>
+                            <li>Tư vấn dinh dưỡng</li>
+                        </ul>
+                        <button class="btn-book-card">Đặt lịch khám</button>
+                    </div>
+                </div>
+            </div>
+            <div class="col-lg-3 col-md-6">
+                <div class="service-card-v2">
+                    <div class="card-head-grad bg-orange-grad"><i class="fa-solid fa-bone"></i></div>
+                    <div class="card-body-content">
+                        <h4>Cơ xương khớp</h4>
+                        <p class="small text-muted">Điều trị chấn thương, đau nhức xương khớp, thoái hóa...</p>
+                        <ul class="service-sub-list">
+                            <li>Khám cơ xương khớp</li>
+                            <li>Chụp X-quang</li>
+                            <li>Vật lý trị liệu</li>
+                            <li>Phục hồi chức năng</li>
+                        </ul>
+                        <button class="btn-book-card">Đặt lịch khám</button>
+                    </div>
+                </div>
+            </div>
+            <div class="col-lg-3 col-md-6">
+                <div class="service-card-v2">
+                    <div class="card-head-grad bg-pink-grad"><i class="fa-solid fa-baby"></i></div>
+                    <div class="card-body-content">
+                        <h4>Sản phụ khoa</h4>
+                        <p class="small text-muted">Chăm sóc sức khỏe phụ nữ, thai sản, sản khoa...</p>
+                        <ul class="service-sub-list">
+                            <li>Khám sản khoa</li>
+                            <li>Siêu âm thai</li>
+                            <li>Xét nghiệm</li>
+                            <li>Tư vấn thai sản</li>
+                        </ul>
+                        <button class="btn-book-card">Đặt lịch khám</button>
+                    </div>
+                </div>
+            </div>
+            <div class="col-lg-3 col-md-6">
+                <div class="service-card-v2">
+                    <div class="card-head-grad bg-teal-grad"><i class="fa-solid fa-eye"></i></div>
+                    <div class="card-body-content">
+                        <h4>Mắt</h4>
+                        <p class="small text-muted">Khám và điều trị các bệnh lý về mắt, đo thị lực...</p>
+                        <ul class="service-sub-list">
+                            <li>Khám mắt tổng quát</li>
+                            <li>Đo thị lực</li>
+                            <li>Phẫu thuật mắt</li>
+                            <li>Điều trị tật khúc xạ</li>
+                        </ul>
+                        <button class="btn-book-card">Đặt lịch khám</button>
+                    </div>
+                </div>
+            </div>
+            <div class="col-lg-3 col-md-6">
+                <div class="service-card-v2">
+                    <div class="card-head-grad bg-green-grad"><i class="fa-solid fa-stethoscope"></i></div>
+                    <div class="card-body-content">
+                        <h4>Nội tổng quát</h4>
+                        <p class="small text-muted">Khám và điều trị các bệnh lý nội khoa thường gặp...</p>
+                        <ul class="service-sub-list">
+                            <li>Khám tổng quát</li>
+                            <li>Xét nghiệm máu</li>
+                            <li>Siêu âm bụng</li>
+                            <li>Nội soi dạ dày</li>
+                        </ul>
+                        <button class="btn-book-card">Đặt lịch khám</button>
+                    </div>
+                </div>
+            </div>
+            <div class="col-lg-3 col-md-6">
+                <div class="service-card-v2">
+                    <div class="card-head-grad bg-purple-grad"><i class="fa-solid fa-syringe"></i></div>
+                    <div class="card-body-content">
+                        <h4>Xét nghiệm</h4>
+                        <p class="small text-muted">Hệ thống xét nghiệm hiện đại, kết quả nhanh chóng...</p>
+                        <ul class="service-sub-list">
+                            <li>Xét nghiệm máu</li>
+                            <li>Xét nghiệm nước tiểu</li>
+                            <li>Xét nghiệm sinh hóa</li>
+                            <li>Xét nghiệm vi sinh</li>
+                        </ul>
+                        <button class="btn-book-card">Đặt lịch khám</button>
+                    </div>
+                </div>
+            </div>
+</section>
+
+<section class="section-padding" style="background-color: #f0faff;">
+    <div class="container text-center">
+        <h2 class="heading-title">Quy trình khám bệnh</h2>
+        <p class="sub-heading">Đơn giản, nhanh chóng và tiện lợi.</p>
+
+        <div class="row g-4 mt-2">
+            <div class="col-md-3 process-step">
+                <div class="step-number">1</div>
+                <h5 class="fw-bold mt-3">Đăng ký</h5>
+                <p class="small text-muted">Đăng ký tài khoản hoặc đăng nhập nếu đã có</p>
+            </div>
+            <div class="col-md-3 process-step">
+                <div class="step-number">2</div>
+                <h5 class="fw-bold mt-3">Đặt lịch</h5>
+                <p class="small text-muted">Chọn chuyên khoa, bác sĩ và thời gian khám</p>
+            </div>
+            <div class="col-md-3 process-step">
+                <div class="step-number">3</div>
+                <h5 class="fw-bold mt-3">Đến khám</h5>
+                <p class="small text-muted">Đến bệnh viện đúng giờ hẹn, không cần chờ đợi</p>
+            </div>
+            <div class="col-md-3 process-step">
+                <div class="step-number">4</div>
+                <h5 class="fw-bold mt-3">Nhận kết quả</h5>
+                <p class="small text-muted">Xem kết quả và đơn thuốc trên hệ thống</p>
+            </div>
+        </div>
+        <button class="btn btn-info text-white mt-5 px-5 py-2 fw-bold" style="background-color: #00bcd4; border-radius: 10px;">Đăng ký ngay</button>
+    </div>
+</section>
+
+<section class="section-padding text-center">
+    <div class="container">
+        <h2 class="heading-title">Tại sao chọn AM2T?</h2>
+
+        <div class="row g-4 mt-2">
+            <div class="col-md-4">
+                <div class="service-card-v2 p-4">
+                    <div class="why-icon-box"><i class="fa-solid fa-user-md"></i></div>
+                    <h5 class="fw-bold">Bác sĩ chuyên môn cao</h5>
+                    <p class="small text-muted mb-0">Đội ngũ bác sĩ được đào tạo chuyên sâu, nhiều năm kinh nghiệm trong điều trị.</p>
+                </div>
+            </div>
+            <div class="col-md-4">
+                <div class="service-card-v2 p-4">
+                    <div class="why-icon-box"><i class="fa-solid fa-microscope"></i></div>
+                    <h5 class="fw-bold">Thiết bị hiện đại</h5>
+                    <p class="small text-muted mb-0">Trang bị máy móc, thiết bị y tế tiên tiến nhất hiện nay.</p>
+                </div>
+            </div>
+            <div class="col-md-4">
+                <div class="service-card-v2 p-4">
+                    <div class="why-icon-box"><i class="fa-solid fa-heart"></i></div>
+                    <h5 class="fw-bold">Chăm sóc tận tâm</h5>
+                    <p class="small text-muted mb-0">Đội ngũ y tá, điều dưỡng chăm sóc chu đáo, tận tình với bệnh nhân.</p>
+                </div>
+            </div>
+        </div>
+    </div>
+</section>

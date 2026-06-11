@@ -1,0 +1,358 @@
+﻿@{
+    ViewData["Title"] = "Nhà thuốc AM2T - Dược phẩm chính hãng";
+}
+
+<style>
+    :root {
+        --pharmacy-green: #00b14f;
+        --pharmacy-dark: #008a3d;
+        --bg-soft: #f4f9f6;
+        --shadow-card: 0 12px 24px rgba(0,0,0,0.06);
+    }
+
+    body {
+        background-color: var(--bg-soft);
+        font-family: 'Plus Jakarta Sans', sans-serif;
+        color: #2d3748;
+    }
+
+    /* --- SEARCH AREA --- */
+    .pharmacy-header {
+        background: linear-gradient(135deg, #00b14f 0%, #008a3d 100%);
+        padding: 80px 0 100px;
+        color: white;
+        border-radius: 0 0 50px 50px;
+    }
+
+    .search-wrapper {
+        max-width: 700px;
+        margin: -40px auto 30px;
+        position: relative;
+        z-index: 10;
+    }
+
+    .search-input-group {
+        background: white;
+        padding: 8px 15px;
+        border-radius: 20px;
+        display: flex;
+        align-items: center;
+        box-shadow: 0 20px 40px rgba(0,0,0,0.1);
+    }
+
+        .search-input-group input {
+            border: none;
+            outline: none;
+            flex: 1;
+            padding: 12px;
+            font-size: 1.1rem;
+        }
+
+    /* --- FILTERS --- */
+    .filter-scroll {
+        display: flex;
+        gap: 12px;
+        justify-content: center;
+        margin-bottom: 40px;
+        overflow-x: auto;
+        padding: 10px;
+    }
+
+    .btn-filter {
+        white-space: nowrap;
+        border: none;
+        background: white;
+        padding: 12px 25px;
+        border-radius: 15px;
+        font-weight: 700;
+        color: #4a5568;
+        transition: 0.3s;
+        box-shadow: var(--shadow-card);
+    }
+
+        .btn-filter.active {
+            background: var(--pharmacy-green);
+            color: white;
+        }
+
+    /* --- PRODUCT CARD --- */
+    .p-card {
+        background: white;
+        border-radius: 25px;
+        overflow: hidden;
+        border: 1px solid rgba(0,0,0,0.03);
+        transition: 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+        height: 100%;
+        display: flex;
+        flex-direction: column;
+    }
+
+        .p-card:hover {
+            transform: translateY(-12px);
+            box-shadow: 0 25px 50px rgba(0,0,0,0.1);
+        }
+
+    .p-img-box {
+        width: 100%;
+        height: 200px;
+        overflow: hidden;
+        position: relative;
+    }
+
+        .p-img-box img {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+            transition: 0.5s;
+        }
+
+    .p-card:hover .p-img-box img {
+        transform: scale(1.1);
+    }
+
+    .p-tag {
+        position: absolute;
+        top: 15px;
+        left: 15px;
+        padding: 5px 12px;
+        border-radius: 10px;
+        font-size: 0.75rem;
+        font-weight: 800;
+        text-transform: uppercase;
+    }
+
+    .p-content {
+        padding: 25px;
+        flex-grow: 1;
+        display: flex;
+        flex-direction: column;
+    }
+
+    .p-title {
+        font-weight: 800;
+        font-size: 1.2rem;
+        margin-bottom: 8px;
+        color: #1a202c;
+    }
+
+    .p-desc {
+        font-size: 0.9rem;
+        color: #718096;
+        margin-bottom: 20px;
+        flex-grow: 1;
+    }
+
+    .p-footer {
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+        margin-top: auto;
+    }
+
+    .p-price {
+        font-size: 1.4rem;
+        font-weight: 800;
+        color: var(--pharmacy-green);
+    }
+
+    .btn-add {
+        width: 50px;
+        height: 50px;
+        border-radius: 15px;
+        border: none;
+        background: #f0fff4;
+        color: var(--pharmacy-green);
+        font-size: 1.2rem;
+        transition: 0.3s;
+    }
+
+        .btn-add:hover {
+            background: var(--pharmacy-green);
+            color: white;
+        }
+
+    /* --- FLOAT CART --- */
+    .cart-float {
+        position: fixed;
+        bottom: 30px;
+        right: 30px;
+        background: #2d3748;
+        color: white;
+        padding: 15px 30px;
+        border-radius: 20px;
+        font-weight: 800;
+        box-shadow: 0 15px 30px rgba(0,0,0,0.2);
+        z-index: 999;
+        display: flex;
+        align-items: center;
+        gap: 12px;
+        cursor: pointer;
+        transition: 0.3s;
+    }
+
+        .cart-float:hover {
+            transform: scale(1.05);
+            background: #000;
+        }
+</style>
+
+<section class="pharmacy-header text-center">
+    <div class="container">
+        <h1 class="display-5 fw-bold mb-3">Nhà Thuốc Online AM2T</h1>
+        <p class="opacity-75">Cung cấp thuốc kê đơn và thực phẩm chức năng đạt chuẩn GPP</p>
+    </div>
+</section>
+
+<div class="container">
+    <div class="search-wrapper">
+        <div class="search-input-group">
+            <i class="fa-solid fa-magnifying-glass ms-2 text-muted"></i>
+            <input type="text" id="pharmaSearch" placeholder="Bạn đang tìm loại thuốc nào?" onkeyup="searchMedicine()">
+        </div>
+
+        <div class="filter-scroll mt-4">
+            <button class="btn-filter active" onclick="filterCat('all', this)">Tất cả</button>
+            <button class="btn-filter" onclick="filterCat('cam-cum', this)">Cảm cúm</button>
+            <button class="btn-filter" onclick="filterCat('giam-dau', this)">Giảm đau</button>
+            <button class="btn-filter" onclick="filterCat('bo-nao', this)">Bổ não</button>
+            <button class="btn-filter" onclick="filterCat('vitamin', this)">Vitamin</button>
+        </div>
+    </div>
+
+    <div class="row g-4 mb-5" id="medGrid">
+        <div class="col-lg-3 col-md-6 med-item" data-cat="cam-cum" data-name="tiffy">
+            <div class="p-card">
+                <div class="p-img-box">
+                    <span class="p-tag bg-success text-white">Bán chạy</span>
+                    <img src="https://images.unsplash.com/photo-1584308666744-24d5c474f2ae?auto=format&fit=crop&w=500" alt="Tiffy">
+                </div>
+                <div class="p-content">
+                    <h5 class="p-title">Tiffy Extra</h5>
+                    <p class="p-desc">Vỉ 4 viên. Đặc trị cảm cúm, sổ mũi và hạ sốt nhanh chóng.</p>
+                    <div class="p-footer">
+                        <span class="p-price">15.000đ</span>
+                        <button class="btn-add" onclick="updateCart('Tiffy Extra')"><i class="fa-solid fa-plus"></i></button>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div class="col-lg-3 col-md-6 med-item" data-cat="giam-dau" data-name="panadol extra">
+            <div class="p-card">
+                <div class="p-img-box">
+                    <img src="https://images.unsplash.com/photo-1626716493137-b67fe9501e76?auto=format&fit=crop&w=500" alt="Panadol">
+                </div>
+                <div class="p-content">
+                    <h5 class="p-title">Panadol Extra</h5>
+                    <p class="p-desc">Hộp 15 vỉ. Giảm đau cơ, đau đầu và đau răng hiệu quả.</p>
+                    <div class="p-footer">
+                        <span class="p-price">45.000đ</span>
+                        <button class="btn-add" onclick="updateCart('Panadol Extra')"><i class="fa-solid fa-plus"></i></button>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div class="col-lg-3 col-md-6 med-item" data-cat="vitamin" data-name="enervon">
+            <div class="p-card">
+                <div class="p-img-box">
+                    <img src="https://medsgo.ph/images/detailed/36/Enervon_Promo_Pack.png" alt="Enervon">
+                </div>
+                <div class="p-content">
+                    <h5 class="p-title">Enervon-C</h5>
+                    <p class="p-desc">Chai 30 viên. Bổ sung Vitamin C và B giúp tăng đề kháng.</p>
+                    <div class="p-footer">
+                        <span class="p-price">65.000đ</span>
+                        <button class="btn-add" onclick="updateCart('Enervon-C')"><i class="fa-solid fa-plus"></i></button>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div class="col-lg-3 col-md-6 med-item" data-cat="bo-nao" data-name="otiv">
+            <div class="p-card">
+                <div class="p-img-box">
+                    <span class="p-tag bg-info text-white">Chính hãng</span>
+                    <img src="https://tse1.mm.bing.net/th/id/OIP.NWe-p5xauQO0FPmWYUjoXQHaHa?pid=Api&P=0&h=180" alt="Otiv">
+                </div>
+                <div class="p-content">
+                    <h5 class="p-title">OTiV Bổ Não</h5>
+                    <p class="p-desc">Chai 30 viên. Hỗ trợ cải thiện mất ngủ và tăng cường trí nhớ.</p>
+                    <div class="p-footer">
+                        <span class="p-price">330.000đ</span>
+                        <button class="btn-add" onclick="updateCart('OTiV')"><i class="fa-solid fa-plus"></i></button>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div class="col-lg-3 col-md-6 med-item" data-cat="cam-cum" data-name="decolgen">
+            <div class="p-card">
+                <div class="p-img-box">
+                    <img src="https://mypharma.imgix.net/assets/site/decolgenforte25mg100tabs.png?auto=compress%2Cformat&crop=focalpoint&domain=mypharma.imgix.net&fit=crop&fp-x=0.5&fp-y=0.5&h=1200&ixlib=php-3.3.1&usm=20&w=1200&s=39de8c32ac479e9b7401c37d002f9400" alt="Decolgen">
+                </div>
+                <div class="p-content">
+                    <h5 class="p-title">Decolgen Forte</h5>
+                    <p class="p-desc">Vỉ 4 viên. Giảm các triệu chứng cảm thông thường.</p>
+                    <div class="p-footer">
+                        <span class="p-price">12.000đ</span>
+                        <button class="btn-add" onclick="updateCart('Decolgen')"><i class="fa-solid fa-plus"></i></button>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div class="col-lg-3 col-md-6 med-item" data-cat="giam-dau" data-name="salonpas">
+            <div class="p-card">
+                <div class="p-img-box">
+                    <img src="https://images.unsplash.com/photo-1585435557343-3b092031a831?auto=format&fit=crop&w=500" alt="Salonpas">
+                </div>
+                <div class="p-content">
+                    <h5 class="p-title">Cao dán Salonpas</h5>
+                    <p class="p-desc">Gói 10 miếng. Giảm đau mỏi vai gáy và xương khớp.</p>
+                    <div class="p-footer">
+                        <span class="p-price">28.000đ</span>
+                        <button class="btn-add" onclick="updateCart('Salonpas')"><i class="fa-solid fa-plus"></i></button>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<div class="cart-float" id="cartFloating">
+    <i class="fa-solid fa-cart-shopping"></i>
+    <span>Giỏ hàng (<span id="cartQty">0</span>)</span>
+</div>
+
+<script>
+    let qty = 0;
+
+    // 1. Tìm kiếm thuốc
+    function searchMedicine() {
+        let input = document.getElementById('pharmaSearch').value.toLowerCase();
+        let items = document.querySelectorAll('.med-item');
+
+        items.forEach(item => {
+            let name = item.getAttribute('data-name');
+            item.style.display = name.includes(input) ? "block" : "none";
+        });
+    }
+
+    // 2. Lọc theo danh mục
+    function filterCat(cat, btn) {
+        document.querySelectorAll('.btn-filter').forEach(b => b.classList.remove('active'));
+        btn.classList.add('active');
+
+        let items = document.querySelectorAll('.med-item');
+        items.forEach(item => {
+            if (cat === 'all' || item.getAttribute('data-cat') === cat) {
+                item.style.display = "block";
+            } else {
+                item.style.display = "none";
+            }
+        });
+    }
+
+   
+</script>

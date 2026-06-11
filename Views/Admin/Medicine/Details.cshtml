@@ -1,0 +1,242 @@
+﻿@model PhongKhamVIP.Models.Clinical.Medicine
+
+@{
+    Layout = "_AdminLayout";
+    ViewData["Title"] = "Chi tiết thuốc";
+}
+
+<style>
+    .detail-container {
+        max-width: 900px;
+        margin: 20px auto;
+    }
+
+    .detail-card {
+        background: white;
+        border-radius: 15px;
+        padding: 30px;
+        box-shadow: 0 5px 20px rgba(0,0,0,.08);
+    }
+
+    .detail-header {
+        display: flex;
+        align-items: center;
+        margin-bottom: 25px;
+        border-bottom: 1px solid #eee;
+        padding-bottom: 20px;
+    }
+
+    .medicine-icon {
+        width: 80px;
+        height: 80px;
+        border-radius: 50%;
+        background: #198754;
+        color: white;
+        font-size: 35px;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        margin-right: 20px;
+    }
+
+    .medicine-name {
+        font-size: 28px;
+        font-weight: 700;
+        color: #333;
+    }
+
+    .medicine-code {
+        color: #666;
+        margin-top: 5px;
+    }
+
+    .info-grid {
+        display: grid;
+        grid-template-columns: repeat(2,1fr);
+        gap: 20px;
+        margin-top: 20px;
+    }
+
+    .info-box {
+        background: #f8f9fa;
+        border-radius: 10px;
+        padding: 15px;
+    }
+
+    .info-label {
+        color: #6c757d;
+        font-size: 13px;
+        margin-bottom: 5px;
+    }
+
+    .info-value {
+        font-size: 16px;
+        font-weight: 600;
+        color: #212529;
+    }
+
+    .stock-good {
+        display: inline-block;
+        background: #198754;
+        color: white;
+        padding: 6px 14px;
+        border-radius: 20px;
+    }
+
+    .stock-low {
+        display: inline-block;
+        background: #dc3545;
+        color: white;
+        padding: 6px 14px;
+        border-radius: 20px;
+    }
+
+    .description-box {
+        margin-top: 20px;
+        background: #f8f9fa;
+        padding: 20px;
+        border-radius: 10px;
+    }
+
+    .btn-group {
+        margin-top: 30px;
+    }
+
+    .btn-custom {
+        padding: 10px 18px;
+        border-radius: 8px;
+        text-decoration: none;
+        color: white;
+        margin-right: 10px;
+    }
+
+    .btn-edit {
+        background: #ffc107;
+        color: black;
+    }
+
+    .btn-back {
+        background: #6c757d;
+    }
+</style>
+
+<div class="detail-container">
+
+    <div class="detail-card">
+
+        <div class="detail-header">
+
+            <div class="medicine-icon">
+                💊
+            </div>
+
+            <div>
+
+                <div class="medicine-name">
+                    @Model.Name
+                </div>
+
+                <div class="medicine-code">
+                    Mã thuốc: #@Model.Id
+                </div>
+
+            </div>
+
+        </div>
+
+        <div class="info-grid">
+
+            <div class="info-box">
+                <div class="info-label">
+                    Tên thuốc
+                </div>
+
+                <div class="info-value">
+                    @Model.Name
+                </div>
+            </div>
+
+            <div class="info-box">
+                <div class="info-label">
+                    Đơn vị tính
+                </div>
+
+                <div class="info-value">
+                    @Model.Unit
+                </div>
+            </div>
+
+            <div class="info-box">
+                <div class="info-label">
+                    Giá bán
+                </div>
+
+                <div class="info-value">
+                    @Model.Price.ToString("N0") VNĐ
+                </div>
+            </div>
+
+            <div class="info-box">
+                <div class="info-label">
+                    Tồn kho
+                </div>
+
+                <div class="info-value">
+
+                    @if (Model.StockQuantity > 20)
+                    {
+                        <span class="stock-good">
+                            @Model.StockQuantity
+                        </span>
+                    }
+                    else
+                    {
+                        <span class="stock-low">
+                            @Model.StockQuantity
+                        </span>
+                    }
+
+                </div>
+            </div>
+
+        </div>
+
+        <div class="description-box">
+
+            <div class="info-label">
+                Mô tả thuốc
+            </div>
+
+            <div class="info-value">
+
+                @if (!string.IsNullOrEmpty(Model.Description))
+                {
+                    @Model.Description
+                }
+                else
+                {
+                    <span>Chưa có mô tả.</span>
+                }
+
+            </div>
+
+        </div>
+
+        <div class="btn-group">
+
+            <a asp-action="Edit"
+               asp-route-id="@Model.Id"
+               class="btn-custom btn-edit">
+                ✏️ Chỉnh sửa
+            </a>
+
+            <a asp-action="Index"
+               class="btn-custom btn-back">
+                ← Quay lại
+            </a>
+
+        </div>
+
+    </div>
+
+</div>

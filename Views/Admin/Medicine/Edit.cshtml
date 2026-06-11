@@ -1,0 +1,206 @@
+﻿@model PhongKhamVIP.Models.Clinical.Medicine
+
+@{
+    Layout = "_AdminLayout";
+    ViewData["Title"] = "Chỉnh sửa thuốc";
+}
+
+<style>
+    .edit-container {
+        max-width: 900px;
+        margin: 20px auto;
+    }
+
+    .edit-card {
+        background: white;
+        border-radius: 15px;
+        padding: 30px;
+        box-shadow: 0 5px 20px rgba(0,0,0,.08);
+    }
+
+    .page-title {
+        color: #198754;
+        font-size: 30px;
+        font-weight: 700;
+        margin-bottom: 25px;
+    }
+
+    .form-row {
+        display: grid;
+        grid-template-columns: 1fr 1fr;
+        gap: 20px;
+    }
+
+    .form-group {
+        margin-bottom: 18px;
+    }
+
+    .form-label {
+        display: block;
+        font-weight: 600;
+        margin-bottom: 8px;
+    }
+
+    .form-control {
+        width: 100%;
+        padding: 12px;
+        border: 1px solid #ddd;
+        border-radius: 10px;
+    }
+
+        .form-control:focus {
+            outline: none;
+            border-color: #198754;
+            box-shadow: 0 0 8px rgba(25,135,84,.2);
+        }
+
+    textarea.form-control {
+        min-height: 120px;
+        resize: vertical;
+    }
+
+    .btn-save {
+        background: #198754;
+        color: white;
+        border: none;
+        padding: 12px 22px;
+        border-radius: 10px;
+        font-weight: 600;
+        cursor: pointer;
+    }
+
+    .btn-back {
+        background: #6c757d;
+        color: white;
+        text-decoration: none;
+        padding: 12px 22px;
+        border-radius: 10px;
+        margin-left: 10px;
+    }
+
+    .text-danger {
+        color: red;
+        font-size: 13px;
+    }
+</style>
+
+<div class="edit-container">
+
+    <div class="edit-card">
+
+        <h2 class="page-title">
+            ✏️ Chỉnh sửa thuốc
+        </h2>
+
+        <form asp-action="Edit" method="post">
+
+            <input type="hidden" asp-for="Id" />
+
+            <div asp-validation-summary="ModelOnly"
+                 class="text-danger">
+            </div>
+
+            <div class="form-row">
+
+                <div class="form-group">
+                    <label asp-for="Name" class="form-label">
+                        Tên thuốc
+                    </label>
+
+                    <input asp-for="Name"
+                           class="form-control" />
+
+                    <span asp-validation-for="Name"
+                          class="text-danger">
+                    </span>
+                </div>
+
+                <div class="form-group">
+                    <label asp-for="Unit" class="form-label">
+                        Đơn vị
+                    </label>
+
+                    <select asp-for="Unit"
+                            class="form-control">
+
+                        <option>Viên</option>
+                        <option>Chai</option>
+                        <option>Gói</option>
+                        <option>Ống</option>
+                        <option>Hộp</option>
+
+                    </select>
+
+                    <span asp-validation-for="Unit"
+                          class="text-danger">
+                    </span>
+                </div>
+
+            </div>
+
+            <div class="form-row">
+
+                <div class="form-group">
+                    <label asp-for="Price" class="form-label">
+                        Giá bán (VNĐ)
+                    </label>
+
+                    <input asp-for="Price"
+                           type="number"
+                           class="form-control" />
+
+                    <span asp-validation-for="Price"
+                          class="text-danger">
+                    </span>
+                </div>
+
+                <div class="form-group">
+                    <label asp-for="StockQuantity" class="form-label">
+                        Tồn kho
+                    </label>
+
+                    <input asp-for="StockQuantity"
+                           type="number"
+                           class="form-control" />
+
+                    <span asp-validation-for="StockQuantity"
+                          class="text-danger">
+                    </span>
+                </div>
+
+            </div>
+
+            <div class="form-group">
+
+                <label asp-for="Description"
+                       class="form-label">
+                    Mô tả
+                </label>
+
+                <textarea asp-for="Description"
+                          class="form-control">
+                </textarea>
+
+            </div>
+
+            <button type="submit"
+                    class="btn-save">
+                💾 Cập nhật thuốc
+            </button>
+
+            <a asp-action="Index"
+               class="btn-back">
+                ← Quay lại
+            </a>
+
+        </form>
+
+    </div>
+
+</div>
+
+@section Scripts {
+    @{
+        await Html.RenderPartialAsync("_ValidationScriptsPartial");
+    }
+}

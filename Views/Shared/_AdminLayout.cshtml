@@ -1,0 +1,168 @@
+﻿<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>@ViewData["Title"] - Quản Trị PhongKhamVIP</title>
+    <link rel="stylesheet" href="~/lib/bootstrap/dist/css/bootstrap.min.css" />
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.1/font/bootstrap-icons.css">
+
+    <style>
+        :root {
+            --primary-admin: #008ca3;
+            --primary-gradient: linear-gradient(135deg, #00b4db 0%, #0083b0 100%);
+            --bg-light: #f8fafc;
+        }
+
+        /* RESET & BODY */
+        html, body {
+            height: 100%;
+            margin: 0;
+            background-color: var(--bg-light);
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            overflow-y: auto; /* KÍCH HOẠT THANH CUỘN TRANG */
+        }
+
+        .page-wrapper {
+            display: flex;
+            min-height: 100vh;
+        }
+
+        /* SIDEBAR */
+        .sidebar {
+            width: 280px;
+            flex-shrink: 0;
+            background: #ffffff;
+            border-right: 1px solid #edf2f7;
+            position: sticky;
+            top: 0;
+            height: 100vh;
+            overflow-y: auto;
+        }
+
+        /* MAIN WRAPPER - TỰ GIÃN THEO NỘI DUNG */
+        .main-wrapper {
+            flex-grow: 1;
+            display: flex;
+            flex-direction: column;
+            min-width: 0; /* Quan trọng để tránh vỡ layout */
+        }
+
+        /* LOGO & MENU */
+        .logo-admin-container {
+            width: 90px;
+            height: 90px;
+            margin: 0 auto 15px auto;
+            border-radius: 24px;
+            overflow: hidden;
+            box-shadow: 0 8px 20px rgba(0, 140, 163, 0.15);
+            border: 2px solid #fff;
+        }
+
+        .nav-link {
+            color: #64748b;
+            padding: 12px 20px;
+            border-radius: 14px;
+            margin: 4px 18px;
+            font-weight: 600;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            transition: 0.3s;
+        }
+
+            .nav-link:hover {
+                background: #f1f5f9;
+                color: var(--primary-admin);
+            }
+
+            .nav-link.active {
+                background: var(--primary-gradient);
+                color: #ffffff !important;
+                box-shadow: 0 8px 20px rgba(0, 131, 176, 0.25);
+            }
+
+        /* TOP NAVBAR */
+        .top-navbar {
+            background: rgba(255, 255, 255, 0.85);
+            backdrop-filter: blur(12px);
+            border-bottom: 1px solid #edf2f7;
+            padding: 18px 40px;
+            position: sticky;
+            top: 0;
+            z-index: 999;
+        }
+    </style>
+</head>
+<body>
+    <div class="page-wrapper">
+        <nav class="sidebar py-4 d-flex flex-column">
+            <div class="text-center mb-4 px-3">
+                <div class="logo-admin-container">
+                    <img src="/imge/am2t.jpg" class="w-100 h-100" style="object-fit:cover;" onerror="this.src='https://ui-avatars.com/api/?name=VIP&background=008ca3&color=fff';" />
+                </div>
+                <h5 class="fw-bold mb-1" style="color: #1e293b;">PHÒNG KHÁM VIP</h5>
+                <span class="badge px-3 py-1 rounded-pill" style="background-color: rgba(0,140,163,0.1); color: var(--primary-admin);">Hệ Thống Tối Cao</span>
+            </div>
+
+            <div class="nav flex-column">
+                <a class="nav-link @(ViewContext.RouteData.Values["Controller"]?.ToString() == "AdminDashboard" ? "active" : "")"
+                   asp-controller="AdminDashboard" asp-action="Index">
+                    <i class="bi bi-grid-1x2-fill"></i> Tổng quan
+                </a>
+
+                <a class="nav-link @(ViewContext.RouteData.Values["Controller"]?.ToString() == "Employee" ? "active" : "")"
+                   asp-controller="Employee" asp-action="Index">
+                    <i class="bi bi-person-badge-fill"></i> Quản lý Nhân sự
+                </a>
+
+                <a class="nav-link @(ViewContext.RouteData.Values["Controller"]?.ToString() == "Medicine" ? "active" : "")"
+                   asp-controller="Medicine" asp-action="Index">
+                    <i class="bi bi-capsule"></i> Quản lý Kho thuốc
+                </a>
+
+                <a class="nav-link @(ViewContext.RouteData.Values["Controller"]?.ToString() == "Service" ? "active" : "")"
+                   asp-controller="Service" asp-action="Index">
+                    <i class="bi bi-activity"></i> Danh mục Dịch vụ
+                </a>
+
+                <a class="nav-link @(ViewContext.RouteData.Values["Controller"]?.ToString() == "Salary" ? "active" : "")"
+                   asp-controller="Salary" asp-action="Index">
+                    <i class="bi bi-cash-stack"></i> Tính lương Nhân viên
+                </a>
+
+                <a class="nav-link @(ViewContext.RouteData.Values["Controller"]?.ToString() == "AuditLog" ? "active" : "")"
+                   asp-controller="AuditLog" asp-action="Index">
+                    <i class="bi bi-shield-lock-fill"></i> Nhật ký Hệ thống
+                </a>
+            </div>
+
+            <div class="nav flex-column mt-auto">
+                <hr class="mx-4">
+                <a class="nav-link text-danger" asp-controller="Account" asp-action="Logout" onclick="return confirm('Đăng xuất?');"><i class="bi bi-box-arrow-left"></i> Đăng xuất</a>
+            </div>
+        </nav>
+
+        <div class="main-wrapper">
+            <header class="top-navbar d-flex justify-content-between align-items-center">
+                <h4 class="mb-0 fw-bold">@ViewData["Title"]</h4>
+                <div class="user-profile d-flex align-items-center bg-white py-1 ps-3 pe-2 rounded-pill border shadow-sm">
+                    <span class="me-3 small fw-bold">Chào, Admin VIP</span>
+                    <img src="https://ui-avatars.com/api/?name=Admin+VIP&background=008ca3&color=fff" class="rounded-circle" width="34" />
+                </div>
+            </header>
+
+            <main class="flex-grow-1 p-4">
+                @RenderBody()
+            </main>
+        </div>
+    </div>
+
+    <script src="~/lib/jquery/dist/jquery.min.js"></script>
+    <script src="~/lib/bootstrap/dist/js/bootstrap.bundle.min.js"></script>
+
+    @await RenderSectionAsync("Scripts", required: false)
+
+</body>
+</html>

@@ -1,0 +1,310 @@
+﻿@{
+    ViewData["Title"] = "Liên hệ - Bệnh viện AM2T";
+}
+
+<style>
+    :root {
+        --primary-color: #00bcd4;
+        --secondary-color: #008ca3;
+        --bg-light: #f4f9fc;
+        --text-dark: #2d3748;
+        --error-color: #e53e3e;
+    }
+
+    body {
+        background-color: var(--bg-light);
+        font-family: 'Plus Jakarta Sans', sans-serif;
+    }
+
+    /* --- HEADER --- */
+    .contact-header {
+        background: linear-gradient(135deg, #00b4db 0%, #0083b0 100%);
+        padding: 80px 0;
+        color: white;
+        border-radius: 0 0 50px 50px;
+        margin-bottom: -50px;
+    }
+
+    /* --- CONTACT CARD --- */
+    .contact-wrapper {
+        background: white;
+        border-radius: 35px;
+        padding: 40px;
+        box-shadow: 0 20px 50px rgba(0,0,0,0.05);
+        border: 1px solid rgba(255,255,255,0.8);
+    }
+
+    .info-box {
+        display: flex;
+        align-items: center;
+        gap: 20px;
+        margin-bottom: 30px;
+        padding: 20px;
+        border-radius: 20px;
+        transition: 0.3s;
+        background: #f8fdff;
+    }
+
+        .info-box:hover {
+            transform: translateX(10px);
+            background: #f0faff;
+        }
+
+    .icon-circle {
+        width: 60px;
+        height: 60px;
+        background: white;
+        color: var(--primary-color);
+        border-radius: 18px;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        font-size: 24px;
+        box-shadow: 0 10px 20px rgba(0, 188, 212, 0.15);
+    }
+
+    /* --- FORM STYLE & VALIDATION --- */
+    .form-control-custom {
+        border: 2px solid #edf2f7;
+        border-radius: 15px;
+        padding: 15px;
+        margin-bottom: 5px;
+        transition: 0.3s;
+        width: 100%;
+    }
+
+        .form-control-custom:focus {
+            border-color: var(--primary-color);
+            box-shadow: 0 0 0 4px rgba(0, 188, 212, 0.1);
+            outline: none;
+        }
+
+        .form-control-custom.is-invalid {
+            border-color: var(--error-color) !important;
+            background-color: #fff5f5;
+            animation: shake 0.2s ease-in-out 0s 2;
+        }
+
+    .error-text {
+        color: var(--error-color);
+        font-size: 0.8rem;
+        font-weight: 600;
+        margin-bottom: 15px;
+        display: block;
+        padding-left: 5px;
+    }
+
+    .btn-send {
+        background: linear-gradient(135deg, #00b4db 0%, #0083b0 100%);
+        color: white;
+        border: none;
+        padding: 15px 40px;
+        border-radius: 15px;
+        font-weight: 700;
+        width: 100%;
+        transition: 0.3s;
+        box-shadow: 0 10px 20px rgba(0, 180, 219, 0.2);
+        cursor: pointer;
+    }
+
+    @@keyframes shake {
+        0%, 100% {
+            transform: translateX(0);
+        }
+
+        25% {
+            transform: translateX(5px);
+        }
+
+        75% {
+            transform: translateX(-5px);
+        }
+    }
+
+    .map-container {
+        border-radius: 30px;
+        overflow: hidden;
+        height: 450px;
+        box-shadow: 0 15px 40px rgba(0,0,0,0.1);
+        margin-top: 50px;
+    }
+
+    .faq-container {
+        max-width: 900px;
+        margin: 50px auto;
+    }
+</style>
+
+<section class="contact-header text-center">
+    <div class="container">
+        <h1 class="fw-bold display-5">Liên Hệ Với Chúng Tôi</h1>
+        <p class="opacity-75">AM2T luôn sẵn sàng hỗ trợ bạn 24/7</p>
+    </div>
+</section>
+
+<section class="container mb-5">
+    <div class="contact-wrapper">
+        <div class="row g-5">
+            <div class="col-lg-5">
+                <h2 class="fw-bold mb-4">Thông tin liên lạc</h2>
+                <div class="info-box">
+                    <div class="icon-circle"><i class="fa-solid fa-location-dot"></i></div>
+                    <div>
+                        <span class="d-block text-muted small fw-bold text-uppercase">Địa chỉ</span>
+                        <p class="mb-0 fw-bold">Ngõ 1 - Phố Xốm - Hà Đông - Hà Nội</p>
+                    </div>
+                </div>
+                <div class="info-box">
+                    <div class="icon-circle"><i class="fa-solid fa-phone-volume"></i></div>
+                    <div>
+                        <span class="d-block text-muted small fw-bold text-uppercase">Hotline</span>
+                        <p class="mb-0 fw-bold">1900 123 456</p>
+                    </div>
+                </div>
+            </div>
+
+            <div class="col-lg-7">
+                <div class="p-4 rounded-4" style="background: #fdfdfd; border: 1px solid #f1f1f1;">
+                    <h3 class="fw-bold mb-4">Gửi tin nhắn tư vấn</h3>
+                    <form id="contactForm" onsubmit="return false;">
+                        <div class="row">
+                            <div class="col-md-6">
+                                <input type="text" id="name" class="form-control-custom" placeholder="Họ và tên">
+                                <span id="nameError" class="error-text"></span>
+                            </div>
+                            <div class="col-md-6">
+                                <input type="email" id="email" class="form-control-custom" placeholder="Địa chỉ Email">
+                                <span id="emailError" class="error-text"></span>
+                            </div>
+                        </div>
+                        <input type="text" id="phone" class="form-control-custom" placeholder="Số điện thoại (10 số)">
+                        <span id="phoneError" class="error-text"></span>
+
+                        <textarea id="message" class="form-control-custom" rows="4" placeholder="Nội dung cần hỗ trợ..."></textarea>
+                        <span id="messageError" class="error-text"></span>
+
+                        <button type="button" id="btnSubmit" class="btn-send">
+                            <i class="fa-solid fa-paper-plane me-2"></i> Gửi yêu cầu ngay
+                        </button>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
+</section>
+<section class="container mb-5">
+    <div class="map-container">
+        <iframe src="https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d3725.689569687708!2d105.7561858758814!3d20.964977489961633!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x313452e85050f24f%3A0x6a0c59828d5427d1!2zTmfDsyAxLCBQaOG7kSBY4bubSwgSMOgIMSQw7RuZywgSMOgIE7hu5lp!5e0!3m2!1svi!2s!4v1715443200000!5m2!1svi!2s"
+                width="100%" height="450" style="border:0;" allowfullscreen="" loading="lazy" referrerpolicy="no-referrer-when-downgrade">
+        </iframe>
+    </div>
+</section>
+
+<section class="container mb-5 faq-container">
+    <h2 class="fw-bold text-center mb-5">Câu hỏi thường gặp</h2>
+    <div class="accordion accordion-flush shadow-sm rounded-4 overflow-hidden" id="accordionFAQ">
+
+        <div class="accordion-item border-bottom">
+            <h2 class="accordion-header">
+                <button class="accordion-button fw-bold py-4" type="button" data-bs-toggle="collapse" data-bs-target="#faq1">
+                    <i class="fa-solid fa-calendar-check me-3 text-info"></i> Làm thế nào để đặt lịch khám?
+                </button>
+            </h2>
+            <div id="faq1" class="accordion-collapse collapse show" data-bs-parent="#accordionFAQ">
+                <div class="accordion-body text-muted px-5 pb-4">
+                    Bạn có thể đặt lịch khám trực tiếp qua trang web này bằng cách đăng nhập vào tài khoản bệnh nhân, hoặc gọi điện đến số Hotline 1900 123 456 để được nhân viên hỗ trợ nhanh nhất.
+                </div>
+            </div>
+        </div>
+
+        <div class="accordion-item border-bottom">
+            <h2 class="accordion-header">
+                <button class="accordion-button collapsed fw-bold py-4" type="button" data-bs-toggle="collapse" data-bs-target="#faq2">
+                    <i class="fa-solid fa-clock me-3 text-info"></i> Bệnh viện có hoạt động 24/7 không?
+                </button>
+            </h2>
+            <div id="faq2" class="accordion-collapse collapse" data-bs-parent="#accordionFAQ">
+                <div class="accordion-body text-muted px-5 pb-4">
+                    Khoa Cấp cứu của chúng tôi hoạt động 24/7. Tuy nhiên, các phòng khám chuyên khoa sẽ làm việc từ 7:30 đến 17:30 tất cả các ngày trong tuần.
+                </div>
+            </div>
+        </div>
+
+        <div class="accordion-item border-bottom">
+            <h2 class="accordion-header">
+                <button class="accordion-button collapsed fw-bold py-4" type="button" data-bs-toggle="collapse" data-bs-target="#faq3">
+                    <i class="fa-solid fa-p me-3 text-info"></i> Bệnh viện có bãi đậu xe không?
+                </button>
+            </h2>
+            <div id="faq3" class="accordion-collapse collapse" data-bs-parent="#accordionFAQ">
+                <div class="accordion-body text-muted px-5 pb-4">
+                    Có, bệnh viện có bãi đậu xe rộng rãi miễn phí dành cho cả xe máy và ô tô ngay trong khuôn viên bệnh viện.
+                </div>
+            </div>
+        </div>
+
+        <div class="accordion-item">
+            <h2 class="accordion-header">
+                <button class="accordion-button collapsed fw-bold py-4" type="button" data-bs-toggle="collapse" data-bs-target="#faq4">
+                    <i class="fa-solid fa-file-invoice-dollar me-3 text-info"></i> Thanh toán bảo hiểm y tế như thế nào?
+                </button>
+            </h2>
+            <div id="faq4" class="accordion-collapse collapse" data-bs-parent="#accordionFAQ">
+                <div class="accordion-body text-muted px-5 pb-4">
+                    Chúng tôi chấp nhận thanh toán qua Bảo hiểm Y tế nhà nước và các loại bảo hiểm bảo lãnh tư nhân. Vui lòng mang theo thẻ BHYT và CCCD khi đến làm thủ tục.
+                </div>
+            </div>
+        </div>
+
+    </div>
+</section>
+<script>
+    document.getElementById('btnSubmit').addEventListener('click', function () {
+        const name = document.getElementById('name');
+        const email = document.getElementById('email');
+        const phone = document.getElementById('phone');
+        const message = document.getElementById('message');
+
+
+        document.querySelectorAll('.error-text').forEach(el => el.innerText = "");
+        document.querySelectorAll('.form-control-custom').forEach(el => el.classList.remove('is-invalid'));
+
+        let isValid = true;
+
+
+        if (name.value.trim().length < 2) {
+            document.getElementById('nameError').innerText = "Vui lòng nhập tên hợp lệ.";
+            name.classList.add('is-invalid');
+            isValid = false;
+        }
+
+        // Validate Email (Dùng 2 dấu @@ cho Razor)
+        const emailRegex = /^[^\s@@]+@@[^\s@@]+\.[^\s@@]+$/;
+        if (!emailRegex.test(email.value)) {
+            document.getElementById('emailError').innerText = "Định dạng Email sai (Ví dụ: abc@@gmail.com).";
+            email.classList.add('is-invalid');
+            isValid = false;
+        }
+
+        // Validate SĐT
+        const phoneRegex = /^(0|84)(3|5|7|8|9)[0-9]{8}$/;
+        if (!phoneRegex.test(phone.value)) {
+            document.getElementById('phoneError').innerText = "Số điện thoại phải 10 số, đúng đầu số VN.";
+            phone.classList.add('is-invalid');
+            isValid = false;
+        }
+
+        // Validate Nội dung
+        if (message.value.trim().length < 5) {
+            document.getElementById('messageError').innerText = "Nội dung quá ngắn.";
+            message.classList.add('is-invalid');
+            isValid = false;
+        }
+
+        if (isValid) {
+            alert("Thông tin hợp lệ! Đang chuyển hướng bạn sang trang Đăng nhập...");
+            // CHUYỂN HƯỚNG SANG TRANG ĐĂNG NHẬP
+            window.location.href = "/Auth/Login";
+        }
+    });
+</script>

@@ -1,0 +1,238 @@
+﻿@model PhongKhamVIP.Models.Finance.Salary
+
+@{
+    Layout = "_AdminLayout";
+    ViewData["Title"] = "Cập Nhật Bảng Lương";
+}
+
+<style>
+    .salary-card {
+        background: white;
+        padding: 30px;
+        border-radius: 20px;
+        box-shadow: 0 5px 25px rgba(0,0,0,.08);
+        max-width: 900px;
+        margin: auto;
+    }
+
+    .page-title {
+        color: #ffc107;
+        font-weight: 700;
+        margin-bottom: 25px;
+    }
+
+    .form-label {
+        font-weight: 600;
+        margin-bottom: 6px;
+    }
+
+    .form-control,
+    .form-select {
+        border-radius: 10px;
+        padding: 10px;
+    }
+
+    .salary-result {
+        background: #fff8e1;
+        border: 2px dashed #ffc107;
+        padding: 15px;
+        border-radius: 10px;
+        text-align: center;
+        font-size: 22px;
+        font-weight: bold;
+        color: #ff9800;
+    }
+
+    .btn-save {
+        background: #ffc107;
+        color: black;
+        border: none;
+        padding: 12px 25px;
+        border-radius: 10px;
+        font-weight: 600;
+    }
+
+    .btn-back {
+        background: #6c757d;
+        color: white;
+        text-decoration: none;
+        padding: 12px 25px;
+        border-radius: 10px;
+        font-weight: 600;
+    }
+
+    .btn-save:hover,
+    .btn-back:hover {
+        opacity: .9;
+    }
+</style>
+
+<div class="salary-card">
+
+    <h2 class="page-title">
+        <i class="bi bi-pencil-square"></i>
+        Cập Nhật Bảng Lương
+    </h2>
+
+    <form asp-action="Edit" method="post">
+
+        <input type="hidden" asp-for="Id" />
+
+        <div class="row">
+
+            <div class="col-md-6 mb-3">
+                <label class="form-label">Nhân viên</label>
+
+                <select asp-for="UserId" class="form-select">
+
+                    @foreach (var user in ViewBag.Users)
+                    {
+                        <option value="@user.Id"
+                                selected="@(user.Id == Model.UserId)">
+                            @user.FullName (@user.Role)
+                        </option>
+                    }
+
+                </select>
+            </div>
+
+            <div class="col-md-3 mb-3">
+                <label class="form-label">Tháng</label>
+
+                <input asp-for="Month"
+                       class="form-control" />
+            </div>
+
+            <div class="col-md-3 mb-3">
+                <label class="form-label">Năm</label>
+
+                <input asp-for="Year"
+                       class="form-control" />
+            </div>
+
+            <div class="col-md-4 mb-3">
+                <label class="form-label">
+                    Lương cơ bản
+                </label>
+
+                <input asp-for="BaseSalary"
+                       id="baseSalary"
+                       class="form-control" />
+            </div>
+
+            <div class="col-md-4 mb-3">
+                <label class="form-label">
+                    Thưởng
+                </label>
+
+                <input asp-for="Bonus"
+                       id="bonus"
+                       class="form-control" />
+            </div>
+
+            <div class="col-md-4 mb-3">
+                <label class="form-label">
+                    Khấu trừ
+                </label>
+
+                <input asp-for="Deductions"
+                       id="deductions"
+                       class="form-control" />
+            </div>
+
+            <div class="col-md-6 mb-3">
+                <label class="form-label">
+                    Ngày trả lương
+                </label>
+
+                <input asp-for="PaidDate"
+                       type="date"
+                       class="form-control" />
+            </div>
+
+            <div class="col-md-6 mb-3">
+                <label class="form-label">
+                    Trạng thái
+                </label>
+
+                <select asp-for="Status"
+                        class="form-select">
+
+                    <option value="Pending">
+                        Chưa thanh toán
+                    </option>
+
+                    <option value="Paid">
+                        Đã thanh toán
+                    </option>
+
+                </select>
+            </div>
+
+            <div class="col-12 mb-4">
+
+                <label class="form-label">
+                    Lương thực nhận
+                </label>
+
+                <div class="salary-result">
+
+                    <span id="salaryPreview">
+                        @Model.NetSalary.ToString("N0") VNĐ
+                    </span>
+
+                </div>
+
+            </div>
+
+        </div>
+
+        <button type="submit" class="btn-save">
+            <i class="bi bi-check-circle-fill"></i>
+            Cập nhật
+        </button>
+
+        <a asp-action="Index" class="btn-back">
+            <i class="bi bi-arrow-left-circle-fill"></i>
+            Quay lại
+        </a>
+
+    </form>
+
+</div>
+
+@section Scripts {
+
+    <script>
+
+        function calculateSalary() {
+
+            let base =
+                parseFloat(document.getElementById("baseSalary").value) || 0;
+
+            let bonus =
+                parseFloat(document.getElementById("bonus").value) || 0;
+
+            let deductions =
+                parseFloat(document.getElementById("deductions").value) || 0;
+
+            let net =
+                base + bonus - deductions;
+
+            document.getElementById("salaryPreview")
+                .innerText =
+                net.toLocaleString('vi-VN') + " VNĐ";
+        }
+
+        document.getElementById("baseSalary")
+            .addEventListener("input", calculateSalary);
+
+        document.getElementById("bonus")
+            .addEventListener("input", calculateSalary);
+
+        document.getElementById("deductions")
+            .addEventListener("input", calculateSalary);
+
+    </script>
+
+}

@@ -1,0 +1,134 @@
+﻿@{
+    Layout = "_Layout";
+    ViewData["Title"] = "Đăng Nhập Hệ Thống";
+}
+
+<style>
+    /* 🔴 HIỆU ỨNG RUNG LỒNG LỘN KHI CÓ LỖI (ĐÃ FIX KHUYẾT KEYFRAMES) */
+    .shake {
+        animation: shakeX 0.5s ease-in-out;
+    }
+
+    
+    @@keyframes shakeX {
+        0%, 100% {
+            transform: translateX(0); 
+        }
+
+        20%, 60% {
+            transform: translateX(-10px);
+        }
+
+        40%, 80% {
+            transform: translateX(10px);
+        }
+    }
+
+    /* Chỉnh màu icon và trạng thái focus của nút con mắt */
+    .btn-show-pass {
+        border-color: #dee2e6 !important;
+        color: #008ca3 !important;
+    }
+
+    .btn-show-pass:hover {
+        background-color: #f8f9fa !important;
+    }
+
+    .register-link {
+        color: #008ca3;
+        text-decoration: none;
+        font-weight: 600;
+    }
+
+    .register-link:hover {
+        text-decoration: underline;
+    }
+</style>
+
+<div class="container my-5">
+    <div class="row justify-content-center">
+        <div class="col-md-4">
+            <div class="card border-0 shadow-sm rounded-4 @(ViewBag.Error != null ? "shake" : "")">
+                <div class="card-body p-4 text-center">
+                    <h4 class="fw-bold mb-4" style="color: #008ca3;">ĐĂNG NHẬP</h4>
+
+                    @* KHU VỰC HIỂN THỊ THÔNG BÁO LỖI VÀNG RỰC RÕ RÀNG *@
+                    @if (ViewBag.Error != null)
+                    {
+                        <div class="alert alert-danger alert-dismissible fade show small text-start shadow-sm border-0" role="alert" id="loginAlert">
+                            <i class="bi bi-exclamation-triangle-fill me-2"></i>
+                            <strong>Lỗi:</strong> @ViewBag.Error
+                            <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close" style="font-size: 0.5rem;"></button>
+                        </div>
+                    }
+
+                    <form asp-action="Login" method="post">
+                        @Html.AntiForgeryToken()
+
+                        @* 🛠️ FIX CHUẨN: Xóa bỏ thẻ ẩn dính cứng Patient để Controller tự check Role trong DB *@
+                        @* Email/Username *@
+                        <div class="mb-3 text-start">
+                            <label class="small fw-bold text-muted mb-1">Tài khoản</label>
+                            <input type="text" name="Email" class="form-control py-2"
+                                   placeholder="Email hoặc Tên đăng nhập"
+                                   value="@ViewBag.RememberedUsername" style="border-radius: 8px;" required />
+                        </div>
+
+                        @* Mật khẩu *@
+                        <div class="mb-4 text-start">
+                            <label class="small fw-bold text-muted mb-1">Mật khẩu</label>
+                            <div class="input-group">
+                                <input type="password" name="Password" id="passLogin" class="form-control py-2" placeholder="Nhập mật khẩu" style="border-top-left-radius: 8px; border-bottom-left-radius: 8px;" required />
+                                <button class="btn btn-outline-secondary btn-show-pass" type="button" onclick="togglePass('passLogin', 'iconLogin')" style="border-top-right-radius: 8px; border-bottom-right-radius: 8px;">
+                                    <i class="bi bi-eye-slash" id="iconLogin"></i>
+                                </button>
+                            </div>
+                        </div>
+
+                        @* Nút đăng nhập *@
+                        <button type="submit" class="btn btn-primary w-100 py-2 fw-bold mb-3" style="background: #008ca3; border:none; border-radius: 8px;">
+                            VÀO HỆ THỐNG
+                        </button>
+
+                        @* Link đăng ký *@
+                        <div class="mt-3">
+                            <p class="small mb-0 text-muted">
+                                Bạn chưa có tài khoản?
+                                <a asp-action="Register" class="register-link">Đăng ký ngay</a>
+                            </p>
+                        </div>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+@section Scripts {
+    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+    <script>
+        function togglePass(inputId, iconId) {
+            const input = document.getElementById(inputId);
+            const icon = document.getElementById(iconId);
+            if (input.type === "password") {
+                input.type = "text";
+                icon.className = "bi bi-eye";
+            } else {
+                input.type = "password";
+                icon.className = "bi bi-eye-slash";
+            }
+        }
+
+        // Tự động ẩn thông báo lỗi sau 5 giây bằng vanilla JS an toàn không lo thiếu thư viện
+        DOMContentLoaded = document.addEventListener("DOMContentLoaded", function () {
+            const alertBox = document.getElementById("loginAlert");
+            if (alertBox) {
+                setTimeout(function () {
+                    alertBox.style.transition = "opacity 0.5s ease";
+                    alertBox.style.opacity = "0";
+                    setTimeout(() => alertBox.remove(), 500);
+                }, 5000);
+            }
+        });
+    </script>
+}

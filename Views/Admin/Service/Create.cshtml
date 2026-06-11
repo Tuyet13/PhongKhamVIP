@@ -1,0 +1,165 @@
+﻿@model PhongKhamVIP.Models.Finance.Service
+
+@{
+    Layout = "_AdminLayout";
+    ViewData["Title"] = "Thêm Dịch vụ";
+}
+
+<style>
+    .form-container {
+        max-width: 900px;
+        margin: auto;
+    }
+
+    .form-card {
+        background: #fff;
+        border-radius: 15px;
+        padding: 30px;
+        box-shadow: 0 5px 20px rgba(0,0,0,.08);
+    }
+
+    .page-title {
+        color: #0d6efd;
+        font-size: 28px;
+        font-weight: 700;
+        margin-bottom: 25px;
+    }
+
+    .form-group {
+        margin-bottom: 20px;
+    }
+
+    .form-label {
+        font-weight: 600;
+        margin-bottom: 8px;
+        display: block;
+    }
+
+    .form-control {
+        width: 100%;
+        padding: 12px;
+        border: 1px solid #ddd;
+        border-radius: 10px;
+    }
+
+    .form-control:focus {
+        border-color: #0d6efd;
+        outline: none;
+        box-shadow: 0 0 8px rgba(13,110,253,.2);
+    }
+
+    textarea.form-control {
+        min-height: 120px;
+        resize: vertical;
+    }
+
+    .btn-save {
+        background: linear-gradient(135deg,#198754,#28a745);
+        color: white;
+        border: none;
+        padding: 12px 20px;
+        border-radius: 10px;
+        font-weight: 600;
+        cursor: pointer;
+    }
+
+    .btn-back {
+        background: #6c757d;
+        color: white;
+        text-decoration: none;
+        padding: 12px 20px;
+        border-radius: 10px;
+        margin-left: 10px;
+    }
+
+    .text-danger {
+        color: red;
+        font-size: 13px;
+    }
+</style>
+
+<div class="form-container">
+
+    <div class="form-card">
+
+        <h2 class="page-title">
+            <i class="bi bi-plus-circle-fill"></i>
+            Thêm Dịch vụ
+        </h2>
+
+        <form asp-action="Create" method="post">
+
+            <div asp-validation-summary="ModelOnly"
+                 class="text-danger">
+            </div>
+
+            <div class="form-group">
+
+                <label asp-for="Name" class="form-label">
+                    <i class="bi bi-clipboard2-pulse-fill"></i>
+                    Tên dịch vụ
+                </label>
+
+                <input asp-for="Name"
+                       class="form-control"
+                       placeholder="Ví dụ: Khám tổng quát" />
+
+                <span asp-validation-for="Name"
+                      class="text-danger"></span>
+
+            </div>
+
+            <div class="form-group">
+
+                <label asp-for="BasePrice" class="form-label">
+                    <i class="bi bi-cash-stack"></i>
+                    Giá dịch vụ (VNĐ)
+                </label>
+
+                <input asp-for="BasePrice"
+                       type="number"
+                       class="form-control"
+                       placeholder="Nhập giá dịch vụ" />
+
+                <span asp-validation-for="BasePrice"
+                      class="text-danger"></span>
+
+            </div>
+
+            <div class="form-group">
+
+                <label asp-for="Description" class="form-label">
+                    <i class="bi bi-card-text"></i>
+                    Mô tả
+                </label>
+
+                <textarea asp-for="Description"
+                          class="form-control"
+                          placeholder="Nhập mô tả dịch vụ"></textarea>
+
+                <span asp-validation-for="Description"
+                      class="text-danger"></span>
+
+            </div>
+
+            <button type="submit" class="btn-save">
+                <i class="bi bi-floppy-fill"></i>
+                Lưu dịch vụ
+            </button>
+
+            <a asp-action="Index" class="btn-back">
+                <i class="bi bi-arrow-left-circle-fill"></i>
+                Quay lại
+            </a>
+
+        </form>
+
+    </div>
+
+</div>
+
+@section Scripts {
+    @{
+        await Html.RenderPartialAsync("_ValidationScriptsPartial");
+    }
+}

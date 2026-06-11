@@ -1,0 +1,238 @@
+﻿@{
+    ViewData["Title"] = "Giới thiệu - Bệnh viện AM2T";
+}
+
+<style>
+    @@import url('https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;600;800&display=swap');
+
+    :root {
+        --primary: #008ca3;
+        --secondary: #00bcd4;
+        --accent: #ff7e5f;
+        --glass: rgba(255, 255, 255, 0.9);
+        --grad: linear-gradient(135deg, #00b4db 0%, #0083b0 100%);
+    }
+
+    body {
+        font-family: 'Plus Jakarta Sans', sans-serif;
+        background-color: #f4f9fc;
+    }
+
+    /* --- HERO SECTION --- */
+    .hero-about {
+        background: var(--grad);
+        padding: 120px 0 80px;
+        color: white;
+        border-radius: 0 0 50px 50px;
+        text-align: center;
+        margin-bottom: -50px;
+    }
+
+        .hero-about h1 {
+            font-weight: 800;
+            font-size: 3.5rem;
+            letter-spacing: -1px;
+        }
+
+    /* --- CARD STYLE (FIGMA STYLE) --- */
+    .f-card {
+        background: var(--white);
+        border: none;
+        border-radius: 32px;
+        padding: 40px;
+        transition: all 0.4s ease;
+        box-shadow: 0 20px 40px rgba(0,0,0,0.03);
+        height: 100%;
+        position: relative;
+        overflow: hidden;
+        border: 1px solid rgba(255,255,255,0.8);
+    }
+
+        .f-card:hover {
+            transform: translateY(-15px);
+            box-shadow: 0 30px 60px rgba(0, 140, 163, 0.12);
+        }
+
+    .icon-circle {
+        width: 80px;
+        height: 80px;
+        border-radius: 24px;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        font-size: 32px;
+        margin-bottom: 25px;
+    }
+
+    /* --- TIMELINE HIỆN ĐẠI --- */
+    .step-box {
+        background: white;
+        padding: 30px;
+        border-radius: 24px;
+        border-left: 6px solid var(--secondary);
+        box-shadow: 0 10px 30px rgba(0,0,0,0.05);
+    }
+
+    .step-year {
+        font-weight: 800;
+        font-size: 1.5rem;
+        color: var(--primary);
+        display: block;
+    }
+
+    /* --- FACILITIES (CƠ SỞ VẬT CHẤT) --- */
+    .img-stack {
+        position: relative;
+        padding: 20px;
+    }
+
+    .img-main {
+        width: 100%;
+        border-radius: 30px;
+        box-shadow: 0 30px 50px rgba(0,0,0,0.2);
+    }
+
+    .badge-float {
+        position: absolute;
+        bottom: 40px;
+        right: -10px;
+        background: white;
+        padding: 20px 30px;
+        border-radius: 20px;
+        box-shadow: 0 15px 30px rgba(0,0,0,0.1);
+        display: flex;
+        align-items: center;
+        gap: 15px;
+    }
+
+    /* --- BUTTONS --- */
+    .btn-grad {
+        background: var(--grad);
+        color: white !important;
+        border: none;
+        padding: 15px 40px;
+        border-radius: 50px;
+        font-weight: 700;
+        transition: 0.3s;
+        box-shadow: 0 10px 20px rgba(0, 180, 219, 0.3);
+    }
+
+        .btn-grad:hover {
+            transform: scale(1.05);
+            box-shadow: 0 15px 30px rgba(0, 180, 219, 0.4);
+        }
+
+</style>
+
+<section class="hero-about">
+    <div class="container">
+        <span class="badge bg-white text-primary px-3 py-2 rounded-pill mb-3 fw-bold">SINCE 2010</span>
+        <h1>Hành Trình Kiến Tạo Sức Khỏe</h1>
+        <p class="lead opacity-75 mx-auto mt-3" style="max-width: 700px;">AM2T tự hào là đối tác tin cậy của hàng triệu gia đình với sứ mệnh mang y khoa hiện đại đến gần hơn với mọi người.</p>
+    </div>
+</section>
+
+<section class="container mb-5">
+    <div class="row g-4">
+        <div class="col-md-6">
+            <div class="f-card">
+                <div class="icon-circle" style="background: #e0f7fa; color: #00bcd4;"><i class="bi bi-eye-slash"></i></div>
+                <h2 class="fw-bold">Sứ mệnh</h2>
+                <p class="text-muted">Mang đến dịch vụ chăm sóc sức khỏe chất lượng cao, an toàn và nhân văn cho cộng đồng. Chúng tôi không ngừng đổi mới để dẫn đầu xu thế y khoa hiện đại.</p>
+            </div>
+        </div>
+        <div class="col-md-6">
+            <div class="f-card">
+                <div class="icon-circle" style="background: #f3e5f5; color: #9c27b0;"><i class="fa-solid fa-eye"></i></div>
+                <h2 class="fw-bold">Tầm nhìn</h2>
+                <p class="text-muted">Trở thành hệ thống bệnh viện đa khoa thông minh hàng đầu Việt Nam vào năm 2030, là biểu tượng của sự tận tâm và chuẩn mực y tế quốc tế.</p>
+            </div>
+        </div>
+    </div>
+</section>
+
+<section class="py-5" style="background: #fff;">
+    <div class="container text-center py-5">
+        <h6 class="text-primary fw-bold text-uppercase">Core Values</h6>
+        <h2 class="fw-bold mb-5" style="font-size: 2.5rem;">Giá Trị Cốt Lõi Tại AM2T</h2>
+
+        <div class="row g-4">
+            <div class="col-lg-3 col-md-6">
+                <div class="f-card shadow-sm border-0">
+                    <div class="icon-circle mx-auto" style="background: #fff0f0; color: #ff5252;"><i class="fa-solid fa-heart-pulse"></i></div>
+                    <h5 class="fw-bold">Tận Tâm</h5>
+                    <p class="small text-muted mb-0">Hành động từ trái tim trong từng quy trình khám chữa bệnh.</p>
+                </div>
+            </div>
+            <div class="col-lg-3 col-md-6">
+                <div class="f-card shadow-sm border-0">
+                    <div class="icon-circle mx-auto" style="background: #e8f5e9; color: #4caf50;"><i class="fa-solid fa-user-shield"></i></div>
+                    <h5 class="fw-bold">Chuyên Nghiệp</h5>
+                    <p class="small text-muted mb-0">Đội ngũ y bác sĩ đầu ngành với chuyên môn vững vàng.</p>
+                </div>
+            </div>
+            <div class="col-lg-3 col-md-6">
+                <div class="f-card shadow-sm border-0">
+                    <div class="icon-circle mx-auto" style="background: #fff8e1; color: #ffc107;"><i class="fa-solid fa-microchip"></i></div>
+                    <h5 class="fw-bold">Hiện Đại</h5>
+                    <p class="small text-muted mb-0">Công nghệ chẩn đoán hình ảnh và xét nghiệm tiên tiến nhất.</p>
+                </div>
+            </div>
+            <div class="col-lg-3 col-md-6">
+                <div class="f-card shadow-sm border-0">
+                    <div class="icon-circle mx-auto" style="background: #e3f2fd; color: #2196f3;"><i class="fa-solid fa-handshake"></i></div>
+                    <h5 class="fw-bold">Minh Bạch</h5>
+                    <p class="small text-muted mb-0">Rõ ràng về chi phí và phác đồ điều trị cho bệnh nhân.</p>
+                </div>
+            </div>
+        </div>
+    </div>
+</section>
+
+<section class="container py-5">
+    <div class="row align-items-center">
+        <div class="col-lg-5">
+            <h2 class="fw-bold mb-4" style="font-size: 2.5rem;">Hành trình 15 năm vươn mình mạnh mẽ</h2>
+            <p class="text-muted mb-5">Từ một phòng khám nhỏ tại Hà Nội, AM2T đã vươn mình trở thành bệnh viện đa khoa tiêu chuẩn quốc tế.</p>
+            <div class="d-flex flex-column gap-4">
+                <div class="step-box">
+                    <span class="step-year">2010</span>
+                    <h5 class="fw-bold mb-0">Khởi nghiệp y đức</h5>
+                </div>
+                <div class="step-box">
+                    <span class="step-year">2018</span>
+                    <h5 class="fw-bold mb-0">Xây dựng cơ sở Xốm - Hà Đông</h5>
+                </div>
+                <div class="step-box">
+                    <span class="step-year">2026</span>
+                    <h5 class="fw-bold mb-0">Hệ sinh thái y tế số hiện đại</h5>
+                </div>
+            </div>
+        </div>
+        <div class="col-lg-7">
+            <div class="img-stack text-center mt-5 mt-lg-0">
+                <img src="https://images.unsplash.com/photo-1519494026892-80bbd2d6fd0d?auto=format&fit=crop&w=800" class="img-main" alt="Hospital">
+                <div class="badge-float">
+                    <div class="icon-circle mb-0" style="width: 50px; height: 50px; background: #e0f7fa;"><i class="fa-solid fa-check" style="font-size: 20px;"></i></div>
+                    <div class="text-start">
+                        <h5 class="fw-bold mb-0">Chuẩn JCI</h5>
+                        <p class="small text-muted mb-0">Chứng nhận y tế toàn cầu</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</section>
+
+<section class="container mb-5">
+    <div class="p-5 rounded-5 text-center text-white shadow-lg" style="background: var(--grad);">
+        <h2 class="fw-bold mb-4">Bạn cần tư vấn chuyên sâu về sức khỏe?</h2>
+        <p class="mb-4 opacity-75">Liên hệ ngay với chuyên gia để được hỗ trợ tốt nhất và nhanh nhất.</p>
+        <div class="d-flex justify-content-center gap-3">
+            <a href="#" class="btn btn-light btn-lg px-5 rounded-pill fw-bold text-primary shadow">Gọi ngay</a>
+            <a href="#" class="btn btn-outline-light btn-lg px-5 rounded-pill fw-bold">Đặt lịch khám</a>
+        </div>
+    </div>
+</section>
+
+

@@ -1,0 +1,303 @@
+﻿<!DOCTYPE html>
+<html lang="vi">
+<head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>@ViewData["Title"] - Bệnh viện AM2T</title>
+
+    <link rel="stylesheet" href="~/lib/bootstrap/dist/css/bootstrap.min.css" />
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" />
+
+    <style>
+        @@import url('https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&display=swap');
+
+        :root {
+            --primary-color: #008ca3;
+            --secondary-color: #00bcd4;
+            --text-dark: #1a202c;
+            --text-muted: #5a6a85;
+            --bg-light: #f6fcff;
+            --white: #ffffff;
+            --shadow-soft: 0 10px 30px rgba(0,0,0,0.08);
+        }
+
+        body {
+            font-family: 'Plus Jakarta Sans', sans-serif;
+            color: var(--text-dark);
+            background-color: var(--white);
+            font-size: 16px; /* Chữ cơ bản to hơn */
+            margin: 0;
+            padding: 0;
+            overflow-x: hidden;
+        }
+
+        /* --- NAVBAR FULL WIDTH --- */
+        .navbar {
+            background: var(--white);
+            padding: 10px 0;
+            border-bottom: 1px solid #edf2f7;
+            position: sticky;
+            top: 0;
+            z-index: 1050;
+            box-shadow: var(--shadow-soft);
+            width: 100%;
+        }
+
+        /* Container dãn sát mép 100% */
+        .nav-full-width {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            width: 100%;
+            padding: 0 50px; /* Khoảng cách đệm 2 bên mép cho sang */
+        }
+
+        .logo-area {
+            display: flex;
+            align-items: center;
+            gap: 15px;
+            text-decoration: none;
+        }
+
+        .logo-nav-circle {
+            width: 70px; /* Logo to rõ hơn */
+            height: 70px;
+            object-fit: contain;
+            mix-blend-mode: multiply;
+        }
+
+        .brand-name {
+            font-weight: 800;
+            color: var(--primary-color);
+            font-size: 1.5rem; /* Tên BV to lên */
+            line-height: 1.1;
+        }
+
+        /* Menu chính */
+        .nav-links {
+            display: flex;
+            list-style: none;
+            gap: 15px;
+            margin: 0;
+            padding: 0;
+        }
+
+            .nav-links a {
+                text-decoration: none;
+                color: var(--text-muted);
+                font-size: 16px; /* Chữ menu to */
+                font-weight: 700;
+                padding: 12px 20px;
+                transition: 0.3s;
+                display: flex;
+                flex-direction: column;
+                align-items: center;
+                border-radius: 12px;
+            }
+
+                .nav-links a i {
+                    font-size: 20px; /* Icon to hơn */
+                    margin-bottom: 4px;
+                }
+
+                .nav-links a:hover, .nav-links a.active {
+                    color: var(--primary-color);
+                    background: #e0f7fa;
+                }
+
+        /* Cụm nút Auth */
+        .auth-group {
+            display: flex;
+            align-items: center;
+            gap: 25px;
+        }
+
+        .login-text {
+            text-decoration: none;
+            color: var(--primary-color);
+            font-weight: 800;
+            font-size: 16px;
+            transition: 0.3s;
+        }
+
+            .login-text:hover {
+                color: var(--secondary-color);
+            }
+
+        .btn-register {
+            background: var(--primary-color);
+            color: white !important;
+            padding: 14px 30px;
+            border-radius: 12px;
+            font-weight: 800;
+            font-size: 16px;
+            text-decoration: none;
+            transition: 0.3s;
+            box-shadow: 0 4px 15px rgba(0, 140, 163, 0.2);
+        }
+
+            .btn-register:hover {
+                transform: translateY(-2px);
+                background: #007a8f;
+            }
+
+        /* --- FOOTER --- */
+        .main-footer {
+            background: #111827;
+            color: #9ca3af;
+            padding: 80px 50px 30px;
+        }
+
+        .footer-grid {
+            display: grid;
+            grid-template-columns: 1.5fr 1fr 1.2fr;
+            gap: 60px;
+        }
+
+        .footer-brand h4, .footer-links h4, .footer-contact h4 {
+            color: white;
+            font-weight: 800;
+            margin-bottom: 25px;
+            font-size: 1.4rem;
+        }
+
+        .footer-links ul {
+            list-style: none;
+            padding: 0;
+        }
+
+        .footer-links a {
+            color: #9ca3af;
+            text-decoration: none;
+            line-height: 2.5;
+            font-size: 16px;
+            transition: 0.2s;
+        }
+
+            .footer-links a:hover {
+                color: var(--secondary-color);
+                padding-left: 5px;
+            }
+
+        .footer-contact p {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            margin-bottom: 15px;
+            font-size: 16px;
+        }
+
+        .footer-contact i {
+            color: var(--secondary-color);
+            font-size: 20px;
+        }
+
+        /* Mobile */
+        @@media (max-width: 991px) {
+            .nav-full-width {
+                padding: 0 20px;
+            }
+
+            .nav-links {
+                display: none;
+            }
+
+            .footer-grid {
+                grid-template-columns: 1fr;
+            }
+        }
+    </style>
+</head>
+<body>
+    <header>
+        <nav class="navbar">
+            <div class="nav-full-width">
+                <a class="logo-area" asp-controller="Home" asp-action="Index">
+                    <img src="/imge/am2t.jpg" class="logo-nav-circle" alt="Logo" />
+                    <div class="brand-info">
+                        <span class="brand-name">Bệnh viện AM2T</span><br />
+                        <span style="font-size: 0.9rem; color: var(--text-muted); font-weight: 600;">AM2T Medical Center</span>
+                    </div>
+                </a>
+
+                <ul class="nav-links">
+                    <li>
+                        <a asp-controller="Home" asp-action="Index" class="@(ViewContext.RouteData.Values["Action"]?.ToString() == "Index" ? "active" : "")">
+                            <i class="fa-solid fa-house"></i> Trang chủ
+                        </a>
+                    </li>
+                    <li>
+                        <a asp-controller="Home" asp-action="GioiThieu" class="@(ViewContext.RouteData.Values["Action"]?.ToString() == "GioiThieu" ? "active" : "")">
+                            <i class="fa-solid fa-circle-info"></i> Giới thiệu
+                        </a>
+                    </li>
+                    <li>
+                        <a asp-controller="Home" asp-action="DichVu" class="@(ViewContext.RouteData.Values["Action"]?.ToString() == "DichVu" ? "active" : "")">
+                            <i class="fa-solid fa-stethoscope"></i> Dịch vụ
+                        </a>
+                    </li>
+                    <li>
+                        <a asp-controller="Home" asp-action="NhaThuoc" class="@(ViewContext.RouteData.Values["Action"]?.ToString() == "NhaThuoc" ? "active" : "")">
+                            <i class="fa-solid fa-pills"></i> Nhà thuốc
+                        </a>
+                    </li>
+                    <li>
+                        <a asp-controller="Home" asp-action="LienHe" class="@(ViewContext.RouteData.Values["Action"]?.ToString() == "LienHe" ? "active" : "")">
+                            <i class="fa-solid fa-phone"></i> Liên hệ
+                        </a>
+                    </li>
+                </ul>
+
+                <div class="auth-group">
+                    <a asp-controller="Account" asp-action="Login" class="login-text">
+                        <i class="fa-solid fa-right-to-bracket me-1"></i> Đăng nhập
+                    </a>
+
+                    <a asp-controller="Account" asp-action="Register" class="btn-register">
+                        <i class="fa-solid fa-user-plus me-2"></i> Đăng ký ngay
+                    </a>
+                </div>
+            </div>
+        </nav>
+    </header>
+
+    <main role="main">
+        @RenderBody()
+    </main>
+
+    <footer class="main-footer">
+        <div class="container-fluid">
+            <div class="footer-grid">
+                <div class="footer-brand">
+                    <h4>Bệnh viện AM2T</h4>
+                    <p style="font-size: 16px;">Chúng tôi tự hào là đơn vị tiên phong trong việc ứng dụng công nghệ hiện đại vào khám chữa bệnh, mang lại trải nghiệm y tế tốt nhất.</p>
+                </div>
+                <div class="footer-links">
+                    <h4>Liên kết nhanh</h4>
+                    <ul>
+                        <li><a href="/Home/GioiThieu">Về chúng tôi</a></li>
+                        <li><a href="/Home/DichVu">Dịch vụ y tế</a></li>
+                        <li><a href="/Home/LienHe">Đặt lịch khám online</a></li>
+                        <li><a href="#">Chính sách bảo mật</a></li>
+                    </ul>
+                </div>
+                <div class="footer-contact">
+                    <h4>Thông tin liên hệ</h4>
+                    <p><i class="fa-solid fa-location-dot"></i> Ngõ 1 - Phố Xốm - Hà Đông - Hà Nội</p>
+                    <p><i class="fa-solid fa-phone"></i> (028) 1234 5678</p>
+                    <p><i class="fa-solid fa-envelope"></i> info@am2t.vn</p>
+                </div>
+            </div>
+
+            <div class="text-center mt-5 pt-4" style="border-top: 1px solid rgba(255,255,255,0.1)">
+                <p class="small">&copy; @DateTime.Now.Year Bệnh viện AM2T. Bản quyền thuộc về AM2T Medical Center.</p>
+            </div>
+        </div>
+    </footer>
+
+    <script src="~/lib/jquery/dist/jquery.min.js"></script>
+    <script src="~/lib/bootstrap/dist/js/bootstrap.bundle.min.js"></script>
+    <script src="~/js/site.js" asp-append-version="true"></script>
+    @await RenderSectionAsync("Scripts", required: false)
+</body>
+</html>

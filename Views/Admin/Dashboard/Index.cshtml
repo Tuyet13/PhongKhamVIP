@@ -1,0 +1,120 @@
+﻿@{
+    Layout = "_AdminLayout";
+    ViewData["Title"] = "Trung tâm Điều hành AM2T";
+}
+
+<style>
+    /* Nền trang */
+    body {
+        background-color: #f8f9fa !important;
+    }
+
+    /* Thẻ Card hiện đại */
+    .card {
+        border-radius: 20px !important; /* Bo góc cực mạnh */
+        border: 1px solid rgba(0,0,0,0.03) !important;
+        box-shadow: 0 10px 15px -3px rgba(0,0,0,0.05) !important;
+        background: #ffffff;
+        transition: transform 0.3s ease, box-shadow 0.3s ease;
+    }
+
+        .card:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 20px 25px -5px rgba(0,0,0,0.1) !important;
+        }
+
+    /* Typography */
+    h6 {
+        font-size: 0.75rem !important;
+        font-weight: 700;
+        color: #94a3b8 !important;
+        text-transform: uppercase;
+        letter-spacing: 0.05em;
+    }
+
+    h3 {
+        color: #1e293b !important;
+        font-weight: 800 !important;
+    }
+
+    /* Bảng dữ liệu */
+    .table thead {
+        background: #f1f5f9 !important;
+        color: #64748b !important;
+        text-transform: uppercase;
+        font-size: 0.8rem;
+    }
+
+    .table th, .table td {
+        padding: 1rem !important;
+        border: none !important;
+        vertical-align: middle;
+    }
+
+    /* Badge bo tròn */
+    .badge-status {
+        padding: 6px 14px;
+        border-radius: 50px;
+        font-weight: 600;
+        font-size: 0.75rem;
+    }
+</style>
+
+<div class="container-fluid py-4 dashboard-container">
+    <div class="row g-4 mb-4">
+        <div class="col-md-4 col-sm-6">
+            <div class="card p-4">
+                <h6>Tổng bệnh nhân</h6>
+                <h3>@ViewBag.TotalPatients</h3>
+            </div>
+        </div>
+        <div class="col-md-4 col-sm-6">
+            <div class="card p-4">
+                <h6>Lịch hẹn chờ</h6>
+                <h3>@ViewBag.PendingAppointments</h3>
+            </div>
+        </div>
+        <div class="col-md-4 col-sm-6">
+            <div class="card p-4">
+                <h6>Doanh thu</h6>
+                <h3>@ViewBag.TodayRevenue</h3>
+            </div>
+        </div>
+    </div>
+
+    <div class="row">
+        <div class="col-12">
+            <div class="card p-4 table-container">
+                <h5 class="fw-bold mb-3">Lịch hẹn gần nhất</h5>
+                <div class="table-responsive">
+                    <table class="table align-middle">
+                        <thead>
+                            <tr>
+                                <th>Bệnh nhân</th>
+                                <th>Thời gian</th>
+                                <th>Trạng thái</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            @if (ViewBag.RecentAppointments != null)
+                            {
+                                foreach (var app in ViewBag.RecentAppointments)
+                                {
+                                    <tr>
+                                        <td class="fw-semibold">@app.PatientName</td>
+                                        <td>@app.AppointmentDate.ToString("dd/MM HH:mm")</td>
+                                        <td>
+                                            <span class="badge-status @(app.Status == "Pending" ? "bg-warning text-dark" : "bg-success text-white")">
+                                                @app.Status
+                                            </span>
+                                        </td>
+                                    </tr>
+                                }
+                            }
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>

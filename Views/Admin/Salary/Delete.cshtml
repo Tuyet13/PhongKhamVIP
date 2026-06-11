@@ -1,0 +1,240 @@
+﻿@model PhongKhamVIP.Models.Finance.Salary
+
+@{
+    Layout = "_AdminLayout";
+    ViewData["Title"] = "Xóa Bảng Lương";
+}
+
+<style>
+    .delete-container {
+        max-width: 800px;
+        margin: auto;
+    }
+
+    .delete-card {
+        background: #fff;
+        border-radius: 20px;
+        padding: 30px;
+        box-shadow: 0 5px 25px rgba(0,0,0,.08);
+    }
+
+    .warning-icon {
+        font-size: 70px;
+        color: #dc3545;
+        text-align: center;
+        margin-bottom: 10px;
+    }
+
+    .delete-title {
+        text-align: center;
+        color: #dc3545;
+        font-weight: 700;
+        margin-bottom: 10px;
+    }
+
+    .delete-text {
+        text-align: center;
+        color: #666;
+        margin-bottom: 30px;
+    }
+
+    .info-table {
+        width: 100%;
+    }
+
+        .info-table td {
+            padding: 12px;
+            border-bottom: 1px solid #eee;
+        }
+
+            .info-table td:first-child {
+                font-weight: 600;
+                width: 220px;
+                color: #555;
+            }
+
+    .salary-box {
+        background: #e8f5e9;
+        color: #198754;
+        padding: 8px 15px;
+        border-radius: 10px;
+        font-weight: bold;
+        display: inline-block;
+    }
+
+    .status-paid {
+        background: #198754;
+        color: white;
+        padding: 6px 12px;
+        border-radius: 20px;
+    }
+
+    .status-pending {
+        background: #ffc107;
+        color: black;
+        padding: 6px 12px;
+        border-radius: 20px;
+    }
+
+    .btn-group-custom {
+        display: flex;
+        justify-content: center;
+        gap: 15px;
+        margin-top: 30px;
+    }
+
+    .btn-delete {
+        background: #dc3545;
+        color: white;
+        border: none;
+        padding: 12px 25px;
+        border-radius: 10px;
+        font-weight: 600;
+    }
+
+    .btn-back {
+        background: #6c757d;
+        color: white;
+        text-decoration: none;
+        padding: 12px 25px;
+        border-radius: 10px;
+        font-weight: 600;
+    }
+
+        .btn-delete:hover,
+        .btn-back:hover {
+            opacity: .9;
+            color: white;
+        }
+</style>
+
+<div class="delete-container">
+
+    <div class="delete-card">
+
+        <div class="warning-icon">
+            <i class="bi bi-trash3-fill"></i>
+        </div>
+
+        <h2 class="delete-title">
+            Xác nhận xóa bảng lương
+        </h2>
+
+        <p class="delete-text">
+            Hành động này không thể hoàn tác.
+        </p>
+
+        <table class="info-table">
+
+            <tr>
+                <td>
+                    <i class="bi bi-person-badge-fill"></i>
+                    Nhân viên
+                </td>
+                <td>@Model.User?.FullName</td>
+            </tr>
+
+            <tr>
+                <td>
+                    <i class="bi bi-calendar3"></i>
+                    Kỳ lương
+                </td>
+                <td>@Model.Month / @Model.Year</td>
+            </tr>
+
+            <tr>
+                <td>
+                    <i class="bi bi-wallet2"></i>
+                    Lương cơ bản
+                </td>
+                <td>@Model.BaseSalary.ToString("N0") VNĐ</td>
+            </tr>
+
+            <tr>
+                <td>
+                    <i class="bi bi-gift-fill"></i>
+                    Thưởng
+                </td>
+                <td>@Model.Bonus.ToString("N0") VNĐ</td>
+            </tr>
+
+            <tr>
+                <td>
+                    <i class="bi bi-dash-circle-fill"></i>
+                    Khấu trừ
+                </td>
+                <td>@Model.Deductions.ToString("N0") VNĐ</td>
+            </tr>
+
+            <tr>
+                <td>
+                    <i class="bi bi-cash-stack"></i>
+                    Lương thực nhận
+                </td>
+                <td>
+                    <span class="salary-box">
+                        @Model.NetSalary.ToString("N0") VNĐ
+                    </span>
+                </td>
+            </tr>
+
+            <tr>
+                <td>
+                    <i class="bi bi-calendar-check-fill"></i>
+                    Ngày trả
+                </td>
+                <td>
+                    @Model.PaidDate.ToString("dd/MM/yyyy")
+                </td>
+            </tr>
+
+            <tr>
+                <td>
+                    <i class="bi bi-info-circle-fill"></i>
+                    Trạng thái
+                </td>
+                <td>
+
+                    @if (Model.Status == "Paid")
+                    {
+                        <span class="status-paid">
+                            <i class="bi bi-check-circle-fill"></i>
+                            Đã thanh toán
+                        </span>
+                    }
+                    else
+                    {
+                        <span class="status-pending">
+                            <i class="bi bi-clock-fill"></i>
+                            Chưa thanh toán
+                        </span>
+                    }
+
+                </td>
+            </tr>
+
+        </table>
+
+        <form asp-action="Delete" method="post">
+
+            <input type="hidden" asp-for="Id" />
+
+            <div class="btn-group-custom">
+
+                <button type="submit" class="btn-delete">
+                    <i class="bi bi-trash3-fill"></i>
+                    Xác nhận xóa
+                </button>
+
+                <a asp-action="Index" class="btn-back">
+                    <i class="bi bi-arrow-left-circle-fill"></i>
+                    Quay lại
+                </a>
+
+            </div>
+
+        </form>
+
+    </div>
+
+</div>

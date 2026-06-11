@@ -1,0 +1,331 @@
+﻿@model IEnumerable<PhongKhamVIP.Models.Users.User>
+
+@{
+    Layout = "_AdminLayout";
+    ViewData["Title"] = "Quản lý Nhân sự";
+}
+
+<style>
+    .page-header {
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        margin-bottom: 25px;
+    }
+
+    .page-title {
+        font-size: 30px;
+        font-weight: 700;
+        color: #0d6efd;
+        margin: 0;
+    }
+
+    .btn-add {
+        background: linear-gradient(135deg,#0d6efd,#4f8cff);
+        color: white;
+        text-decoration: none;
+        padding: 12px 18px;
+        border-radius: 10px;
+        font-weight: 600;
+        transition: .3s;
+    }
+
+        .btn-add:hover {
+            color: white;
+            transform: translateY(-2px);
+            box-shadow: 0 6px 15px rgba(13,110,253,.3);
+        }
+
+    .search-container {
+        display: flex;
+        gap: 10px;
+        margin-bottom: 20px;
+    }
+
+    .search-box {
+        flex: 1;
+        padding: 12px;
+        border: 1px solid #ddd;
+        border-radius: 10px;
+        outline: none;
+    }
+
+        .search-box:focus {
+            border-color: #0d6efd;
+            box-shadow: 0 0 8px rgba(13,110,253,.2);
+        }
+
+    .btn-search {
+        background: #198754;
+        color: white;
+        border: none;
+        padding: 12px 20px;
+        border-radius: 10px;
+        cursor: pointer;
+        font-weight: 600;
+    }
+
+    .employee-card {
+        background: white;
+        border-radius: 15px;
+        padding: 20px;
+        box-shadow: 0 5px 20px rgba(0,0,0,.08);
+        overflow: hidden;
+    }
+
+    .employee-table {
+        width: 100%;
+        border-collapse: collapse;
+    }
+
+        .employee-table thead {
+            background: #0d6efd;
+            color: white;
+        }
+
+        .employee-table th {
+            padding: 15px;
+            text-align: center;
+        }
+
+        .employee-table td {
+            padding: 14px;
+            text-align: center;
+            border-bottom: 1px solid #eee;
+            vertical-align: middle;
+        }
+
+        .employee-table tbody tr {
+            transition: .2s;
+        }
+
+            .employee-table tbody tr:hover {
+                background: #f5faff;
+            }
+
+    .badge-role {
+        padding: 6px 12px;
+        border-radius: 20px;
+        color: white;
+        font-size: 13px;
+        font-weight: 600;
+    }
+
+    .doctor {
+        background: #198754;
+    }
+
+    .receptionist {
+        background: #fd7e14;
+    }
+
+    .action-buttons {
+        display: flex;
+        justify-content: center;
+        gap: 6px;
+    }
+
+    .btn-action {
+        padding: 8px 12px;
+        border-radius: 8px;
+        text-decoration: none;
+        font-size: 13px;
+        font-weight: 600;
+        transition: .3s;
+    }
+
+    .btn-detail {
+        background: linear-gradient(135deg,#17a2b8,#0dcaf0);
+        color: white;
+    }
+
+        .btn-detail:hover {
+            color: white;
+            transform: translateY(-2px);
+        }
+
+    .btn-edit {
+        background: linear-gradient(135deg,#ffc107,#ffd95e);
+        color: black;
+    }
+
+        .btn-edit:hover {
+            color: black;
+            transform: translateY(-2px);
+        }
+
+    .btn-delete {
+        background: linear-gradient(135deg,#dc3545,#ff6b81);
+        color: white;
+    }
+
+        .btn-delete:hover {
+            color: white;
+            transform: translateY(-2px);
+        }
+
+    .total-box {
+        margin-bottom: 15px;
+        font-weight: 600;
+        color: #666;
+    }
+
+    .empty-row {
+        padding: 30px;
+        color: #888;
+        text-align: center;
+    }
+
+    .alert-success {
+        background: #d1e7dd;
+        color: #0f5132;
+        padding: 12px;
+        border-radius: 10px;
+        margin-bottom: 15px;
+    }
+</style>
+
+<div class="page-header">
+
+    <h2 class="page-title">
+        Quản lý Nhân sự
+    </h2>
+
+    <a asp-action="Create" class="btn-add">
+        <i class="bi bi-plus-circle-fill"></i> Thêm Nhân Viên
+    </a>
+
+</div>
+
+@if (TempData["Success"] != null)
+{
+    <div class="alert-success" id="successMessage">
+        <i class="bi bi-check-circle-fill"></i>
+        @TempData["Success"]
+    </div>
+}
+
+<form asp-action="Index" method="get">
+
+    <div class="search-container">
+
+        <input type="text"
+               name="searchString"
+               value="@ViewBag.SearchString"
+               class="search-box"
+               placeholder="Tìm theo tên, email, SĐT hoặc username..." />
+
+        <button type="submit" class="btn-search">
+            Tìm kiếm
+        </button>
+
+    </div>
+
+</form>
+
+<div class="total-box">
+    Tổng nhân viên: @Model.Count()
+</div>
+
+<div class="employee-card">
+
+    <table class="employee-table">
+
+        <thead>
+            <tr>
+                <th>STT</th>
+                <th>Họ tên</th>
+                <th>Email</th>
+                <th>SĐT</th>
+                <th>Vai trò</th>
+                <th width="260">Thao tác</th>
+            </tr>
+        </thead>
+
+        <tbody>
+
+            @{
+                int stt = 1;
+            }
+
+            @if (Model.Any())
+            {
+                @foreach (var item in Model)
+                {
+                    <tr>
+
+                        <td>@stt</td>
+
+                        <td>@item.FullName</td>
+
+                        <td>@item.Email</td>
+
+                        <td>@item.Phone</td>
+
+                        <td>
+                            @if (item.Role == "Doctor")
+                            {
+                                <span class="badge-role doctor">
+                                    Bác sĩ
+                                </span>
+                            }
+                            else
+                            {
+                                <span class="badge-role receptionist">
+                                    Lễ tân
+                                </span>
+                            }
+                        </td>
+
+                        <td>
+                            <div class="action-buttons">
+
+                                <a asp-action="Details"
+                                   asp-route-id="@item.Id"
+                                   class="btn-action btn-detail">
+                                    <i class="bi bi-eye-fill"></i> Chi tiết
+                                </a>
+
+                                <a asp-action="Edit"
+                                   asp-route-id="@item.Id"
+                                   class="btn-action btn-edit">
+                                    <i class="bi bi-pencil-square"></i> Sửa
+                                </a>
+
+                                <a asp-action="Delete"
+                                   asp-route-id="@item.Id"
+                                   class="btn-action btn-delete">
+                                    <i class="bi bi-trash-fill"></i> Xóa
+                                </a>
+
+                            </div>
+                        </td>
+
+                    </tr>
+
+                    stt++;
+                }
+            }
+            else
+            {
+                <tr>
+                    <td colspan="6" class="empty-row">
+                        Không tìm thấy nhân viên nào
+                    </td>
+                </tr>
+            }
+
+        </tbody>
+
+    </table>
+
+</div>
+
+@section Scripts {
+    <script>
+        setTimeout(() => {
+            const msg = document.getElementById("successMessage");
+            if (msg) msg.style.display = "none";
+        }, 3000);
+    </script>
+}

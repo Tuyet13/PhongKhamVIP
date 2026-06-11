@@ -1,0 +1,217 @@
+﻿@model PhongKhamVIP.Models.Finance.Salary
+
+@{
+    Layout = "_AdminLayout";
+    ViewData["Title"] = "Thêm Bảng Lương";
+}
+
+<style>
+    .salary-card {
+        background: white;
+        padding: 30px;
+        border-radius: 15px;
+        box-shadow: 0 5px 20px rgba(0,0,0,.08);
+        max-width: 900px;
+        margin: auto;
+    }
+
+    .page-title {
+        color: #0d6efd;
+        font-weight: 700;
+        margin-bottom: 25px;
+    }
+
+    .form-label {
+        font-weight: 600;
+    }
+
+    .form-control,
+    .form-select {
+        border-radius: 10px;
+        padding: 10px;
+    }
+
+    .salary-result {
+        background: #e8f5e9;
+        border: 2px dashed #198754;
+        padding: 15px;
+        border-radius: 10px;
+        text-align: center;
+        font-size: 22px;
+        font-weight: bold;
+        color: #198754;
+    }
+
+    .btn-save {
+        background: #198754;
+        color: white;
+        border: none;
+        padding: 12px 25px;
+        border-radius: 10px;
+        font-weight: 600;
+    }
+
+    .btn-back {
+        background: #6c757d;
+        color: white;
+        text-decoration: none;
+        padding: 12px 25px;
+        border-radius: 10px;
+    }
+</style>
+
+<div class="salary-card">
+
+    <h2 class="page-title">
+        <i class="bi bi-cash-stack"></i>
+        Thêm Bảng Lương
+    </h2>
+
+    <form asp-action="Create" method="post">
+        <div asp-validation-summary="All" class="text-danger mb-3"></div>
+
+        <div class="row">
+
+            <div class="col-md-6 mb-3">
+                <label class="form-label">Nhân viên</label>
+                <select asp-for="UserId" class="form-select">
+                    <option value="">-- Chọn nhân viên --</option>
+                    @foreach (var user in ViewBag.Users)
+                    {
+                        <option value="@user.Id">
+                            @user.FullName (@user.Role)
+                        </option>
+                    }
+                </select>
+                <span asp-validation-for="UserId" class="text-danger"></span>
+            </div>
+
+            <div class="col-md-3 mb-3">
+                <label class="form-label">Tháng</label>
+                <input asp-for="Month" class="form-control" type="number" min="1" max="12" />
+                <span asp-validation-for="Month" class="text-danger"></span>
+            </div>
+
+            <div class="col-md-3 mb-3">
+                <label class="form-label">Năm</label>
+                <input asp-for="Year" class="form-control" type="number" min="2000" />
+                <span asp-validation-for="Year" class="text-danger"></span>
+            </div>
+
+            <div class="col-md-12 mb-3">
+                <div class="alert alert-info" id="attendanceSummary" style="display:none; border-left: 5px solid #0dcaf0;">
+                    <i class="bi bi-calendar-check-fill me-2"></i> Thống kê ngày công:
+                    <strong id="lblWorkingDays" class="text-success mx-1">0</strong> ngày đi làm |
+                    <strong id="lblAbsentDays" class="text-danger mx-1">0</strong> ngày nghỉ.
+                </div>
+            </div>
+
+            <div class="col-md-4 mb-3">
+                <label class="form-label">Lương cơ bản</label>
+                <input asp-for="BaseSalary" id="baseSalary" class="form-control" type="number" step="any" />
+                <span asp-validation-for="BaseSalary" class="text-danger"></span>
+            </div>
+
+            <div class="col-md-4 mb-3">
+                <label class="form-label">Thưởng</label>
+                <input asp-for="Bonus" id="bonus" class="form-control" type="number" step="any" />
+                <span asp-validation-for="Bonus" class="text-danger"></span>
+            </div>
+
+            <div class="col-md-4 mb-3">
+                <label class="form-label">Khấu trừ</label>
+                <input asp-for="Deductions" id="deductions" class="form-control" type="number" step="any" />
+                <span asp-validation-for="Deductions" class="text-danger"></span>
+            </div>
+
+            <div class="col-md-6 mb-3">
+                <label class="form-label">Ngày trả lương</label>
+                <input asp-for="PaidDate" type="date" class="form-control" />
+                <span asp-validation-for="PaidDate" class="text-danger"></span>
+            </div>
+
+            <div class="col-md-6 mb-3">
+                <label class="form-label">Trạng thái</label>
+                <select asp-for="Status" class="form-select">
+                    <option value="Pending">Chưa thanh toán</option>
+                    <option value="Paid">Đã thanh toán</option>
+                </select>
+                <span asp-validation-for="Status" class="text-danger"></span>
+            </div>
+
+            <div class="col-12 mb-4">
+                <label class="form-label">Lương thực nhận</label>
+                <div class="salary-result">
+                    <span id="salaryPreview">0 VNĐ</span>
+                </div>
+            </div>
+
+        </div>
+
+        <button type="submit" class="btn-save">
+            <i class="bi bi-check-circle-fill me-1"></i> Lưu
+        </button>
+
+        <a asp-action="Index" class="btn-back">
+            <i class="bi bi-arrow-left-circle-fill me-1"></i> Quay lại
+        </a>
+    </form>
+
+</div>
+
+@section Scripts {
+    <script>
+        // 1. Hàm tính toán và hiển thị lương thực nhận tại Client
+        function calculateSalary() {
+            let base = parseFloat(document.getElementById("baseSalary").value) || 0;
+            let bonus = parseFloat(document.getElementById("bonus").value) || 0;
+            let deductions = parseFloat(document.getElementById("deductions").value) || 0;
+
+            let net = base + bonus - deductions;
+            document.getElementById("salaryPreview").innerText = net.toLocaleString('vi-VN') + " VNĐ";
+        }
+
+        // 2. Hàm gọi API bất đồng bộ để lấy dữ liệu Chấm công
+        function updateAttendanceSummary() {
+            let userId = document.querySelector("[name='UserId']").value;
+            let month = document.querySelector("[name='Month']").value;
+            let year = document.querySelector("[name='Year']").value;
+
+            if (userId && month && year) {
+                // Đảm bảo URL này khớp với cấu trúc định tuyến (Route) trong Controller của bạn
+                fetch(`/Salary/GetEmployeeWorkSummary?userId=${userId}&month=${month}&year=${year}`)
+                    .then(response => {
+                        if (!response.ok) {
+                            throw new Error('Mạng xã hội hoặc API lỗi.');
+                        }
+                        return response.json();
+                    })
+                    .then(data => {
+                        document.getElementById("attendanceSummary").style.display = "block";
+                        document.getElementById("lblWorkingDays").innerText = data.workingDays;
+                        document.getElementById("lblAbsentDays").innerText = data.absentDays;
+                    })
+                    .catch(error => {
+                        console.error('Lỗi khi lấy dữ liệu chấm công:', error);
+                    });
+            } else {
+                document.getElementById("attendanceSummary").style.display = "none";
+            }
+        }
+
+        // 3. Gán sự kiện lắng nghe (Event Listeners)
+        document.getElementById("baseSalary").addEventListener("input", calculateSalary);
+        document.getElementById("bonus").addEventListener("input", calculateSalary);
+        document.getElementById("deductions").addEventListener("input", calculateSalary);
+
+        document.querySelector("[name='UserId']").addEventListener("change", updateAttendanceSummary);
+        document.querySelector("[name='Month']").addEventListener("input", updateAttendanceSummary);
+        document.querySelector("[name='Year']").addEventListener("input", updateAttendanceSummary);
+
+        // 4. Khởi chạy tính toán ban đầu khi tải/re-load lại trang (Trong trường hợp Validate lỗi trả dữ liệu về)
+        document.addEventListener("DOMContentLoaded", function () {
+            calculateSalary();
+            updateAttendanceSummary();
+        });
+    </script>
+}

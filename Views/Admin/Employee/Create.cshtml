@@ -1,0 +1,111 @@
+﻿@model PhongKhamVIP.Models.Users.User
+
+@{
+    Layout = "_AdminLayout";
+    ViewData["Title"] = "Thêm nhân viên";
+}
+
+<style>
+    .employee-container {
+        max-width: 700px;
+        margin: 30px auto;
+        background: #fff;
+        padding: 30px;
+        border-radius: 12px;
+        box-shadow: 0 3px 15px rgba(0,0,0,.1);
+    }
+
+    .employee-title {
+        text-align: center;
+        color: #0d6efd;
+        margin-bottom: 25px;
+    }
+
+    .form-group {
+        margin-bottom: 15px;
+    }
+
+    .form-label {
+        font-weight: 600;
+        margin-bottom: 5px;
+    }
+
+    .form-control {
+        width: 100%;
+        padding: 10px;
+        border: 1px solid #ddd;
+        border-radius: 6px;
+    }
+
+    .btn-save {
+        background: #0d6efd;
+        color: white;
+        border: none;
+        padding: 10px 25px;
+        border-radius: 6px;
+    }
+
+    .btn-back {
+        background: #6c757d;
+        color: white;
+        text-decoration: none;
+        padding: 10px 25px;
+        border-radius: 6px;
+        margin-left: 10px;
+    }
+</style>
+
+<div class="employee-container">
+
+    <h2 class="employee-title">
+        Thêm nhân viên mới
+    </h2>
+
+    <form asp-action="Create" method="post">
+
+        <div class="form-group">
+            <label class="form-label">Họ và tên</label>
+            <input asp-for="FullName" class="form-control" />
+        </div>
+
+        <div class="form-group">
+            <label class="form-label">Tên đăng nhập</label>
+            <input asp-for="Username" class="form-control" />
+        </div>
+
+        <div class="form-group">
+            <label class="form-label">Mật khẩu</label>
+            <input asp-for="PasswordHash" type="password" class="form-control" />
+        </div>
+
+        <div class="form-group">
+            <label class="form-label">Email</label>
+            <input asp-for="Email" class="form-control" />
+        </div>
+
+        <div class="form-group">
+            <label class="form-label">Số điện thoại</label>
+            <input asp-for="Phone" class="form-control" />
+        </div>
+
+        <div class="form-group">
+            <label class="form-label">Vai trò</label>
+
+            <select asp-for="Role" class="form-control">
+                <option value="">-- Chọn chức vụ --</option>
+                <option value="Doctor">Bác sĩ</option>
+                <option value="Receptionist">Lễ tân</option>
+            </select>
+        </div>
+
+        <button type="submit" class="btn-save">
+            Lưu nhân viên
+        </button>
+
+        <a asp-action="Index" class="btn-back">
+            Quay lại
+        </a>
+
+    </form>
+
+</div>

@@ -1,0 +1,217 @@
+﻿@model PhongKhamVIP.Models.Finance.Salary
+
+@{
+    Layout = "_AdminLayout";
+    ViewData["Title"] = "Chi Tiết Bảng Lương";
+}
+
+<style>
+    .details-card {
+        max-width: 900px;
+        margin: auto;
+        background: white;
+        border-radius: 20px;
+        padding: 35px;
+        box-shadow: 0 5px 25px rgba(0,0,0,.08);
+    }
+
+    .page-title {
+        text-align: center;
+        color: #0d6efd;
+        font-weight: 700;
+        margin-bottom: 30px;
+    }
+
+    .info-table {
+        width: 100%;
+    }
+
+    .info-table td {
+        padding: 14px;
+        border-bottom: 1px solid #eee;
+    }
+
+    .info-table td:first-child {
+        width: 250px;
+        font-weight: 600;
+        color: #555;
+    }
+
+    .salary-box {
+        background: #e8f5e9;
+        color: #198754;
+        padding: 8px 15px;
+        border-radius: 10px;
+        font-weight: bold;
+        display: inline-block;
+    }
+
+    .status-paid {
+        background: #198754;
+        color: white;
+        padding: 6px 14px;
+        border-radius: 20px;
+    }
+
+    .status-pending {
+        background: #ffc107;
+        color: black;
+        padding: 6px 14px;
+        border-radius: 20px;
+    }
+
+    .btn-group-custom {
+        margin-top: 30px;
+        display: flex;
+        justify-content: center;
+        gap: 15px;
+    }
+
+    .btn-edit {
+        background: #ffc107;
+        color: black;
+        text-decoration: none;
+        padding: 12px 25px;
+        border-radius: 10px;
+        font-weight: 600;
+    }
+
+    .btn-back {
+        background: #6c757d;
+        color: white;
+        text-decoration: none;
+        padding: 12px 25px;
+        border-radius: 10px;
+        font-weight: 600;
+    }
+
+    .btn-edit:hover,
+    .btn-back:hover {
+        opacity: .9;
+    }
+</style>
+
+<div class="details-card">
+
+    <h2 class="page-title">
+        <i class="bi bi-cash-stack"></i>
+        Chi Tiết Bảng Lương
+    </h2>
+
+    <table class="info-table">
+
+        <tr>
+            <td>
+                <i class="bi bi-person-badge-fill"></i>
+                Nhân viên
+            </td>
+            <td>@Model.User?.FullName</td>
+        </tr>
+
+        <tr>
+            <td>
+                <i class="bi bi-calendar3"></i>
+                Kỳ lương
+            </td>
+            <td>
+                Tháng @Model.Month / @Model.Year
+            </td>
+        </tr>
+
+        <tr>
+            <td>
+                <i class="bi bi-wallet2"></i>
+                Lương cơ bản
+            </td>
+            <td>
+                @Model.BaseSalary.ToString("N0") VNĐ
+            </td>
+        </tr>
+
+        <tr>
+            <td>
+                <i class="bi bi-gift-fill"></i>
+                Thưởng
+            </td>
+            <td>
+                @Model.Bonus.ToString("N0") VNĐ
+            </td>
+        </tr>
+
+        <tr>
+            <td>
+                <i class="bi bi-dash-circle-fill"></i>
+                Khấu trừ
+            </td>
+            <td>
+                @Model.Deductions.ToString("N0") VNĐ
+            </td>
+        </tr>
+
+        <tr>
+            <td>
+                <i class="bi bi-cash-coin"></i>
+                Lương thực nhận
+            </td>
+            <td>
+                <span class="salary-box">
+                    @Model.NetSalary.ToString("N0") VNĐ
+                </span>
+            </td>
+        </tr>
+
+        <tr>
+            <td>
+                <i class="bi bi-calendar-check-fill"></i>
+                Ngày thanh toán
+            </td>
+            <td>
+                @Model.PaidDate.ToString("dd/MM/yyyy")
+            </td>
+        </tr>
+
+        <tr>
+            <td>
+                <i class="bi bi-info-circle-fill"></i>
+                Trạng thái
+            </td>
+            <td>
+
+                @if (Model.Status == "Paid")
+                {
+                    <span class="status-paid">
+                        <i class="bi bi-check-circle-fill"></i>
+                        Đã thanh toán
+                    </span>
+                }
+                else
+                {
+                    <span class="status-pending">
+                        <i class="bi bi-clock-fill"></i>
+                        Chưa thanh toán
+                    </span>
+                }
+
+            </td>
+        </tr>
+
+    </table>
+
+    <div class="btn-group-custom">
+
+        <a asp-action="Edit"
+           asp-route-id="@Model.Id"
+           class="btn-edit">
+            <i class="bi bi-pencil-square"></i>
+            Chỉnh sửa
+        </a>
+
+        <a asp-action="Index"
+           class="btn-back">
+            <i class="bi bi-arrow-left-circle-fill"></i>
+            Quay lại
+        </a>
+
+    </div>
+
+</div>

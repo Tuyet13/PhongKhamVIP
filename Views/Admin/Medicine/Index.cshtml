@@ -1,0 +1,310 @@
+﻿@model IEnumerable<PhongKhamVIP.Models.Clinical.Medicine>
+
+@{
+    Layout = "_AdminLayout";
+    ViewData["Title"] = "Quản lý Thuốc";
+}
+
+<style>
+    .page-header {
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        margin-bottom: 25px;
+    }
+
+    .page-title {
+        font-size: 30px;
+        font-weight: 700;
+        color: #198754;
+    }
+
+    .btn-add {
+        background: linear-gradient(135deg,#198754,#28a745);
+        color: white;
+        text-decoration: none;
+        padding: 12px 18px;
+        border-radius: 10px;
+        font-weight: 600;
+        transition: .3s;
+    }
+
+    .btn-add:hover {
+        color: white;
+        transform: translateY(-2px);
+    }
+
+    .search-container {
+        display: flex;
+        gap: 10px;
+        margin-bottom: 20px;
+    }
+
+    .search-box {
+        flex: 1;
+        padding: 12px;
+        border: 1px solid #ddd;
+        border-radius: 10px;
+    }
+
+    .btn-search {
+        background: #0d6efd;
+        color: white;
+        border: none;
+        padding: 12px 20px;
+        border-radius: 10px;
+    }
+
+    .medicine-card {
+        background: white;
+        border-radius: 15px;
+        padding: 20px;
+        box-shadow: 0 5px 20px rgba(0,0,0,.08);
+    }
+
+    .medicine-table {
+        width: 100%;
+        border-collapse: collapse;
+    }
+
+    .medicine-table thead {
+        background: #198754;
+        color: white;
+    }
+
+    .medicine-table th,
+    .medicine-table td {
+        padding: 14px;
+        text-align: center;
+        border-bottom: 1px solid #eee;
+    }
+
+    .medicine-table tbody tr:hover {
+        background: #f8fff9;
+    }
+
+    .stock-good {
+        background: #198754;
+        color: white;
+        padding: 5px 10px;
+        border-radius: 20px;
+        font-size: 13px;
+    }
+
+    .stock-low {
+        background: #dc3545;
+        color: white;
+        padding: 5px 10px;
+        border-radius: 20px;
+        font-size: 13px;
+    }
+
+    .action-buttons {
+        display: flex;
+        justify-content: center;
+        gap: 6px;
+    }
+
+    .btn-action {
+        padding: 8px 12px;
+        border-radius: 8px;
+        text-decoration: none;
+        font-size: 13px;
+        font-weight: 600;
+    }
+
+    .btn-detail {
+        background: #0dcaf0;
+        color: white;
+    }
+
+    .btn-edit {
+        background: #ffc107;
+        color: black;
+    }
+
+    .btn-delete {
+        background: #dc3545;
+        color: white;
+    }
+
+    .total-box {
+        margin-bottom: 15px;
+        font-weight: 600;
+        color: #666;
+    }
+
+    .empty-row {
+        padding: 25px;
+        color: #888;
+    }
+
+    .alert-success {
+        background: #d1e7dd;
+        color: #0f5132;
+        padding: 12px;
+        border-radius: 10px;
+        margin-bottom: 15px;
+    }
+</style>
+
+<div class="page-header">
+
+    <h2 class="page-title">
+        Quản lý Thuốc
+    </h2>
+
+    <a asp-action="Create" class="btn-add">
+        Thêm thuốc
+    </a>
+
+</div>
+@if (TempData["Success"] != null)
+{
+    <div class="alert-success" id="successMessage">
+        <i class="bi bi-check-circle-fill"></i>
+        @TempData["Success"]
+    </div>
+}
+
+<form asp-action="Index" method="get">
+
+    <div class="search-container">
+
+        <input type="text"
+               name="searchString"
+               value="@ViewBag.SearchString"
+               class="search-box"
+               placeholder="Tìm theo tên thuốc hoặc đơn vị..." />
+
+        <button type="submit" class="btn-search">
+            Tìm kiếm
+        </button>
+
+    </div>
+
+</form>
+
+<div class="total-box">
+    Tổng số thuốc: @Model.Count()
+</div>
+
+<div class="medicine-card">
+
+    <table class="medicine-table">
+
+        <thead>
+            <tr>
+                <th>STT</th>
+                <th>Tên thuốc</th>
+                <th>Đơn vị</th>
+                <th>Giá bán</th>
+                <th>Tồn kho</th>
+                <th width="250">Thao tác</th>
+            </tr>
+        </thead>
+
+        <tbody>
+
+            @{
+                int stt = 1;
+            }
+
+            @if (Model.Any())
+            {
+                @foreach (var item in Model)
+                {
+                    <tr>
+
+                        <td>@stt</td>
+
+                        <td>@item.Name</td>
+
+                        <td>@item.Unit</td>
+
+                        <td>
+                            @item.Price.ToString("N0") VNĐ
+                        </td>
+
+                        <td>
+
+                            @if (item.StockQuantity > 20)
+                            {
+                                <span class="stock-good">
+                                    @item.StockQuantity
+                                </span>
+                            }
+                            else
+                            {
+                                <span class="stock-low">
+                                    @item.StockQuantity
+                                </span>
+                            }
+
+                        </td>
+
+                        <td>
+
+                            <div class="action-buttons">
+
+                                <a asp-action="Details"
+                                   asp-route-id="@item.Id"
+                                   class="btn-action btn-detail">
+                                    Chi tiết
+                                </a>
+
+                                <a asp-action="Edit"
+                                   asp-route-id="@item.Id"
+                                   class="btn-action btn-edit">
+                                    Sửa
+                                </a>
+
+                                <a asp-action="Delete"
+                                   asp-route-id="@item.Id"
+                                   class="btn-action btn-delete">
+                                    Xóa
+                                </a>
+
+                            </div>
+
+                        </td>
+
+                    </tr>
+
+                    stt++;
+                }
+            }
+            else
+            {
+                <tr>
+                    <td colspan="6" class="empty-row">
+                        Chưa có thuốc nào trong hệ thống
+                    </td>
+                </tr>
+            }
+
+        </tbody>
+
+    </table>
+
+</div>
+@section Scripts {
+    <script>
+        setTimeout(() => {
+
+            const alertBox = document.getElementById("successMessage");
+
+            if (alertBox) {
+
+                alertBox.style.transition = "all .6s ease";
+                alertBox.style.opacity = "0";
+                alertBox.style.transform = "translateY(-20px)";
+
+                setTimeout(() => {
+                    alertBox.remove();
+                }, 600);
+            }
+
+        }, 3000);
+    </script>
+}

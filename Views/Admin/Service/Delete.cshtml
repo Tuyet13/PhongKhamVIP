@@ -1,0 +1,169 @@
+﻿@model PhongKhamVIP.Models.Finance.Service
+
+@{
+    Layout = "_AdminLayout";
+    ViewData["Title"] = "Xóa Dịch vụ";
+}
+
+<style>
+    .delete-container {
+        max-width: 800px;
+        margin: auto;
+    }
+
+    .delete-card {
+        background: white;
+        border-radius: 15px;
+        padding: 30px;
+        box-shadow: 0 5px 20px rgba(0,0,0,.08);
+    }
+
+    .page-title {
+        color: #dc3545;
+        font-size: 28px;
+        font-weight: 700;
+        margin-bottom: 20px;
+    }
+
+    .warning-box {
+        background: #fff3cd;
+        border-left: 5px solid #ffc107;
+        padding: 15px;
+        border-radius: 10px;
+        margin-bottom: 25px;
+    }
+
+    .service-info {
+        background: #f8f9fa;
+        border-radius: 12px;
+        padding: 20px;
+        margin-bottom: 25px;
+    }
+
+    .info-row {
+        display: flex;
+        margin-bottom: 12px;
+    }
+
+    .info-label {
+        width: 180px;
+        font-weight: 600;
+        color: #555;
+    }
+
+    .info-value {
+        flex: 1;
+    }
+
+    .price-badge {
+        background: #198754;
+        color: white;
+        padding: 6px 12px;
+        border-radius: 20px;
+        font-size: 13px;
+        font-weight: 600;
+    }
+
+    .btn-delete {
+        background: linear-gradient(135deg,#dc3545,#ff6b81);
+        color: white;
+        border: none;
+        padding: 12px 20px;
+        border-radius: 10px;
+        font-weight: 600;
+        cursor: pointer;
+    }
+
+    .btn-back {
+        background: #6c757d;
+        color: white;
+        text-decoration: none;
+        padding: 12px 20px;
+        border-radius: 10px;
+        margin-left: 10px;
+    }
+
+    .btn-delete:hover,
+    .btn-back:hover {
+        opacity: .9;
+        color: white;
+    }
+</style>
+
+<div class="delete-container">
+
+    <div class="delete-card">
+
+        <h2 class="page-title">
+            <i class="bi bi-trash3-fill"></i>
+            Xóa Dịch vụ
+        </h2>
+
+        <div class="warning-box">
+            <i class="bi bi-exclamation-triangle-fill"></i>
+            Bạn có chắc chắn muốn xóa dịch vụ này không?
+        </div>
+
+        <div class="service-info">
+
+            <div class="info-row">
+                <div class="info-label">
+                    <i class="bi bi-hash"></i> Mã dịch vụ
+                </div>
+                <div class="info-value">
+                    @Model.Id
+                </div>
+            </div>
+
+            <div class="info-row">
+                <div class="info-label">
+                    <i class="bi bi-clipboard2-pulse-fill"></i> Tên dịch vụ
+                </div>
+                <div class="info-value">
+                    @Model.Name
+                </div>
+            </div>
+
+            <div class="info-row">
+                <div class="info-label">
+                    <i class="bi bi-cash-stack"></i> Giá dịch vụ
+                </div>
+                <div class="info-value">
+                    <span class="price-badge">
+                        @Model.BasePrice.ToString("N0") VNĐ
+                    </span>
+                </div>
+            </div>
+
+            <div class="info-row">
+                <div class="info-label">
+                    <i class="bi bi-card-text"></i> Mô tả
+                </div>
+                <div class="info-value">
+                    @(string.IsNullOrEmpty(Model.Description)
+                        ? "Không có mô tả"
+                        : Model.Description)
+                </div>
+            </div>
+
+        </div>
+
+        <form asp-action="DeleteConfirmed" method="post">
+
+            <input type="hidden" asp-for="Id" />
+
+            <button type="submit" class="btn-delete">
+                <i class="bi bi-trash3-fill"></i>
+                Xác nhận xóa
+            </button>
+
+            <a asp-action="Index" class="btn-back">
+                <i class="bi bi-arrow-left-circle-fill"></i>
+                Quay lại
+            </a>
+
+        </form>
+
+    </div>
+
+</div>

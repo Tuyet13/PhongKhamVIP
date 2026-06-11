@@ -1,0 +1,73 @@
+﻿@{
+    Layout = "_Layout";
+    ViewData["Title"] = "Xác Thực Mã OTP";
+}
+
+<style>
+    /* Hiệu ứng rung khi có lỗi */
+    .shake {
+        animation: shake 0.5s;
+    }
+
+
+    /* Định dạng link quay lại */
+    .login-link {
+        color: #008ca3;
+        text-decoration: none;
+        font-weight: 600;
+    }
+
+    .login-link:hover {
+        text-decoration: underline;
+    }
+</style>
+
+<div class="container my-5">
+    <div class="row justify-content-center">
+        <div class="col-md-4">
+            <div class="card border-0 shadow-sm rounded-4 @(!ViewData.ModelState.IsValid ? "shake" : "")">
+                <div class="card-body p-4 text-center">
+                    <h4 class="fw-bold mb-2" style="color: #008ca3;">XÁC THỰC MÃ OTP</h4>
+                    <p class="text-muted small mb-4">
+                        Mã bảo mật gồm 6 chữ số đã được gửi đến hòm thư:<br />
+                        <strong class="text-dark">@ViewBag.Target</strong>
+                    </p>
+
+                    <form asp-action="ConfirmOtp" method="post">
+                        @Html.AntiForgeryToken()
+
+                        <div class="text-danger small mb-3 text-start" asp-validation-summary="ModelOnly"></div>
+
+                        <input type="hidden" name="target" value="@ViewBag.Target" />
+
+                        <div class="mb-4 text-start">
+                            <label class="small fw-bold text-muted mb-3 d-block text-center">Vui lòng nhập mã bảo mật</label>
+                            <input type="text" name="otpCode" class="form-control text-center fw-bold"
+                                   placeholder="000000" maxlength="6" minlength="6" autocomplete="off"
+                                   style="padding: 12px; border-radius: 8px; font-size: 24px; letter-spacing: 6px; color: #008ca3; font-family: monospace;" required />
+                        </div>
+
+                        @* Nút xác nhận hoàn tất *@
+                        <button type="submit" class="btn btn-primary w-100 py-2 fw-bold mb-3" style="background: #008ca3; border:none; border-radius: 8px;">
+                            HOÀN TẤT XÁC THỰC
+                        </button>
+
+                        @* Link quay lại *@
+                        <div class="mt-3">
+                            <a href="/Account/Login" class="login-link small">⬅️ Quay lại trang đăng nhập</a>
+                        </div>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+@section Scripts {
+    <script>
+        // Tự động ẩn thông báo lỗi sau 5 giây nếu có
+        setTimeout(function () {
+            $('.alert').fadeOut('slow');
+        }, 5000);
+    </script>
+}
