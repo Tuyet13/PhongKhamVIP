@@ -1,0 +1,45 @@
+﻿@using System.Security.Claims
+@{
+    var role = User.FindFirstValue(ClaimTypes.Role);
+    var name = User.Identity?.Name ?? "Nhân viên";
+    // Xác định title dựa trên role để header hiển thị đúng
+    var roleTitle = role == "Doctor" ? "Bác sĩ" : (role == "Receptionist" ? "Lễ tân" : "Nhân viên");
+}
+
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+    <meta charset="utf-8" />
+    <title>@ViewData["Title"] - Phòng Khám VIP</title>
+    <link rel="stylesheet" href="~/lib/bootstrap/dist/css/bootstrap.min.css" />
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.1/font/bootstrap-icons.css">
+    <style>
+        .sidebar { width: 280px; background: #f8fafc; height: 100vh; position: sticky; top: 0; border-right: 1px solid #e2e8f0; }
+        .nav-link { color: #64748b; padding: 12px 20px; font-weight: 500; }
+        .nav-link.active { background: #e0f2fe; color: #0ea5e9; }
+    </style>
+</head>
+<body>
+    <div class="d-flex">
+        <nav class="sidebar p-3">
+            <div class="text-center mb-4">
+                <div class="fw-bold">PHÒNG KHÁM VIP</div>
+                <small class="text-info">@roleTitle: @name</small>
+            </div>
+
+            <div class="nav flex-column">
+                <a class="nav-link" asp-controller="@role" asp-action="Index"><i class="bi bi-house"></i> Về trang chủ @roleTitle</a>
+                <hr />
+                <a class="nav-link" asp-controller="Personal" asp-action="Notifications"><i class="bi bi-bell"></i> Thông báo</a>
+                <a class="nav-link" asp-controller="Personal" asp-action="Attendance"><i class="bi bi-clock-history"></i> Chấm công</a>
+                <a class="nav-link" asp-controller="Personal" asp-action="LeaveRequest"><i class="bi bi-file-earmark-break"></i> Xin nghỉ phép</a>
+                <a class="nav-link" asp-controller="Personal" asp-action="Salary"><i class="bi bi-wallet2"></i> Tra cứu lương</a>
+            </div>
+        </nav>
+
+        <main class="flex-grow-1 p-4">
+            @RenderBody()
+        </main>
+    </div>
+</body>
+</html>

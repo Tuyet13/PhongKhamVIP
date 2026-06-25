@@ -1,4 +1,5 @@
-﻿using System.ComponentModel.DataAnnotations;
+﻿using Microsoft.EntityFrameworkCore;
+using System.ComponentModel.DataAnnotations;
 
 namespace PhongKhamVIP.Models.Clinical
 {
@@ -12,8 +13,7 @@ namespace PhongKhamVIP.Models.Clinical
 
         [Required, StringLength(50)]
         public string Unit { get; set; } // Viên, Chai, Gói
-
-        [Required]
+        [Precision(18, 2)] 
         public decimal Price { get; set; } // Giá bán lẻ
 
         [Required]

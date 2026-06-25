@@ -1,0 +1,145 @@
+﻿@using System.Security.Claims
+@{
+    var name = User.Identity?.Name ?? "Lễ tân";
+    var currentController = ViewContext.RouteData.Values["Controller"]?.ToString();
+    var currentAction = ViewContext.RouteData.Values["Action"]?.ToString();
+}
+
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>@ViewData["Title"] - Phòng Khám VIP</title>
+    <link rel="stylesheet" href="~/lib/bootstrap/dist/css/bootstrap.min.css" />
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.1/font/bootstrap-icons.css">
+
+    <style>
+        :root {
+            --sidebar-bg: #f8fafc;
+            --sidebar-border: #e2e8f0;
+            --active-color: #0ea5e9;
+            --text-main: #334155;
+            --text-muted: #64748b;
+        }
+
+        body {
+            background-color: #f1f5f9;
+            font-family: 'Segoe UI', sans-serif;
+        }
+
+        .page-wrapper {
+            display: flex;
+            min-height: 100vh;
+        }
+
+        .sidebar {
+            width: 280px;
+            background: var(--sidebar-bg);
+            border-right: 1px solid var(--sidebar-border);
+            display: flex;
+            flex-direction: column;
+            position: sticky;
+            top: 0;
+            height: 100vh;
+        }
+
+        .logo-box {
+            padding: 25px;
+            text-align: center;
+            border-bottom: 1px solid var(--sidebar-border);
+            background: linear-gradient(to bottom, #ffffff, #f8fafc);
+        }
+
+        .logo-img {
+            width: 100px;
+            height: 100px;
+            border-radius: 20px;
+            box-shadow: 0 10px 15px -3px rgba(0,0,0,0.1);
+            object-fit: cover;
+            margin-bottom: 10px;
+        }
+
+        .nav-link {
+            color: var(--text-muted);
+            padding: 12px 20px;
+            margin: 6px 15px;
+            border-radius: 8px;
+            display: flex;
+            align-items: center;
+            gap: 15px;
+            transition: all 0.2s;
+            font-weight: 500;
+        }
+
+            .nav-link:hover {
+                background: #e2e8f0;
+                color: var(--text-main);
+            }
+
+            .nav-link.active {
+                background: #e0f2fe;
+                color: var(--active-color) !important;
+                font-weight: 600;
+            }
+
+        .top-navbar {
+            background: white;
+            padding: 15px 30px;
+            border-bottom: 1px solid var(--sidebar-border);
+        }
+
+        .btn-outline-danger {
+            border-color: #fda4af;
+            color: #e11d48;
+        }
+
+            .btn-outline-danger:hover {
+                background: #ffe4e6;
+                color: #e11d48;
+                border-color: #fda4af;
+            }
+    </style>
+</head>
+<body>
+    <div class="page-wrapper">
+        <nav class="sidebar">
+            <div class="logo-box">
+                <img src="~/imge/am2t.jpg" alt="Logo" class="logo-img" />
+                <div class="fw-bold text-dark">PHÒNG KHÁM VIP</div>
+                <div class="small text-info">Lễ tân: @name</div>
+            </div>
+
+            <div class="nav flex-column mt-3">
+                <a class="nav-link @(currentAction == "Index" ? "active" : "")" asp-controller="Receptionist" asp-action="Index"><i class="bi bi-speedometer2"></i> Dashboard</a>
+                <a class="nav-link @(currentAction == "ManageAppointments" ? "active" : "")" asp-controller="Receptionist" asp-action="ManageAppointments"><i class="bi bi-calendar-check"></i> Duyệt lịch khám</a>
+                <a class="nav-link @(currentAction == "CheckIn" ? "active" : "")" asp-controller="Receptionist" asp-action="CheckIn">
+                    <i class="bi bi-person-plus"></i> Tiếp nhận bệnh nhân
+                </a>
+                <hr class="mx-4 my-2 border-secondary">
+
+                <a class="nav-link" asp-controller="Personal" asp-action="Notifications"><i class="bi bi-bell"></i> Thông báo</a>
+                <a class="nav-link" asp-controller="Personal" asp-action="Attendance"><i class="bi bi-clock-history"></i> Chấm công</a>
+                <a class="nav-link" asp-controller="Personal" asp-action="LeaveRequest"><i class="bi bi-file-earmark-break"></i> Xin nghỉ phép</a>
+                <a class="nav-link" asp-controller="Personal" asp-action="Salary"><i class="bi bi-wallet2"></i> Tra cứu lương</a>
+            </div>
+
+            <div class="mt-auto p-4">
+                <a class="btn btn-outline-danger w-100" asp-controller="Account" asp-action="Logout">
+                    <i class="bi bi-box-arrow-left"></i> Đăng xuất
+                </a>
+            </div>
+        </nav>
+
+        <div class="flex-grow-1">
+            <header class="top-navbar d-flex justify-content-between align-items-center">
+                <h5 class="mb-0 fw-bold text-dark">@ViewData["Title"]</h5>
+                <div class="text-muted small">@DateTime.Now.ToString("dd/MM/yyyy")</div>
+            </header>
+            <main class="p-4">
+                @RenderBody()
+            </main>
+        </div>
+    </div>
+</body>
+</html>

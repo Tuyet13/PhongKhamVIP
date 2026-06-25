@@ -1,0 +1,12 @@
+﻿@{
+    ViewData["Title"] = "Từ chối truy cập";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+
+<div class="container mt-5 text-center">
+    <div class="alert alert-warning">
+        <h2 class="text-danger">403 - Bạn không có quyền truy cập</h2>
+        <p>Tính năng này chỉ dành cho Admin hoặc Bác sĩ.</p>
+        <a href="@Url.Action("Login", "Account")" class="btn btn-primary">Về trang đăng nhập</a>
+    </div>
+</div>

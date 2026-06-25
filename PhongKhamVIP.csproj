@@ -24,7 +24,7 @@
 	</ItemGroup>
 
 	<ItemGroup>
-	  <Folder Include="Views\Admin\AuditLog\" />
+	  <Folder Include="Controllers\Clinical\" />
 	</ItemGroup>
 
 </Project>

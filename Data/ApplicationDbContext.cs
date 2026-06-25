@@ -4,7 +4,6 @@ using PhongKhamVIP.Models.Users;
 using PhongKhamVIP.Models.Clinical;
 using PhongKhamVIP.Models.Finance;
 using PhongKhamVIP.Models.System;
-
 namespace PhongKhamVIP.Data
 {
     public class ApplicationDbContext : DbContext
@@ -31,14 +30,17 @@ namespace PhongKhamVIP.Data
         public DbSet<Invoice> Invoices { get; set; }
         public DbSet<InvoiceDetail> InvoiceDetails { get; set; }
         public DbSet<Salary> Salaries { get; set; }
+      
 
         // 4. SYSTEM
         public DbSet<Specialty> Specialties { get; set; }
         public DbSet<LeaveRequest> LeaveRequests { get; set; }
         public DbSet<OtpVerification> OtpVerifications { get; set; }
         public DbSet<AuditLog> AuditLogs { get; set; }
-        // Đảm bảo bạn thay "Attendance" bằng tên chính xác của Model chấm công/lịch trực trong project của bạn
         public DbSet<Attendance> Attendances { get; set; }
+        public DbSet<Notification> Notifications { get; set; }
+        // Trong class ApplicationDbContext
+     
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
             base.OnModelCreating(modelBuilder);
@@ -67,7 +69,7 @@ namespace PhongKhamVIP.Data
 
             modelBuilder.Entity<MedicalRecord>()
                 .HasOne(m => m.Patient)
-                .WithMany(p => p.MedicalRecords)
+                .WithMany() 
                 .HasForeignKey(m => m.PatientId)
                 .OnDelete(DeleteBehavior.Restrict);
 
@@ -87,7 +89,11 @@ namespace PhongKhamVIP.Data
                 entity.Ignore(u => u.IsActive);
                 entity.Ignore(u => u.PhoneNumber);
             });
-
+            modelBuilder.Entity<LeaveRequest>()
+                .HasOne(l => l.User)
+                .WithMany() // Nếu User không có collection LeaveRequests thì để trống
+    .           HasForeignKey(l => l.UserId)
+               .OnDelete(DeleteBehavior.Cascade); // Khi xóa User thì xóa đơn nghỉ phép của họ
             // Loại bỏ hoàn toàn cấu hình ép buộc cũ của OtpVerification để tránh xung đột Metadata cache
             // EF Core sẽ tự động ánh xạ thuộc tính Receiver -> cột Receiver dưới SQL một cách tự nhiên.
         }

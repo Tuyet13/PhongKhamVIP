@@ -1,0 +1,17 @@
+﻿@using PhongKhamVIP.Models.Finance
+@model IEnumerable<LeaveRequest>
+
+@{
+    Layout = ViewBag.Layout ?? "~/Views/Shared/_ReceptionistLayout.cshtml";
+    ViewData["Title"] = "Xin nghỉ phép";
+}
+
+<div class="container mt-4">
+    <h3>Xin nghỉ phép</h3>
+    <form asp-action="LeaveRequest" method="post">
+        <div class="mb-3"><label>Từ ngày</label><input type="date" name="StartDate" class="form-control" required /></div>
+        <div class="mb-3"><label>Đến ngày</label><input type="date" name="EndDate" class="form-control" required /></div>
+        <div class="mb-3"><label>Lý do</label><textarea name="Reason" class="form-control"></textarea></div>
+        <button type="submit" class="btn btn-warning">Gửi đơn</button>
+    </form>
+</div>

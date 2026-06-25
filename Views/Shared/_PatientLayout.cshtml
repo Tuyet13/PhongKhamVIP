@@ -1,0 +1,117 @@
+﻿<!DOCTYPE html>
+<html lang="vi">
+<head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>@ViewData["Title"] - Bệnh viện AM2T</title>
+    <link rel="stylesheet" href="~/lib/bootstrap/dist/css/bootstrap.min.css" />
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" />
+    <style>
+        @@import url('https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;600;700;800&display=swap');
+
+        :root {
+            --primary-color: #008ca3;
+            --text-dark: #1a202c;
+            --text-muted: #5a6a85;
+        }
+
+        body {
+            font-family: 'Plus Jakarta Sans', sans-serif;
+        }
+
+        .navbar {
+            background: white;
+            padding: 10px 50px;
+            box-shadow: 0 10px 30px rgba(0,0,0,0.08);
+        }
+
+        .nav-full-width {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            width: 100%;
+        }
+
+        .logo-area {
+            display: flex;
+            align-items: center;
+            gap: 15px;
+            text-decoration: none;
+        }
+
+        .nav-links {
+            display: flex;
+            list-style: none;
+            gap: 10px;
+            margin: 0;
+        }
+
+            .nav-links a {
+                text-decoration: none;
+                color: var(--text-muted);
+                font-weight: 700;
+                padding: 12px 20px;
+                border-radius: 12px;
+            }
+
+                .nav-links a:hover, .nav-links a.active {
+                    color: var(--primary-color);
+                    background: #e0f7fa;
+                }
+
+        .auth-group {
+            display: flex;
+            align-items: center;
+            gap: 15px;
+        }
+
+        .btn-register {
+            background: var(--primary-color);
+            color: white !important;
+            padding: 12px 25px;
+            border-radius: 12px;
+            font-weight: 700;
+            text-decoration: none;
+        }
+    </style>
+</head>
+<body>
+    <header>
+        <nav class="navbar">
+            <div class="nav-full-width">
+                <a class="logo-area" asp-controller="Home" asp-action="Index">
+                    <img src="/imge/am2t.jpg" style="width:60px;" alt="Logo" />
+                    <span style="font-weight:800; color:var(--primary-color);">Bệnh viện AM2T</span>
+                </a>
+
+                <ul class="nav-links">
+                    <li><a asp-controller="Home" asp-action="Index">Trang chủ</a></li>
+                    <li><a asp-controller="Appointment" asp-action="Create">Đặt lịch</a></li>
+                    <li><a asp-controller="Payment" asp-action="Index">Thanh toán</a></li>
+                </ul>
+
+                <div class="auth-group">
+                    @using Microsoft.AspNetCore.Http
+                    @inject IHttpContextAccessor HttpContextAccessor
+
+                    @if (!string.IsNullOrEmpty(HttpContextAccessor.HttpContext.Session.GetString("UserEmail")))
+                    {
+                        <span class="me-2 fw-bold text-dark">@HttpContextAccessor.HttpContext.Session.GetString("UserName")</span>
+                        <a asp-controller="Account" asp-action="Logout" class="btn btn-danger rounded-pill">Đăng xuất</a>
+                    }
+                    else
+                    {
+                        <a asp-controller="Account" asp-action="Logout" class="btn btn-danger btn-sm rounded-pill">Đăng xuất</a>
+
+                    }
+                </div>
+            </div>
+        </nav>
+    </header>
+
+    <main role="main">@RenderBody()</main>
+
+    <script src="~/lib/jquery/dist/jquery.min.js"></script>
+    <script src="~/lib/bootstrap/dist/js/bootstrap.bundle.min.js"></script>
+</body>
+</html>

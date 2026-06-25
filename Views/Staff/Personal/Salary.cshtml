@@ -1,0 +1,37 @@
+﻿@using PhongKhamVIP.Models.Finance
+@model Salary
+
+@{
+    // Sử dụng ViewBag.Layout được truyền từ PersonalController
+    // Mặc định là layout lễ tân nếu không tìm thấy ViewBag
+    Layout = ViewBag.Layout ?? "~/Views/Shared/_ReceptionistLayout.cshtml";
+    ViewData["Title"] = "Tra cứu lương";
+}
+
+<div class="container mt-4">
+    <h3 class="mb-4">Tra cứu lương</h3>
+
+    @if (Model != null)
+    {
+        <div class="card shadow-sm border-0">
+            <div class="card-body">
+                <h5>Lương tháng @Model.Month/@Model.Year</h5>
+                <h2 class="text-success">@Model.NetSalary.ToString("N0") VNĐ</h2>
+                <hr />
+                <div class="row">
+                    <div class="col-md-6">
+                        <p>Lương cơ bản: <strong>@Model.BaseSalary.ToString("N0")</strong></p>
+                        <p>Phụ cấp: <strong>@Model.Bonus.ToString("N0")</strong></p>
+                        <p>Khấu trừ: <strong class="text-danger">@Model.Deductions.ToString("N0")</strong></p>
+                    </div>
+                </div>
+            </div>
+        </div>
+    }
+    else
+    {
+        <div class="alert alert-warning">
+            <i class="bi bi-exclamation-triangle"></i> Chưa có dữ liệu lương cho tháng này.
+        </div>
+    }
+</div>

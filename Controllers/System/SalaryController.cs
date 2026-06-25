@@ -60,7 +60,6 @@ namespace PhongKhamVIP.Controllers.System
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> Create(Salary salary)
         {
-            // Bắt buộc loại bỏ kiểm tra thuộc tính liên kết để ModelState không bị False vô lý
             ModelState.Remove("User");
 
             if (ModelState.IsValid)
@@ -74,27 +73,11 @@ namespace PhongKhamVIP.Controllers.System
                 return RedirectToAction(nameof(Index));
             }
 
-            // Nếu lỗi Validate, nạp lại danh sách nhân viên trước khi trả về View
             ViewBag.Users = await _context.Users
                 .Where(u => u.Role == "Doctor" || u.Role == "Receptionist")
                 .ToListAsync();
 
             return View("~/Views/Admin/Salary/Create.cshtml", salary);
-        }
-
-        // GET: Salary/Edit/5
-        public async Task<IActionResult> Edit(int id)
-        {
-            var salary = await _context.Salaries.FindAsync(id);
-
-            if (salary == null)
-                return NotFound();
-
-            ViewBag.Users = await _context.Users
-                .Where(u => u.Role == "Doctor" || u.Role == "Receptionist")
-                .ToListAsync();
-
-            return View("~/Views/Admin/Salary/Edit.cshtml", salary);
         }
 
         // POST: Salary/Edit/5
@@ -155,21 +138,46 @@ namespace PhongKhamVIP.Controllers.System
             return RedirectToAction(nameof(Index));
         }
 
-        // API AJAX: Tính số ngày công dựa trên Nhân viên, Tháng và Năm
-        [HttpGet]
-        public async Task<IActionResult> GetEmployeeWorkSummary(string userId, int month, int year)
+        // API AJAX: Xác nhận tích nhanh đổi trạng thái bảng lương
+        [HttpPost]
+        public async Task<IActionResult> UpdateStatusQuick(int id, string status = "Paid")
         {
-            if (string.IsNullOrEmpty(userId) || month == 0 || year == 0)
+            var salary = await _context.Salaries.FindAsync(id);
+            if (salary == null)
+            {
+                return Json(new { success = false, message = "Không tìm thấy bảng lương yêu cầu!" });
+            }
+
+            salary.Status = status;
+
+            if (status == "Paid")
+            {
+                salary.PaidDate = DateTime.Now;
+            }
+
+            _context.Update(salary);
+            await _context.SaveChangesAsync();
+
+            return Json(new { success = true, currentStatus = status, paidDate = salary.PaidDate?.ToString("dd/MM/yyyy") });
+        }
+
+        // API AJAX: Thống kê ngày công
+       
+        [HttpGet]
+        public async Task<IActionResult> GetEmployeeWorkSummary(int userId, int month, int year)
+        {
+            if (userId == 0 || month == 0 || year == 0)
                 return Json(new { workingDays = 0, absentDays = 0 });
 
-            // Đếm số ngày đi làm (Present)
+            // 1. Số ngày làm việc thực tế
             var workingDays = await _context.Attendances
                 .CountAsync(a => a.UserId == userId &&
                                  a.Date.Month == month &&
                                  a.Date.Year == year &&
-                                 a.Status == "Present");
+                                 a.Status == "Checked-In");
 
-            // Đếm số ngày nghỉ (Absent)
+            // 2. Tính số ngày nghỉ (Absent)
+            // Cách 1: Đếm số bản ghi có Status == "Absent" trong DB
             var absentDays = await _context.Attendances
                 .CountAsync(a => a.UserId == userId &&
                                  a.Date.Month == month &&

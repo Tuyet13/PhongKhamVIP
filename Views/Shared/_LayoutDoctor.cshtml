@@ -1,0 +1,175 @@
+﻿@using System.Security.Claims
+@{
+    var doctorName = User.Identity?.Name ?? "Bác sĩ";
+}
+
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>@ViewData["Title"] - AM2T Clinic</title>
+    <link rel="stylesheet" href="~/lib/bootstrap/dist/css/bootstrap.min.css" />
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.1/font/bootstrap-icons.css">
+
+    <style>
+        :root {
+            /* Chuyển sang tông màu nhạt, chuyên nghiệp hơn */
+            --sidebar-bg: #f8fafc; /* Nền sidebar màu trắng xám rất nhạt */
+            --sidebar-border: #e2e8f0; /* Đường viền mờ */
+            --active-color: #0ea5e9; /* Xanh biển nhạt tươi sáng */
+            --text-main: #334155; /* Chữ màu xám đậm (không dùng đen tuyền) */
+            --text-muted: #64748b;
+        }
+
+        body {
+            background-color: #f1f5f9; /* Nền trang chủ nhạt hơn */
+            font-family: 'Segoe UI', sans-serif;
+        }
+
+        .page-wrapper {
+            display: flex;
+            min-height: 100vh;
+        }
+
+        .sidebar {
+            width: 280px;
+            background: var(--sidebar-bg);
+            border-right: 1px solid var(--sidebar-border);
+            position: sticky;
+            top: 0;
+            height: 100vh;
+        }
+
+        .logo-box {
+            padding: 25px;
+            text-align: center;
+            border-bottom: 1px solid var(--sidebar-border);
+        }
+
+        .logo-img {
+            width: 65px;
+            border-radius: 15px;
+            box-shadow: 0 4px 6px -1px rgba(0,0,0,0.1);
+        }
+
+        .nav-link {
+            color: var(--text-muted);
+            padding: 12px 20px;
+            margin: 6px 15px;
+            border-radius: 8px;
+            display: flex;
+            align-items: center;
+            gap: 15px;
+            transition: all 0.2s;
+            font-weight: 500;
+        }
+
+            .nav-link:hover {
+                background: #e2e8f0;
+                color: var(--text-main);
+            }
+
+            .nav-link.active {
+                background: #e0f2fe;
+                color: var(--active-color) !important;
+            }
+
+        .top-navbar {
+            background: white;
+            padding: 15px 30px;
+            border-bottom: 1px solid var(--sidebar-border);
+        }
+
+        .main-content {
+            padding: 30px;
+        }
+
+        /* Làm nhạt nút đăng xuất */
+        .btn-outline-danger {
+            border-color: #fda4af;
+            color: #e11d48;
+        }
+
+            .btn-outline-danger:hover {
+                background: #ffe4e6;
+                color: #e11d48;
+                border-color: #fda4af;
+            }
+
+        .logo-box {
+            padding: 25px;
+            text-align: center;
+            border-bottom: 1px solid var(--sidebar-border);
+            /* Thêm gradient nhẹ để tạo chiều sâu */
+            background: linear-gradient(to bottom, #ffffff, #f8fafc);
+        }
+
+        .logo-img {
+            width: 100px; /* Tăng kích thước logo từ 70px lên 100px */
+            height: 100px;
+            border-radius: 20px;
+            box-shadow: 0 10px 15px -3px rgba(0,0,0,0.1); /* Đổ bóng đậm hơn */
+            object-fit: cover;
+        }
+
+        .brand-name {
+            font-size: 1.1rem;
+            color: #1e293b; /* Chữ đậm hơn để không bị mờ */
+            text-shadow: 0 1px 1px rgba(255,255,255,0.5); /* Tạo viền sáng cho chữ */
+            letter-spacing: 0.5px;
+        }
+
+        .doctor-name {
+            color: #0284c7; /* Xanh đậm hơn chút để nổi trên nền trắng */
+            font-weight: 600;
+        }
+    </style>
+</head>
+<body>
+    <div class="page-wrapper">
+        <nav class="sidebar">
+            <div class="logo-box">
+                <img src="~/imge/am2t.jpg" alt="Logo" class="logo-img" />
+                <div class="small text-info">Xin chào, BS. @doctorName</div>
+            </div>
+
+            <div class="nav flex-column mt-3">
+                <a class="nav-link @(ViewContext.RouteData.Values["Controller"]?.ToString() == "Doctor" ? "active" : "")" asp-controller="Doctor" asp-action="Index">
+                    <i class="bi bi-calendar-event"></i> Lịch khám bệnh
+                </a>
+                <a class="nav-link @(ViewContext.RouteData.Values["Controller"]?.ToString() == "Prescription" ? "active" : "")" asp-controller="Prescription" asp-action="Index">
+                    <i class="bi bi-file-earmark-medical"></i> Kê đơn thuốc
+                </a>
+                <a class="nav-link @(ViewContext.RouteData.Values["Controller"]?.ToString() == "MedicalHistory" ? "active" : "")" asp-controller="MedicalHistory" asp-action="Index">
+                    <i class="bi bi-journal-medical"></i> Lịch sử khám
+                </a>
+                <a class="nav-link" asp-controller="UserMedicine" asp-action="Index">
+                    <i class="bi bi-capsule"></i> Tra cứu thuốc
+                </a>
+                <hr class="mx-4 my-2 border-secondary">
+                <a class="nav-link" asp-controller="Personal" asp-action="Notifications">Thông báo</a>
+                <a class="nav-link" asp-controller="Personal" asp-action="Attendance">Chấm công</a>
+                <a class="nav-link" asp-controller="Personal" asp-action="LeaveRequest">Xin nghỉ phép</a>
+                <a class="nav-link" asp-controller="Personal" asp-action="Salary">Tra cứu lương</a>
+            </div>
+
+            <div class="mt-auto p-4">
+                <a class="btn btn-outline-danger w-100" asp-controller="Account" asp-action="Logout">
+                    <i class="bi bi-box-arrow-left"></i> Đăng xuất
+                </a>
+            </div>
+        </nav>
+
+        <div class="flex-grow-1">
+            <header class="top-navbar d-flex justify-content-between align-items-center">
+                <h5 class="mb-0 fw-bold text-dark">@ViewData["Title"]</h5>
+                <div class="text-muted small">@DateTime.Now.ToString("dd/MM/yyyy")</div>
+            </header>
+            <main class="main-content">
+                @RenderBody()
+            </main>
+        </div>
+    </div>
+</body>
+</html>

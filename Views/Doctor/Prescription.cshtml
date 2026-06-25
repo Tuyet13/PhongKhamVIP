@@ -1,0 +1,21 @@
+﻿@{
+    ViewData["Title"] = "Kê đơn thuốc";
+    Layout = "~/Views/Shared/_LayoutDoctor.cshtml";
+}
+
+<div class="card border-0 shadow-sm p-4">
+    <h4 class="mb-4 text-primary">Kê đơn thuốc cho bệnh nhân</h4>
+    <form asp-action="Create" method="post">
+        <div class="mb-3">
+            <label class="form-label">Chọn bệnh nhân</label>
+            <select class="form-select" name="patientId">
+                <option value="">-- Chọn bệnh nhân từ lịch khám --</option>
+            </select>
+        </div>
+        <div class="mb-3">
+            <label class="form-label">Danh mục thuốc</label>
+            <textarea class="form-control" rows="5" placeholder="Nhập tên thuốc và liều lượng..."></textarea>
+        </div>
+        <button type="submit" class="btn btn-primary">Lưu đơn thuốc</button>
+    </form>
+</div>

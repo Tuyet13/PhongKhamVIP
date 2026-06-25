@@ -1,0 +1,38 @@
+﻿@model IEnumerable<PhongKhamVIP.Models.System.LeaveRequest>
+@{
+    ViewData["Title"] = "Duyệt đơn nghỉ phép";
+    Layout = "_AdminLayout"; // Nhớ trỏ đúng layout Admin của bạn
+}
+
+<div class="card p-4">
+    <h3>Danh sách đơn xin nghỉ phép chờ duyệt</h3>
+    <table class="table">
+        <thead>
+            <tr>
+                <th>Nhân viên</th>
+                <th>Từ ngày</th>
+                <th>Đến ngày</th>
+                <th>Lý do</th>
+                <th>Thao tác</th>
+            </tr>
+        </thead>
+        <tbody>
+            @foreach (var item in Model)
+            {
+                <tr>
+                    <td>@item.User?.FullName</td>
+                    <td>@item.StartDate.ToString("dd/MM/yyyy")</td>
+                    <td>@item.EndDate.ToString("dd/MM/yyyy")</td>
+                    <td>@item.Reason</td>
+                    <td>
+                        <form asp-action="UpdateLeaveStatus" method="post">
+                            <input type="hidden" name="id" value="@item.Id" />
+                            <button name="status" value="Approved" class="btn btn-success btn-sm">Duyệt</button>
+                            <button name="status" value="Rejected" class="btn btn-danger btn-sm">Từ chối</button>
+                        </form>
+                    </td>
+                </tr>
+            }
+        </tbody>
+    </table>
+</div>

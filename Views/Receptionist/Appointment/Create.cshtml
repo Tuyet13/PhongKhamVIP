@@ -1,0 +1,50 @@
+﻿@model IEnumerable<PhongKhamVIP.Models.Clinical.Appointment>
+
+@{
+    Layout = "~/Views/Shared/_ReceptionistLayout.cshtml";
+    ViewData["Title"] = "Đăng ký lịch khám";
+}
+
+<div class="container mt-4">
+    <div class="row justify-content-center">
+        <div class="col-md-8">
+            <div class="card shadow-sm">
+                <div class="card-header bg-primary text-white">
+                    <h5 class="mb-0"><i class="bi bi-calendar-plus"></i> Đăng ký lịch khám mới</h5>
+                </div>
+                <div class="card-body">
+                    <form asp-controller="ReceptionistAppointment" asp-action="Create" method="post">
+                        @Html.AntiForgeryToken()
+
+                        <div class="mb-3">
+                            <label class="form-label">Chọn Bệnh nhân</label>
+                            <input asp-for="PatientId" class="form-control" placeholder="Nhập ID bệnh nhân..." required />
+                        </div>
+
+                        <div class="mb-3">
+                            <label class="form-label">Chọn Bác sĩ</label>
+                            <select asp-for="DoctorId" class="form-control" required>
+                                <option value="">-- Chọn bác sĩ --</option>
+                            </select>
+                        </div>
+
+                        <div class="mb-3">
+                            <label class="form-label">Ngày và Giờ khám</label>
+                            <input asp-for="AppointmentDate" type="datetime-local" class="form-control" required />
+                        </div>
+
+                        <div class="mb-3">
+                            <label class="form-label">Ghi chú</label>
+                            <textarea asp-for="Note" class="form-control" rows="3"></textarea>
+                        </div>
+
+                        <div class="d-grid gap-2">
+                            <button type="submit" class="btn btn-primary btn-lg">Xác nhận đặt lịch</button>
+                            <a asp-controller="ReceptionistAppointment" asp-action="Index" class="btn btn-secondary">Quay lại danh sách</a>
+                        </div>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>

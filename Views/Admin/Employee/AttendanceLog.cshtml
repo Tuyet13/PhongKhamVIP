@@ -1,0 +1,51 @@
+﻿@model IEnumerable<PhongKhamVIP.Models.Users.User>
+@{
+    Layout = "_AdminLayout";
+    ViewData["Title"] = "Nhật Ký Chấm Công Nhân Sự";
+    // Đổi kiểu Dictionary Key từ string sang int ở dòng dưới đây:
+    var attendances = ViewBag.Attendances as Dictionary<int, PhongKhamVIP.Models.Finance.Attendance>;
+    int stt = 1;
+}
+
+<!-- Giữ nguyên khối thiết kế giao diện bên trên, chỉ sửa phần xử lý dữ liệu trong thẻ <tbody> -->
+<tbody>
+    @if (Model != null)
+    {
+        foreach (var user in Model)
+        {
+            // Tìm kiếm trực tiếp bằng khóa nguyên gốc user.Id (int)
+            var record = (attendances != null && attendances.ContainsKey(user.Id)) ? attendances[user.Id] : null;
+
+            <tr class="attendance-row" data-user-id="@user.Id">
+                <td class="text-center">@(stt++)</td>
+                <td class="fw-bold">@user.FullName</td>
+                <td class="text-center">
+                    <span class="badge @(user.Role == "Doctor" ? "bg-success" : "bg-warning text-dark") rounded-pill px-3 py-2">
+                        @(user.Role == "Doctor" ? "Bác sĩ" : "Lễ tân")
+                    </span>
+                </td>
+                <td class="text-center">
+                    <input type="time" value="@(record?.CheckIn?.ToString(@"hh\:mm"))" class="form-control form-control-sm text-center rounded-pill input-checkin" />
+                </td>
+                <td class="text-center">
+                    <input type="time" value="@(record?.CheckOut?.ToString(@"hh\:mm"))" class="form-control form-control-sm text-center rounded-pill input-checkout" />
+                </td>
+                <td class="text-center">
+                    <select class="form-select form-select-sm rounded-pill text-center fw-bold select-status">
+                        <option value="Absent" selected="@(record?.Status == "Absent" || record == null)">Vắng mặt</option>
+                        <option value="Present" selected="@(record?.Status == "Present")">Có đi làm</option>
+                        <option value="Late" selected="@(record?.Status == "Late")">Đi muộn</option>
+                    </select>
+                </td>
+                <td>
+                    <input type="text" value="@record?.Note" class="form-control form-control-sm rounded-3 input-note" placeholder="Chưa có ghi chú phát sinh..." />
+                </td>
+                <td class="text-center">
+                    <button type="button" class="btn btn-primary btn-sm btn-save-attendance rounded-pill px-3">
+                        <i class="bi bi-check-circle"></i> Cập nhật
+                    </button>
+                </td>
+            </tr>
+        }
+    }
+</tbody>

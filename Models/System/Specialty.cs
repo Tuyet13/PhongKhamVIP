@@ -1,4 +1,5 @@
-﻿using System.ComponentModel.DataAnnotations;
+﻿using PhongKhamVIP.Models.Users;
+using System.ComponentModel.DataAnnotations;
 
 namespace PhongKhamVIP.Models.System
 {
@@ -12,5 +13,6 @@ namespace PhongKhamVIP.Models.System
 
         [StringLength(200)]
         public string Description { get; set; }
+        public ICollection<Doctor> Doctors { get; set; } // Một chuyên khoa có nhiều bác sĩ
     }
 }

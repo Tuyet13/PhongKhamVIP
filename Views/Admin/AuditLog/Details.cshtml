@@ -1,0 +1,39 @@
+﻿@model PhongKhamVIP.Models.System.AuditLog
+
+@{
+    Layout = "_AdminLayout";
+    ViewData["Title"] = "Chi Tiết Nhật Ký";
+}
+
+<div class="container mt-4" style="max-width: 800px;">
+    <div class="card shadow-sm border-0 rounded-3">
+        <div class="card-header bg-dark text-white py-3">
+            <h5 class="m-0"><i class="bi bi-info-circle"></i> Chi Tiết Nhật Ký Thao Tác - ID #@Model.Id</h5>
+        </div>
+        <div class="card-body">
+            <table class="table table-bordered">
+                <tr>
+                    <th style="width: 200px;" class="bg-light">Tài khoản thực hiện:</th>
+                    <td><strong class="text-primary">@Model.ActionBy</strong></td>
+                </tr>
+                <tr>
+                    <th class="bg-light">Phân loại hành động:</th>
+                    <td><span class="badge bg-secondary">@Model.ActionType</span></td>
+                </tr>
+                <tr>
+                    <th class="bg-light">Thời gian ghi nhận:</th>
+                    <td>@Model.Timestamp.ToString("dd/MM/yyyy HH:mm:ss")</td>
+                </tr>
+                <tr>
+                    <th class="bg-light align-top">Nội dung thay đổi chi tiết:</th>
+                    <td>
+                        <div class="p-3 bg-light rounded border" style="white-space: pre-wrap; font-family: monospace;">@Model.Description</div>
+                    </td>
+                </tr>
+            </table>
+            <div class="text-end mt-3">
+                <a href="/AuditLog" class="btn btn-secondary rounded-pill px-4">Quay lại danh sách</a>
+            </div>
+        </div>
+    </div>
+</div>

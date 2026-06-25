@@ -1,0 +1,65 @@
+﻿@{
+    ViewData["Title"] = "Dashboard Bệnh Nhân";
+    Layout = "~/Views/Shared/_PatientLayout.cshtml";
+}
+
+<div class="container mt-4">
+
+    <div class="text-center mb-5">
+        <h2>Xin chào @User.Identity?.Name</h2>
+        <p>Chào mừng bạn đến với hệ thống quản lý phòng khám.</p>
+    </div>
+
+    <div class="row">
+
+        <div class="col-md-3 mb-3">
+            <div class="card shadow">
+                <div class="card-body text-center">
+                    <h5>Đặt lịch khám</h5>
+                    <a asp-action="CreateAppointment"
+                       class="btn btn-primary">
+                        Truy cập
+                    </a>
+                </div>
+            </div>
+        </div>
+
+        <div class="col-md-3 mb-3">
+            <div class="card shadow">
+                <div class="card-body text-center">
+                    <h5>Lịch khám</h5>
+                    <a asp-action="MyAppointments"
+                       class="btn btn-success">
+                        Xem
+                    </a>
+                </div>
+            </div>
+        </div>
+
+        <div class="col-md-3 mb-3">
+            <div class="card shadow">
+                <div class="card-body text-center">
+                    <h5>Hóa đơn</h5>
+                    <a asp-action="MyInvoices"
+                       class="btn btn-warning">
+                        Xem
+                    </a>
+                </div>
+            </div>
+        </div>
+
+        <div class="col-md-3 mb-3">
+            <div class="card shadow">
+                <div class="card-body text-center">
+                    <h5>Đơn thuốc</h5>
+                    <a asp-action="MyPrescriptions"
+                       class="btn btn-info">
+                        Xem
+                    </a>
+                </div>
+            </div>
+        </div>
+
+    </div>
+
+</div>

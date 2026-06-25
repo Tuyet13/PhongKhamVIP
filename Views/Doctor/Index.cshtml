@@ -1,0 +1,46 @@
+﻿@model IEnumerable<PhongKhamVIP.Models.Clinical.Appointment>
+
+@{
+    ViewData["Title"] = "Lịch khám bệnh";
+    Layout = "~/Views/Shared/_LayoutDoctor.cshtml";
+}
+
+<div class="card shadow-sm border-0">
+    <div class="card-header bg-white border-bottom py-3">
+        <h5 class="mb-0 fw-bold text-primary"><i class="bi bi-calendar-check me-2"></i>Lịch khám hôm nay</h5>
+    </div>
+    <div class="card-body">
+        <table class="table table-hover align-middle">
+            <thead class="table-light">
+                <tr>
+                    <th>Bệnh nhân</th>
+                    <th>Giờ khám</th>
+                    <th>Trạng thái</th>
+                    <th>Hành động</th>
+                </tr>
+            </thead>
+            <tbody>
+                @foreach (var item in Model)
+                {
+                    <tr>
+                        <td>
+                            <div class="fw-bold">@item.Patient.FullName</div>
+                            <small class="text-muted">ID: @item.PatientId</small>
+                        </td>
+                        <td>@item.TimeSlot</td>
+                        <td>
+                            <span class="badge @(item.Status == "Confirmed" ? "bg-success" : "bg-warning")">
+                                @item.Status
+                            </span>
+                        </td>
+                        <td>
+                            <a asp-action="MedicalExamination" asp-route-id="@item.Id" class="btn btn-sm btn-info text-white">
+                                <i class="bi bi-clipboard-pulse"></i> Khám bệnh
+                            </a>
+                        </td>
+                    </tr>
+                }
+            </tbody>
+        </table>
+    </div>
+</div>

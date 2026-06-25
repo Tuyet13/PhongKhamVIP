@@ -3,6 +3,7 @@ using System.ComponentModel.DataAnnotations;
 using System.ComponentModel.DataAnnotations.Schema;
 // --- THÊM CÁC DÒNG USING NÀY ĐỂ KẾT NỐI ĐẾN THƯ MỤC CLINICAL VÀ SYSTEM ---
 using PhongKhamVIP.Models.Clinical;
+using PhongKhamVIP.Models.Finance;
 using PhongKhamVIP.Models.System;
 
 namespace PhongKhamVIP.Models.Users
@@ -30,5 +31,8 @@ namespace PhongKhamVIP.Models.Users
         // Mối quan hệ liên kết
         public virtual ICollection<Appointment> Appointments { get; set; }
         public virtual ICollection<MedicalRecord> MedicalRecords { get; set; }
+        public virtual ICollection<Attendance> Attendances { get; set; }
+        public virtual ICollection<LeaveRequest> LeaveRequests { get; set; }
+        public virtual ICollection<Salary> Salaries { get; set; }
     }
 }

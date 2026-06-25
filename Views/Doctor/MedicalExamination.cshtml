@@ -1,0 +1,30 @@
+﻿@model PhongKhamVIP.Models.Clinical.Appointment
+
+@{
+    ViewData["Title"] = "Hồ sơ khám bệnh";
+    Layout = "~/Views/Shared/_LayoutDoctor.cshtml";
+}
+
+<div class="card shadow-sm border-0">
+    <div class="card-header bg-white">
+        <h5 class="mb-0">Khám bệnh cho: @Model.Patient.FullName</h5>
+    </div>
+    <div class="card-body">
+        <form asp-action="SaveExamination" method="post">
+            <input type="hidden" name="AppointmentId" value="@Model.Id" />
+
+            <div class="mb-3">
+                <label class="form-label">Chẩn đoán</label>
+                <textarea name="Diagnosis" class="form-control" rows="3" required></textarea>
+            </div>
+
+            <div class="mb-3">
+                <label class="form-label">Đơn thuốc</label>
+                <textarea name="Prescription" class="form-control" rows="3" placeholder="Nhập tên thuốc và cách dùng..."></textarea>
+            </div>
+
+            <button type="submit" class="btn btn-primary px-4">Lưu hồ sơ & Hoàn tất</button>
+            <a asp-action="Index" class="btn btn-secondary">Quay lại</a>
+        </form>
+    </div>
+</div>

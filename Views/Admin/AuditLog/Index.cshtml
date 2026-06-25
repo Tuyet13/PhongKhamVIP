@@ -1,0 +1,94 @@
+﻿@model IEnumerable<PhongKhamVIP.Models.System.AuditLog>
+
+@{
+    Layout = "_AdminLayout";
+    ViewData["Title"] = "Nhật Ký Hệ Thống";
+    int stt = 1;
+}
+
+<div class="container-fluid mt-4">
+    <div class="card shadow-sm border-0 rounded-3">
+        <div class="card-header bg-white py-3 d-flex justify-content-between align-items-center">
+            <h4 class="m-0 font-weight-bold text-danger"><i class="bi bi-journal-text"></i> Nhật Ký Hoạt Động Hệ Thống</h4>
+            <span class="badge bg-secondary rounded-pill px-3 py-2">Tổng số: @Model.Count() bản ghi</span>
+        </div>
+        <div class="card-body">
+
+            <form asp-action="Index" method="get" class="mb-3 row g-2">
+                <div class="col-md-4">
+                    <input type="text" name="searchUser" value="@ViewBag.SearchUser" class="form-control" placeholder="Tìm tên tài khoản (Action By)...">
+                </div>
+                <div class="col-md-4">
+                    <input type="text" name="searchType" value="@ViewBag.SearchType" class="form-control" placeholder="Tìm loại hành động (Action Type)...">
+                </div>
+                <div class="col-md-2">
+                    <button class="btn btn-danger w-100" type="submit"><i class="bi bi-search"></i> Lọc dữ liệu</button>
+                </div>
+            </form>
+
+            <div class="table-responsive">
+                <table class="table table-hover align-middle border-light">
+                    <thead class="text-white" style="background: #dc3545;">
+                        <tr>
+                            <th class="text-center" style="width: 80px;">STT</th>
+                            <th>Tài khoản thực hiện</th>
+                            <th class="text-center">Loại hành động</th>
+                            <th>Mô tả chi tiết</th>
+                            <th class="text-center">Thời gian thực hiện</th>
+                            <th class="text-center" style="width: 100px;">Thao tác</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        @if (Model != null && Model.Any())
+                        {
+                            foreach (var item in Model)
+                            {
+                                <tr>
+                                    <td class="text-center">@(stt++)</td>
+                                    <td><span class="badge bg-dark px-2 py-1">@item.ActionBy</span></td>
+                                    <td class="text-center">
+                                        @if (item.ActionType.Contains("Xóa") || item.ActionType.Contains("Delete"))
+                                        {
+                                            <span class="badge bg-danger px-2 py-1 rounded-pill">@item.ActionType</span>
+                                        }
+                                        else if (item.ActionType.Contains("Sửa") || item.ActionType.Contains("Update"))
+                                        {
+                                            <span class="badge bg-warning text-dark px-2 py-1 rounded-pill">@item.ActionType</span>
+                                        }
+                                        else if (item.ActionType.Contains("Thêm") || item.ActionType.Contains("Create"))
+                                        {
+                                            <span class="badge bg-success px-2 py-1 rounded-pill">@item.ActionType</span>
+                                        }
+                                        else
+                                        {
+                                            <span class="badge bg-info text-dark px-2 py-1 rounded-pill">@item.ActionType</span>
+                                        }
+                                    </td>
+                                    <td>
+                                        <div class="text-truncate" style="max-width: 400px;" title="@item.Description">
+                                            @item.Description
+                                        </div>
+                                    </td>
+                                    <td class="text-center text-muted" style="font-size: 13px;">
+                                        @item.Timestamp.ToString("dd/MM/yyyy HH:mm:ss")
+                                    </td>
+                                    <td class="text-center">
+                                        <a href="/AuditLog/Details/@item.Id" class="btn btn-outline-secondary btn-sm" title="Xem chi tiết">
+                                            <i class="bi bi-eye"></i>
+                                        </a>
+                                    </td>
+                                </tr>
+                            }
+                        }
+                        else
+                        {
+                            <tr>
+                                <td colspan="6" class="text-center text-muted py-4">Hệ thống chưa lưu lại lịch sử thao tác nào.</td>
+                            </tr>
+                        }
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    </div>
+</div>

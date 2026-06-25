@@ -17,7 +17,7 @@ using Microsoft.AspNetCore.Authentication.Cookies;
 using MimeKit;
 using MailKit.Security;
 
-namespace PhongKhamVIP.Controllers.Users
+namespace PhongKhamVIP.Controllers
 {
     // Class nhận dữ liệu đăng nhập từ giao diện View
     public class LoginViewModel
@@ -76,6 +76,13 @@ namespace PhongKhamVIP.Controllers.Users
         public IActionResult Register()
         {
             return View("~/Views/Auth/Register.cshtml");
+        }
+        // Trong AccountController.cs
+        [HttpGet]
+        public IActionResult AccessDenied()
+        {
+            // Bạn có thể tạo file Views/Auth/AccessDenied.cshtml để thông báo cho người dùng
+            return View("~/Views/Auth/AccessDenied.cshtml");
         }
 
         [HttpPost]
@@ -195,7 +202,7 @@ namespace PhongKhamVIP.Controllers.Users
             }
 
             var validOtp = await _context.OtpVerifications
-                .Where(o => o.Receiver == target && o.OtpCode == otpCode && !o.IsUsed && o.ExpiredAt > DateTime.Now) // FIX TỪ 'o.Target' THÀNH 'o.Receiver'
+                .Where(o => o.Receiver == target && o.OtpCode == otpCode && !o.IsUsed && o.ExpiredAt > DateTime.Now)
                 .OrderByDescending(o => o.Id)
                 .FirstOrDefaultAsync();
 
@@ -209,44 +216,55 @@ namespace PhongKhamVIP.Controllers.Users
             validOtp.IsUsed = true;
             await _context.SaveChangesAsync();
 
-            // LƯU TÀI KHOẢN MỚI SAU KHI ĐĂNG KÝ VÀ XÁC THỰC OTP THÀNH CÔNG
+            // 1. XỬ LÝ ĐĂNG KÝ (Tại ConfirmOtp)
             if (TempData["IsRegisterFlow"] != null && (bool)TempData["IsRegisterFlow"])
             {
-                try
+                using (var transaction = await _context.Database.BeginTransactionAsync())
                 {
-                    var newUser = new User
+                    try
                     {
-                        Username = TempData["Reg_Username"]?.ToString() ?? "",
-                        PasswordHash = TempData["Reg_Password"]?.ToString() ?? "",
-                        Email = TempData["Reg_Email"]?.ToString() ?? "",
-                        FullName = TempData["Reg_FullName"]?.ToString() ?? "",
-                        Phone = TempData["Reg_Phone"]?.ToString() ?? "",
-                        Role = "Patient",
-                        CreatedAt = DateTime.Now
-                    };
+                        var newUser = new User
+                        {
+                            Username = TempData["Reg_Username"]?.ToString() ?? "",
+                            PasswordHash = TempData["Reg_Password"]?.ToString() ?? "",
+                            Email = TempData["Reg_Email"]?.ToString() ?? "",
+                            FullName = TempData["Reg_FullName"]?.ToString() ?? "",
+                            Phone = TempData["Reg_Phone"]?.ToString() ?? "",
+                            Role = "Patient",
+                            CreatedAt = DateTime.Now
+                        };
 
-                    _context.Users.Add(newUser);
-                    await _context.SaveChangesAsync();
+                        _context.Users.Add(newUser);
+                        await _context.SaveChangesAsync(); // Lưu user để có Id
 
-                    TempData["SuccessMessage"] = "Chúc mừng Quý khách đã tạo tài khoản thành viên thành công tại Hệ thống Phòng Khám VIP!";
-                    return RedirectToAction("Login");
-                }
-                catch (Exception ex)
-                {
-                    var innerMsg = ex.InnerException != null ? ex.InnerException.Message : ex.Message;
-                    ModelState.AddModelError("", $"Lỗi hệ thống khi lưu hồ sơ: {innerMsg}");
-                    ViewBag.Target = target;
-                    return View("~/Views/Auth/VerifyOtp.cshtml");
+                        // TỰ ĐỘNG TẠO HỒ SƠ BỆNH NHÂN
+                        var newPatient = new Patient
+                        {
+                            UserId = newUser.Id,
+                            FullName = newUser.FullName, // Bắt buộc
+                            Phone = newUser.Phone
+                        };
+
+                        _context.Patients.Add(newPatient);
+                        await _context.SaveChangesAsync();
+
+                        await transaction.CommitAsync();
+                        TempData["SuccessMessage"] = "Đăng ký thành công!";
+                        return RedirectToAction("Login");
+                    }
+                    catch (Exception ex)
+                    {
+                        await transaction.RollbackAsync();
+                        ModelState.AddModelError("", "Lỗi hệ thống: " + ex.Message);
+                        return View("~/Views/Auth/VerifyOtp.cshtml");
+                    }
                 }
             }
-
-            // LOGIC ĐĂNG NHẬP QUA OTP
+            // 2. XỬ LÝ ĐĂNG NHẬP BẰNG OTP
             var user = await _context.Users.FirstOrDefaultAsync(u => u.Email == target);
-
             if (user == null)
             {
-                ModelState.AddModelError("", "Tài khoản liên kết với địa chỉ Email này không tồn tại trên hệ thống.");
-                ViewBag.Target = target;
+                ModelState.AddModelError("", "Tài khoản không tồn tại.");
                 return View("~/Views/Auth/VerifyOtp.cshtml");
             }
 
@@ -290,16 +308,16 @@ namespace PhongKhamVIP.Controllers.Users
 
         private IActionResult RedirectUserByRole(string? role)
         {
-            if (role == "Admin")
+            return role switch
             {
-                return RedirectToAction("Index", "AdminDashboard");
-            }
-            else if (role == "Doctor")
-            {
-                return RedirectToAction("Index", "DoctorSchedule");
-            }
-            return RedirectToAction("Index", "Home");
+                "Admin" => RedirectToAction("Index", "AdminDashboard"),
+                "Doctor" => RedirectToAction("Index", "Doctor"),
+                "Receptionist" => RedirectToAction("Index", "Receptionist"),
+                "Patient" => RedirectToAction("Index", "PatientDashboard"),
+                _ => RedirectToAction("Index", "Home")
+            };
         }
+    
 
         private async Task SendOtpEmailReal(string toEmail, string otp)
         {
@@ -314,18 +332,38 @@ namespace PhongKhamVIP.Controllers.Users
             var bodyBuilder = new BodyBuilder
             {
                 HtmlBody = $@"
-                    <div style='font-family: Arial, sans-serif; max-width: 500px; margin: 0 auto; border: 1px solid #e0e0e0; border-radius: 8px; padding: 20px;'>
-                        <h2 style='color: #008094; text-align: center; margin-bottom: 25px;'>HỆ THỐNG PHÒNG KHÁM VIP</h2>
-                        <p>Kính chào Quý khách,</p>
-                        <p>Hệ thống nhận được yêu cầu cung cấp mã OTP để xác thực thông tin tài khoản thành viên từ phía Quý khách.</p>
-                        <div style='background-color: #f4fbfd; border: 1px dashed #008094; padding: 18px; text-align: center; margin: 25px 0; border-radius: 6px;'>
-                            <p style='margin: 0; font-size: 14px; color: #555555;'>Mã xác thực của Quý khách là:</p>
-                            <span style='font-size: 28px; font-weight: bold; color: #008b9b; letter-spacing: 5px; display: block; margin-top: 10px;'>{otp}</span>
-                        </div>
-                        <p style='color: #d9534f; font-size: 13px; font-style: italic;'>* Lưu ý: Mã OTP này có thời hạn sử dụng trong vòng 5 phút và chỉ áp dụng cho 1 lần xác thực duy nhất. Để đảm bảo an toàn, Quý khách tuyệt đối không cung cấp mã này cho bất kỳ ai.</p>
-                        <hr style='border: 0; border-top: 1px solid #eeeeee; margin: 25px 0;'/>
-                        <p style='font-size: 11px; color: #999999; text-align: center; margin: 0;'>Đây là thông điệp tự động từ hệ thống quản lý phòng khám, vui lòng không phản hồi trực tiếp email này.</p>
-                    </div>"
+    <div style='font-family: 'Segoe UI', Arial, sans-serif; max-width: 600px; margin: 0 auto; border: 1px solid #e0e0e0; border-radius: 12px; overflow: hidden;'>
+        <div style='background-color: #008094; padding: 20px; text-align: center;'>
+            <h2 style='color: #ffffff; margin: 0;'>PHÒNG KHÁM VIP</h2>
+        </div>
+
+        <div style='padding: 30px;'>
+            <h3 style='color: #333;'>Xin chào Quý khách,</h3>
+            <p style='color: #555; line-height: 1.6;'>
+                Chúng tôi nhận được yêu cầu xác thực tài khoản từ hệ thống của <b>Phòng Khám VIP</b>. 
+                Để hoàn tất quá trình này, vui lòng sử dụng mã xác thực dưới đây:
+            </p>
+
+            <div style='background-color: #f4fbfd; border: 2px dashed #008094; padding: 25px; text-align: center; margin: 30px 0; border-radius: 8px;'>
+                <span style='font-size: 32px; font-weight: bold; color: #008094; letter-spacing: 8px;'>{otp}</span>
+            </div>
+
+            <p style='color: #d9534f; font-weight: bold; font-size: 0.9em;'>
+                <i class='fa fa-clock'></i> Mã xác thực có hiệu lực trong vòng 5 phút.
+            </p>
+            
+            <p style='color: #777; font-size: 0.9em; line-height: 1.6;'>
+                Lưu ý: Để bảo mật thông tin, tuyệt đối không chia sẻ mã này cho bất kỳ ai, kể cả nhân viên phòng khám. 
+                Nếu Quý khách không thực hiện yêu cầu này, vui lòng bỏ qua email và liên hệ với chúng tôi nếu cần hỗ trợ.
+            </p>
+        </div>
+
+        <div style='background-color: #f9f9f9; padding: 20px; text-align: center; color: #888; font-size: 0.8em;'>
+            <p>Phòng Khám VIP - Chăm sóc sức khỏe tận tâm</p>
+            <p>Hotline hỗ trợ: 1900 xxxx | Website: www.phongkhamvip.com</p>
+            <p>© 2026 Phòng Khám VIP. Tất cả các quyền được bảo lưu.</p>
+        </div>
+    </div>"
             };
             message.Body = bodyBuilder.ToMessageBody();
 

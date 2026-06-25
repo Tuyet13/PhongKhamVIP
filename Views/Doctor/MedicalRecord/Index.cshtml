@@ -1,0 +1,47 @@
+﻿@model IEnumerable<PhongKhamVIP.Models.Clinical.MedicalRecord>
+@{
+    ViewData["Title"] = "Lịch sử khám bệnh";
+    Layout = "~/Views/Shared/_LayoutDoctor.cshtml";
+}
+
+<div class="container-fluid mt-4">
+    <div class="card shadow-sm">
+        <div class="card-header bg-white">
+            <h4 class="mb-0 text-primary"><i class="bi bi-clock-history"></i> Lịch sử khám bệnh</h4>
+        </div>
+        <div class="card-body">
+            <table class="table table-hover table-striped">
+                <thead class="table-light">
+                    <tr>
+                        <th>Ngày khám</th>
+                        <th>Bác sĩ</th>
+                        <th>Triệu chứng</th>
+                        <th>Chẩn đoán</th>
+                        <th>Hướng điều trị</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    @if (Model != null && Model.Any())
+                    {
+                        @foreach (var item in Model)
+                        {
+                            <tr>
+                                <td>@item.CreatedAt.ToString("dd/MM/yyyy")</td>
+                                <td>@(item.Doctor?.User?.FullName ?? "N/A")</td>
+                                <td>@item.Symptoms</td>
+                                <td><span class="badge bg-info text-dark">@item.Diagnosis</span></td>
+                                <td>@item.TreatmentPlan</td>
+                            </tr>
+                        }
+                    }
+                    else
+                    {
+                        <tr>
+                            <td colspan="5" class="text-center text-muted">Chưa có lịch sử khám bệnh nào.</td>
+                        </tr>
+                    }
+                </tbody>
+            </table>
+        </div>
+    </div>
+</div>

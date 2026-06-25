@@ -1,0 +1,38 @@
+﻿@{
+    ViewData["Title"] = "Trang chủ Lễ tân";
+    Layout = "_ReceptionistLayout"; // Thay _AdminLayout bằng _ReceptionistLayout
+}
+<div class="container-fluid mt-4">
+    <h2 class="mb-4">Chào mừng Lễ tân, @User.Identity.Name!</h2>
+
+    <div class="row">
+        <div class="col-md-4">
+            <div class="card text-white bg-primary mb-3">
+                <div class="card-body">
+                    <h5 class="card-title">Lịch hẹn hôm nay</h5>
+                    <p class="card-text fs-2">@ViewBag.PendingAppointments</p>
+                    <a href="/Receptionist/ManageAppointments" class="text-white">Xem chi tiết &raquo;</a>
+                </div>
+            </div>
+        </div>
+
+        <div class="col-md-4">
+            <div class="card text-white bg-danger mb-3">
+                <div class="card-body">
+                    <h5 class="card-title">Bác sĩ nghỉ phép</h5>
+                    <p class="card-text fs-2">@ViewBag.DoctorsOnLeave</p>
+                    <small>Cần lưu ý khi sắp xếp lịch!</small>
+                </div>
+            </div>
+        </div>
+
+        <div class="col-md-4">
+            <div class="card text-white bg-success mb-3">
+                <div class="card-body">
+                    <h5 class="card-title">Tiếp nhận bệnh nhân</h5>
+                    <a href="/Receptionist/CheckIn" class="btn btn-light mt-2">Mở cửa sổ Check-in</a>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>

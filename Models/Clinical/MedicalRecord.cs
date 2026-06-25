@@ -1,6 +1,6 @@
-﻿using PhongKhamVIP.Models.Users;
+﻿using System.ComponentModel.DataAnnotations;
 using System.ComponentModel.DataAnnotations.Schema;
-using System.ComponentModel.DataAnnotations;
+using PhongKhamVIP.Models.Users; // Đảm bảo đã import namespace chứa lớp Patient
 
 namespace PhongKhamVIP.Models.Clinical
 {
@@ -13,7 +13,7 @@ namespace PhongKhamVIP.Models.Clinical
         public int PatientId { get; set; }
 
         [ForeignKey("PatientId")]
-        public virtual Patient Patient { get; set; }
+        public virtual Patient Patient { get; set; } // ĐỔI TỪ User SANG Patient
 
         [Required]
         public int DoctorId { get; set; }
@@ -21,18 +21,13 @@ namespace PhongKhamVIP.Models.Clinical
         [ForeignKey("DoctorId")]
         public virtual Doctor Doctor { get; set; }
 
-        [Required]
-        public DateTime DateOfVisit { get; set; }
-
-        [Required, StringLength(500)]
-        public string Symptoms { get; set; } // Triệu chứng lâm sàng
+        public DateTime CreatedAt { get; set; }
+        public string Prescription { get; set; }
+        public string Symptoms { get; set; }
 
         [Required, StringLength(200)]
-        public string Diagnosis { get; set; } // Chẩn đoán bệnh (ICD-10)
+        public string Diagnosis { get; set; }
 
-        public string TreatmentPlan { get; set; } // Hướng điều trị
-
-        // Mối quan hệ liên kết sang Đơn thuốc
-        public virtual Prescription Prescription { get; set; }
+        public string TreatmentPlan { get; set; }
     }
 }

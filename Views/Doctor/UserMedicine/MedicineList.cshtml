@@ -1,0 +1,52 @@
+﻿@model IEnumerable<PhongKhamVIP.Models.Clinical.Medicine>
+
+@{
+    ViewData["Title"] = "Tra cứu thuốc";
+    Layout = "~/Views/Shared/_LayoutDoctor.cshtml";
+}
+
+<div class="container-fluid">
+    <h3 class="my-4">Tra cứu danh mục thuốc</h3>
+
+    <form asp-controller="Medicine" asp-action="Index" method="get" class="form-inline mb-4">
+        <div class="input-group">
+            <input type="text" name="SearchString" class="form-control" placeholder="Nhập tên thuốc..." />
+            <div class="input-group-append">
+                <button type="submit" class="btn btn-primary">Tìm kiếm</button>
+            </div>
+        </div>
+    </form>
+
+    <table class="table table-bordered table-hover">
+        <thead class="thead-light">
+            <tr>
+                <th>Tên thuốc</th>
+                <th>Đơn vị</th>
+                <th>Giá bán</th>
+                <th>Tồn kho</th>
+                <th>Mô tả</th>
+            </tr>
+        </thead>
+        <tbody>
+            @if (Model.Any())
+            {
+                @foreach (var item in Model)
+                {
+                    <tr>
+                        <td>@item.Name</td>
+                        <td>@item.Unit</td>
+                        <td>@item.Price.ToString("N0") VNĐ</td>
+                        <td>@item.StockQuantity</td>
+                        <td>@item.Description</td>
+                    </tr>
+                }
+            }
+            else
+            {
+                <tr>
+                    <td colspan="5" class="text-center">Không tìm thấy thuốc nào phù hợp.</td>
+                </tr>
+            }
+        </tbody>
+    </table>
+</div>

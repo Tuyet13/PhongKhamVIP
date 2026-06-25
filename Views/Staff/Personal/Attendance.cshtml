@@ -1,0 +1,29 @@
+﻿@using PhongKhamVIP.Models.Finance
+@model IEnumerable<Attendance>
+
+@{
+    Layout = ViewBag.Layout ?? "~/Views/Shared/_ReceptionistLayout.cshtml";
+    ViewData["Title"] = "Chấm công";
+}
+
+<div class="container mt-4">
+    <h3>Chấm công</h3>
+    <form asp-action="CheckIn" method="post">
+        <button type="submit" class="btn btn-primary">Chấm công hôm nay</button>
+    </form>
+    <table class="table mt-3">
+        <thead>
+            <tr><th>Ngày</th><th>Check-in</th><th>Trạng thái</th></tr>
+        </thead>
+        <tbody>
+            @foreach (var item in Model)
+            {
+                <tr>
+                    <td>@item.Date.ToShortDateString()</td>
+                    <td>@item.CheckIn</td>
+                    <td>@item.Status</td>
+                </tr>
+            }
+        </tbody>
+    </table>
+</div>

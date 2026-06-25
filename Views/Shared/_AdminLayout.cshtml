@@ -117,6 +117,11 @@
                     <i class="bi bi-person-badge-fill"></i> Quản lý Nhân sự
                 </a>
 
+                <a class="nav-link @(ViewContext.RouteData.Values["Controller"]?.ToString() == "Patient" ? "active" : "")"
+                   asp-controller="Patient" asp-action="Index">
+                    <i class="bi bi-people-fill"></i> Quản lý Bệnh nhân
+                </a>
+
                 <a class="nav-link @(ViewContext.RouteData.Values["Controller"]?.ToString() == "Medicine" ? "active" : "")"
                    asp-controller="Medicine" asp-action="Index">
                     <i class="bi bi-capsule"></i> Quản lý Kho thuốc
@@ -131,6 +136,11 @@
                    asp-controller="Salary" asp-action="Index">
                     <i class="bi bi-cash-stack"></i> Tính lương Nhân viên
                 </a>
+                <li class="nav-item">
+                    <a class="nav-link" asp-controller="AdminDashboard" asp-action="ManageLeaveRequests">
+                        Duyệt nghỉ phép
+                    </a>
+                </li>
 
                 <a class="nav-link @(ViewContext.RouteData.Values["Controller"]?.ToString() == "AuditLog" ? "active" : "")"
                    asp-controller="AuditLog" asp-action="Index">

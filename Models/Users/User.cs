@@ -1,7 +1,8 @@
 ﻿using System;
 using System.ComponentModel.DataAnnotations;
 using System.ComponentModel.DataAnnotations.Schema;
-
+using System.Collections.Generic;
+using PhongKhamVIP.Models.Clinical;
 namespace PhongKhamVIP.Models.Users
 {
     public class User
@@ -31,8 +32,6 @@ namespace PhongKhamVIP.Models.Users
         public string Role { get; set; }
 
         public DateTime CreatedAt { get; set; }
-
-        // Khắc phục lỗi thiếu thuộc tính 'IsActive' ở dòng 28 file EmployeeController
         [NotMapped]
         public bool IsActive { get; set; } = true;
     }

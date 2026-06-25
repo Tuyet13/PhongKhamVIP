@@ -1,0 +1,66 @@
+﻿@model IEnumerable<PhongKhamVIP.Models.Clinical.Appointment>
+
+@{
+    Layout = "~/Views/Shared/_ReceptionistLayout.cshtml";
+    ViewData["Title"] = "Danh sách lịch hẹn";
+}
+
+<div class="container mt-4">
+    <div class="d-flex justify-content-between align-items-center mb-4">
+        <h3><i class="bi bi-calendar-event text-primary"></i> Danh sách lịch hẹn</h3>
+        <a asp-controller="ReceptionistAppointment" asp-action="Create" class="btn btn-success">
+            <i class="bi bi-plus-circle"></i> Đăng ký lịch mới
+        </a>
+    </div>
+
+    <div class="card shadow-sm">
+        <div class="card-body">
+            <table class="table table-hover align-middle">
+                <thead class="table-light">
+                    <tr>
+                        <th>Bệnh nhân</th>
+                        <th>Bác sĩ</th>
+                        <th>Ngày khám</th>
+                        <th>Trạng thái</th>
+                        <th>Thao tác</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    @if (Model != null && Model.Any())
+                    {
+                        @foreach (var item in Model)
+                        {
+                            <tr>
+                                <td>@item.Patient?.FullName</td>
+                                <td>@item.Doctor?.User?.FullName</td>
+                                <td>@item.AppointmentDate.ToString("dd/MM/yyyy HH:mm")</td>
+                                <td>
+                                    <span class="badge @(item.Status == "Confirmed" ? "bg-success" : "bg-warning")">
+                                        @item.Status
+                                    </span>
+                                </td>
+                                <td>
+                                    <a asp-action="Details" asp-route-id="@item.Id" class="btn btn-sm btn-outline-primary">Chi tiết</a>
+
+                                    @if (item.Status == "Pending")
+                                    {
+                                        <form asp-controller="ReceptionistAppointment" asp-action="CheckIn" asp-route-id="@item.Id" method="post" style="display:inline;">
+                                            @Html.AntiForgeryToken()
+                                            <button type="submit" class="btn btn-sm btn-info text-white ms-1">Check-in</button>
+                                        </form>
+                                    }
+                                </td>
+                            </tr>
+                        }
+                    }
+                    else
+                    {
+                        <tr>
+                            <td colspan="5" class="text-center">Chưa có lịch hẹn nào được tạo.</td>
+                        </tr>
+                    }
+                </tbody>
+            </table>
+        </div>
+    </div>
+</div>
