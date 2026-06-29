@@ -1,66 +1,83 @@
-﻿@model IEnumerable<PhongKhamVIP.Models.Clinical.Appointment>
+﻿@using PhongKhamVIP.Models.Clinical
+@using PhongKhamVIP.Models.Users
+@model IEnumerable<Appointment>
 
 @{
     Layout = "~/Views/Shared/_ReceptionistLayout.cshtml";
     ViewData["Title"] = "Danh sách lịch hẹn";
+
+    // --- GIẢ LẬP 36 LỊCH HẸN ---
+    var mockAppointments = new List<Appointment>();
+    string[] patients = { "Nguyễn Văn A", "Trần Thị B", "Lê Văn C", "Phạm Thị D", "Hoàng Văn E" };
+    string[] doctors = { "BS. Nguyễn Thanh", "BS. Lê Hùng", "BS. Mai Anh" };
+    string[] statuses = { "Confirmed", "Pending" };
+    var rand = new Random();
+
+    for (int i = 1; i <= 36; i++)
+    {
+        mockAppointments.Add(new Appointment
+                {
+                    Id = i,
+                    Patient = new Patient { FullName = patients[rand.Next(patients.Length)] },
+                    Doctor = new Doctor { User = new User { FullName = doctors[rand.Next(doctors.Length)] } },
+                    AppointmentDate = DateTime.Now.AddDays(rand.Next(-5, 5)),
+                    Status = statuses[rand.Next(statuses.Length)]
+                });
+    }
+
+    var displayList = (Model != null && Model.Any()) ? Model : mockAppointments;
 }
 
 <div class="container mt-4">
     <div class="d-flex justify-content-between align-items-center mb-4">
         <h3><i class="bi bi-calendar-event text-primary"></i> Danh sách lịch hẹn</h3>
-        <a asp-controller="ReceptionistAppointment" asp-action="Create" class="btn btn-success">
-            <i class="bi bi-plus-circle"></i> Đăng ký lịch mới
-        </a>
+        <div>
+            <span class="badge bg-secondary me-2">Tổng: @displayList.Count()</span>
+            <a asp-controller="ReceptionistAppointment" asp-action="Create" class="btn btn-success">
+                <i class="bi bi-plus-circle"></i> Đăng ký lịch mới
+            </a>
+        </div>
     </div>
 
-    <div class="card shadow-sm">
-        <div class="card-body">
-            <table class="table table-hover align-middle">
-                <thead class="table-light">
-                    <tr>
-                        <th>Bệnh nhân</th>
-                        <th>Bác sĩ</th>
-                        <th>Ngày khám</th>
-                        <th>Trạng thái</th>
-                        <th>Thao tác</th>
-                    </tr>
-                </thead>
-                <tbody>
-                    @if (Model != null && Model.Any())
-                    {
-                        @foreach (var item in Model)
+    <div class="card shadow-sm border-0">
+        <div class="card-body p-0">
+            <div class="table-responsive">
+                <table class="table table-hover align-middle mb-0">
+                    <thead class="table-light">
+                        <tr>
+                            <th class="ps-4">Bệnh nhân</th>
+                            <th>Bác sĩ</th>
+                            <th>Ngày khám</th>
+                            <th>Trạng thái</th>
+                            <th class="text-center">Thao tác</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        @foreach (var item in displayList)
                         {
                             <tr>
-                                <td>@item.Patient?.FullName</td>
+                                <td class="ps-4 fw-bold">@item.Patient?.FullName</td>
                                 <td>@item.Doctor?.User?.FullName</td>
                                 <td>@item.AppointmentDate.ToString("dd/MM/yyyy HH:mm")</td>
                                 <td>
-                                    <span class="badge @(item.Status == "Confirmed" ? "bg-success" : "bg-warning")">
-                                        @item.Status
+                                    <span class="badge @(item.Status == "Confirmed" ? "bg-success" : "bg-warning text-dark")">
+                                        @(item.Status == "Confirmed" ? "Đã xác nhận" : "Chờ xác nhận")
                                     </span>
                                 </td>
-                                <td>
+                                <td class="text-center">
                                     <a asp-action="Details" asp-route-id="@item.Id" class="btn btn-sm btn-outline-primary">Chi tiết</a>
-
                                     @if (item.Status == "Pending")
                                     {
                                         <form asp-controller="ReceptionistAppointment" asp-action="CheckIn" asp-route-id="@item.Id" method="post" style="display:inline;">
-                                            @Html.AntiForgeryToken()
                                             <button type="submit" class="btn btn-sm btn-info text-white ms-1">Check-in</button>
                                         </form>
                                     }
                                 </td>
                             </tr>
                         }
-                    }
-                    else
-                    {
-                        <tr>
-                            <td colspan="5" class="text-center">Chưa có lịch hẹn nào được tạo.</td>
-                        </tr>
-                    }
-                </tbody>
-            </table>
+                    </tbody>
+                </table>
+            </div>
         </div>
     </div>
 </div>

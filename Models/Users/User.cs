@@ -15,11 +15,8 @@ namespace PhongKhamVIP.Models.Users
         public string Username { get; set; }
 
         public string PasswordHash { get; set; }
-
-        // Khớp hoàn toàn với trường dữ liệu gốc trong Database của bạn
         public string Phone { get; set; }
 
-        // Khắc phục lỗi thiếu thuộc tính 'PhoneNumber' ở dòng 26 file EmployeeController
         [NotMapped]
         public string PhoneNumber
         {
@@ -34,5 +31,11 @@ namespace PhongKhamVIP.Models.Users
         public DateTime CreatedAt { get; set; }
         [NotMapped]
         public bool IsActive { get; set; } = true;
+        [NotMapped]
+        public string UserName
+        {
+            get => Username;
+            set => Username = value;
+        }
     }
 }

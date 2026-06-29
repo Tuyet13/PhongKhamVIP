@@ -1,0 +1,49 @@
+﻿@model PhongKhamVIP.ViewModels.BookAppointmentViewModel
+
+@{
+    ViewData["Title"] = "Đặt lịch hẹn";
+    Layout = "_PatientLayout";
+}
+
+<div class="container mt-4">
+    <div class="card shadow">
+        <div class="card-header bg-primary text-white">
+            <h2 class="mb-0">Đặt lịch khám bệnh</h2>
+        </div>
+        <div class="card-body">
+            <form asp-controller="PatientDashboard" asp-action="BookAppointment" method="post">
+                @Html.AntiForgeryToken()
+
+                <div class="mb-3">
+                    <label class="form-label">Chọn Bác sĩ</label>
+                    <select asp-for="DoctorId" asp-items="Model.Doctors" class="form-control" required>
+                        <option value="">-- Chọn bác sĩ --</option>
+                    </select>
+                    <span asp-validation-for="DoctorId" class="text-danger"></span>
+                </div>
+
+                <div class="mb-3">
+                    <label class="form-label">Ngày giờ khám</label>
+                    <input asp-for="AppointmentDate" type="datetime-local" class="form-control" required />
+                    <span asp-validation-for="AppointmentDate" class="text-danger"></span>
+                </div>
+
+                <div class="mb-3">
+                    <label class="form-label">Ghi chú</label>
+                    <textarea asp-for="Note" class="form-control" rows="3"></textarea>
+                </div>
+
+                <div class="d-grid">
+                    <button type="submit" class="btn btn-success btn-lg">Xác nhận đặt lịch</button>
+                    <a asp-action="Index" class="btn btn-link mt-2">Quay lại bảng điều khiển</a>
+                </div>
+            </form>
+        </div>
+    </div>
+</div>
+
+@section Scripts {
+    @{
+        await Html.RenderPartialAsync("_ValidationScriptsPartial");
+    }
+}

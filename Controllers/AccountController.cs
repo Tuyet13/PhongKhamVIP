@@ -61,7 +61,7 @@ namespace PhongKhamVIP.Controllers
             {
                 // Vì IsActive được gắn [NotMapped], ta xử lý kiểm tra trạng thái hoạt động trực tiếp tại đây nếu cần thiết
                 await SignInUserAsync(user);
-                return RedirectUserByRole(user.Role);
+                return await RedirectUserByRole(user.Role);
             }
 
             ModelState.AddModelError("", "Tài khoản hoặc mật khẩu không chính xác.");
@@ -223,45 +223,67 @@ namespace PhongKhamVIP.Controllers
                 {
                     try
                     {
+                        // 1. Khởi tạo User
                         var newUser = new User
                         {
                             Username = TempData["Reg_Username"]?.ToString() ?? "",
                             PasswordHash = TempData["Reg_Password"]?.ToString() ?? "",
                             Email = TempData["Reg_Email"]?.ToString() ?? "",
-                            FullName = TempData["Reg_FullName"]?.ToString() ?? "",
+                            FullName = TempData["Reg_FullName"]?.ToString() ?? "Khách hàng",
                             Phone = TempData["Reg_Phone"]?.ToString() ?? "",
                             Role = "Patient",
                             CreatedAt = DateTime.Now
                         };
 
                         _context.Users.Add(newUser);
-                        await _context.SaveChangesAsync(); // Lưu user để có Id
+                        // Lưu để lấy UserId (newUser.Id)
+                        await _context.SaveChangesAsync();
 
-                        // TỰ ĐỘNG TẠO HỒ SƠ BỆNH NHÂN
+                        // 2. Tự động tạo hồ sơ bệnh nhân
                         var newPatient = new Patient
                         {
                             UserId = newUser.Id,
-                            FullName = newUser.FullName, // Bắt buộc
-                            Phone = newUser.Phone
+                            FullName = newUser.FullName,
+                            Phone = newUser.Phone,
+                            Address = "Chưa cập nhật", // Cột này thường NOT NULL
+                            Gender = "Khác",           // Cột này thường NOT NULL
+                            DateOfBirth = new DateTime(1900, 1, 1), // Gán ngày mặc định
+                            MedicalHistory = "Chưa có tiền sử bệnh", // Gán giá trị tránh lỗi NULL
+                            HealthInsuranceNumber = "N/A"             // Gán giá trị tránh lỗi NULL
                         };
 
                         _context.Patients.Add(newPatient);
                         await _context.SaveChangesAsync();
 
+                        // 3. Hoàn tất giao dịch
                         await transaction.CommitAsync();
-                        TempData["SuccessMessage"] = "Đăng ký thành công!";
-                        return RedirectToAction("Login");
+
+                        TempData["SuccessMessage"] = "Đăng ký thành công! Quý khách vui lòng đăng nhập.";
+                        return RedirectToAction("Login", "Account");
+                    }
+                    catch (DbUpdateException ex)
+                    {
+                        await transaction.RollbackAsync();
+
+                        // Lấy chi tiết lỗi từ Database (rất quan trọng để biết cột nào đang thiếu)
+                        var innerEx = ex.InnerException != null ? ex.InnerException.Message : ex.Message;
+                        ModelState.AddModelError("", "Lỗi lưu dữ liệu: " + innerEx);
+
+                        ViewBag.Target = TempData["UserTarget"];
+                        return View("~/Views/Auth/VerifyOtp.cshtml");
                     }
                     catch (Exception ex)
                     {
                         await transaction.RollbackAsync();
                         ModelState.AddModelError("", "Lỗi hệ thống: " + ex.Message);
+
+                        ViewBag.Target = TempData["UserTarget"];
                         return View("~/Views/Auth/VerifyOtp.cshtml");
                     }
                 }
             }
-            // 2. XỬ LÝ ĐĂNG NHẬP BẰNG OTP
-            var user = await _context.Users.FirstOrDefaultAsync(u => u.Email == target);
+                // 2. XỬ LÝ ĐĂNG NHẬP BẰNG OTP
+                var user = await _context.Users.FirstOrDefaultAsync(u => u.Email == target);
             if (user == null)
             {
                 ModelState.AddModelError("", "Tài khoản không tồn tại.");
@@ -269,7 +291,7 @@ namespace PhongKhamVIP.Controllers
             }
 
             await SignInUserAsync(user);
-            return RedirectUserByRole(user.Role);
+            return await RedirectUserByRole(user.Role);
         }
 
         // =========================================================================
@@ -306,8 +328,26 @@ namespace PhongKhamVIP.Controllers
             await HttpContext.SignInAsync(CookieAuthenticationDefaults.AuthenticationScheme, new ClaimsPrincipal(claimsIdentity), authProperties);
         }
 
-        private IActionResult RedirectUserByRole(string? role)
+        // Trong AccountController, sửa lại logic chuyển hướng
+        private async Task<IActionResult> RedirectUserByRole(string? role)
         {
+            if (role == "Patient")
+            {
+                var claim = User.FindFirst(ClaimTypes.NameIdentifier);
+                if (claim == null) return RedirectToAction("Login", "Account");
+
+                int userId = int.Parse(claim.Value);
+
+                // ĐỒNG NHẤT TÊN BẢNG LÀ 'Patients' (Sửa lại cho khớp với DB của bạn)
+                bool hasProfile = await _context.Patients.AnyAsync(p => p.UserId == userId);
+
+                if (!hasProfile)
+                {
+                    // Để tránh lỗi 404, hãy đảm bảo bạn đã tạo Controller tên 'ProfileController' và Action 'Edit'
+                    return RedirectToAction("Edit", "Profile");
+                }
+            }
+
             return role switch
             {
                 "Admin" => RedirectToAction("Index", "AdminDashboard"),
@@ -317,7 +357,6 @@ namespace PhongKhamVIP.Controllers
                 _ => RedirectToAction("Index", "Home")
             };
         }
-    
 
         private async Task SendOtpEmailReal(string toEmail, string otp)
         {

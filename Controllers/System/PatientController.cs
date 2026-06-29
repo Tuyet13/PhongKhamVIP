@@ -18,10 +18,10 @@ namespace PhongKhamVIP.Controllers.System
             _context = context;
         }
 
+        // 1. Danh sách bệnh nhân
         public async Task<IActionResult> Index(string searchString)
         {
-            // Lấy dữ liệu từ DB, bao gồm thông tin User (nếu có)
-            var patients = _context.Patients.Include(p => p.User).AsQueryable();
+            var patients = _context.Patients.Include(p => p.User).AsNoTracking();
 
             if (!string.IsNullOrEmpty(searchString))
             {
@@ -34,10 +34,14 @@ namespace PhongKhamVIP.Controllers.System
             return View("/Views/Admin/Patient/Index.cshtml", await patients.ToListAsync());
         }
 
-        public async Task<IActionResult> Details(int id)
+        // 2. Chi tiết
+        public async Task<IActionResult> Details(int? id)
         {
+            if (id == null) return NotFound();
+
             var patient = await _context.Patients
                 .Include(p => p.User)
+                .AsNoTracking()
                 .FirstOrDefaultAsync(p => p.Id == id);
 
             if (patient == null) return NotFound();
@@ -45,33 +49,44 @@ namespace PhongKhamVIP.Controllers.System
             return View("/Views/Admin/Patient/Details.cshtml", patient);
         }
 
-        public async Task<IActionResult> Edit(int id)
+        // 3. Edit (GET)
+        public async Task<IActionResult> Edit(int? id)
         {
+            if (id == null) return NotFound();
+
             var patient = await _context.Patients.FindAsync(id);
             if (patient == null) return NotFound();
+
             return View("/Views/Admin/Patient/Edit.cshtml", patient);
         }
 
+        // 4. Edit (POST)
         [HttpPost]
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> Edit(int id, Patient patient)
         {
             if (id != patient.Id) return NotFound();
 
-            // Loại bỏ User khỏi validate vì User là quan hệ khóa ngoại
-            ModelState.Remove("User");
-
             if (ModelState.IsValid)
             {
-                _context.Update(patient);
-                await _context.SaveChangesAsync();
-                TempData["Success"] = "Cập nhật thành công!";
-                return RedirectToAction(nameof(Index));
+                try
+                {
+                    // Đính kèm và cập nhật những thay đổi
+                    _context.Update(patient);
+                    await _context.SaveChangesAsync();
+                    TempData["Success"] = "Cập nhật thông tin bệnh nhân thành công!";
+                    return RedirectToAction(nameof(Index));
+                }
+                catch (DbUpdateException)
+                {
+                    ModelState.AddModelError("", "Không thể lưu thay đổi. Vui lòng kiểm tra lại dữ liệu.");
+                }
             }
             return View("/Views/Admin/Patient/Edit.cshtml", patient);
         }
 
-        [HttpPost]
+        // 5. Xóa
+        [HttpPost, ActionName("Delete")]
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> DeleteConfirmed(int id)
         {
@@ -80,7 +95,7 @@ namespace PhongKhamVIP.Controllers.System
             {
                 _context.Patients.Remove(patient);
                 await _context.SaveChangesAsync();
-                TempData["Success"] = "Đã xóa bệnh nhân!";
+                TempData["Success"] = "Đã xóa bệnh nhân khỏi hệ thống!";
             }
             return RedirectToAction(nameof(Index));
         }

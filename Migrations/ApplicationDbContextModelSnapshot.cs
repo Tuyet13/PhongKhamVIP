@@ -88,9 +88,6 @@ namespace PhongKhamVIP.Migrations
                     b.Property<int>("PatientId")
                         .HasColumnType("int");
 
-                    b.Property<int?>("PatientId1")
-                        .HasColumnType("int");
-
                     b.Property<string>("Prescription")
                         .IsRequired()
                         .HasColumnType("nvarchar(max)");
@@ -108,8 +105,6 @@ namespace PhongKhamVIP.Migrations
                     b.HasIndex("DoctorId");
 
                     b.HasIndex("PatientId");
-
-                    b.HasIndex("PatientId1");
 
                     b.ToTable("MedicalRecords");
                 });
@@ -165,8 +160,16 @@ namespace PhongKhamVIP.Migrations
                         .HasMaxLength(500)
                         .HasColumnType("nvarchar(500)");
 
+                    b.Property<string>("Dosage")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
+
                     b.Property<int>("MedicalRecordId")
                         .HasColumnType("int");
+
+                    b.Property<string>("MedicineName")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
 
                     b.HasKey("Id");
 
@@ -253,10 +256,15 @@ namespace PhongKhamVIP.Migrations
 
                     SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"));
 
+                    b.Property<DateTime>("CreatedAt")
+                        .HasColumnType("datetime2");
+
                     b.Property<decimal>("DiscountAmount")
+                        .HasPrecision(18, 2)
                         .HasColumnType("decimal(18,2)");
 
                     b.Property<decimal>("FinalAmount")
+                        .HasPrecision(18, 2)
                         .HasColumnType("decimal(18,2)");
 
                     b.Property<int?>("MedicalRecordId")
@@ -279,6 +287,7 @@ namespace PhongKhamVIP.Migrations
                         .HasColumnType("nvarchar(20)");
 
                     b.Property<decimal>("TotalAmount")
+                        .HasPrecision(18, 2)
                         .HasColumnType("decimal(18,2)");
 
                     b.HasKey("Id");
@@ -310,9 +319,11 @@ namespace PhongKhamVIP.Migrations
                         .HasColumnType("int");
 
                     b.Property<decimal>("SubTotal")
+                        .HasPrecision(18, 2)
                         .HasColumnType("decimal(18,2)");
 
                     b.Property<decimal>("UnitPrice")
+                        .HasPrecision(18, 2)
                         .HasColumnType("decimal(18,2)");
 
                     b.HasKey("Id");
@@ -320,32 +331,6 @@ namespace PhongKhamVIP.Migrations
                     b.HasIndex("InvoiceId");
 
                     b.ToTable("InvoiceDetails");
-                });
-
-            modelBuilder.Entity("PhongKhamVIP.Models.Finance.Notification", b =>
-                {
-                    b.Property<int>("Id")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("int");
-
-                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"));
-
-                    b.Property<DateTime>("CreatedAt")
-                        .HasColumnType("datetime2");
-
-                    b.Property<bool>("IsRead")
-                        .HasColumnType("bit");
-
-                    b.Property<string>("Message")
-                        .IsRequired()
-                        .HasColumnType("nvarchar(max)");
-
-                    b.Property<int>("UserId")
-                        .HasColumnType("int");
-
-                    b.HasKey("Id");
-
-                    b.ToTable("Notifications");
                 });
 
             modelBuilder.Entity("PhongKhamVIP.Models.Finance.Salary", b =>
@@ -357,12 +342,15 @@ namespace PhongKhamVIP.Migrations
                     SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"));
 
                     b.Property<decimal>("BaseSalary")
+                        .HasPrecision(18, 2)
                         .HasColumnType("decimal(18,2)");
 
                     b.Property<decimal>("Bonus")
+                        .HasPrecision(18, 2)
                         .HasColumnType("decimal(18,2)");
 
                     b.Property<decimal>("Deductions")
+                        .HasPrecision(18, 2)
                         .HasColumnType("decimal(18,2)");
 
                     b.Property<int?>("DoctorId")
@@ -372,6 +360,7 @@ namespace PhongKhamVIP.Migrations
                         .HasColumnType("int");
 
                     b.Property<decimal>("NetSalary")
+                        .HasPrecision(18, 2)
                         .HasColumnType("decimal(18,2)");
 
                     b.Property<DateTime?>("PaidDate")
@@ -405,6 +394,7 @@ namespace PhongKhamVIP.Migrations
                     SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"));
 
                     b.Property<decimal>("BasePrice")
+                        .HasPrecision(18, 2)
                         .HasColumnType("decimal(18,2)");
 
                     b.Property<string>("Description")
@@ -492,6 +482,32 @@ namespace PhongKhamVIP.Migrations
                     b.ToTable("LeaveRequests");
                 });
 
+            modelBuilder.Entity("PhongKhamVIP.Models.System.Notification", b =>
+                {
+                    b.Property<int>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("int");
+
+                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"));
+
+                    b.Property<DateTime>("CreatedAt")
+                        .HasColumnType("datetime2");
+
+                    b.Property<bool>("IsRead")
+                        .HasColumnType("bit");
+
+                    b.Property<string>("Message")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<int>("UserId")
+                        .HasColumnType("int");
+
+                    b.HasKey("Id");
+
+                    b.ToTable("Notifications");
+                });
+
             modelBuilder.Entity("PhongKhamVIP.Models.System.OtpVerification", b =>
                 {
                     b.Property<int>("Id")
@@ -560,6 +576,10 @@ namespace PhongKhamVIP.Migrations
                         .HasMaxLength(500)
                         .HasColumnType("nvarchar(500)");
 
+                    b.Property<string>("FullName")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
+
                     b.Property<int>("SpecialtyId")
                         .HasColumnType("int");
 
@@ -619,6 +639,51 @@ namespace PhongKhamVIP.Migrations
                     b.HasIndex("UserId");
 
                     b.ToTable("Patients");
+                });
+
+            modelBuilder.Entity("PhongKhamVIP.Models.Users.PatientProfile", b =>
+                {
+                    b.Property<int>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("int");
+
+                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"));
+
+                    b.Property<string>("Address")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<DateTime>("DateOfBirth")
+                        .HasColumnType("datetime2");
+
+                    b.Property<string>("FullName")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<string>("Gender")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<string>("HealthInsuranceNumber")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<string>("MedicalHistory")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<string>("Phone")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<int>("UserId")
+                        .HasColumnType("int");
+
+                    b.HasKey("Id");
+
+                    b.HasIndex("UserId");
+
+                    b.ToTable("PatientProfiles");
                 });
 
             modelBuilder.Entity("PhongKhamVIP.Models.Users.Receptionist", b =>
@@ -711,15 +776,11 @@ namespace PhongKhamVIP.Migrations
                         .OnDelete(DeleteBehavior.Restrict)
                         .IsRequired();
 
-                    b.HasOne("PhongKhamVIP.Models.Users.User", "Patient")
-                        .WithMany()
+                    b.HasOne("PhongKhamVIP.Models.Users.Patient", "Patient")
+                        .WithMany("MedicalRecords")
                         .HasForeignKey("PatientId")
                         .OnDelete(DeleteBehavior.Restrict)
                         .IsRequired();
-
-                    b.HasOne("PhongKhamVIP.Models.Users.Patient", null)
-                        .WithMany("MedicalRecords")
-                        .HasForeignKey("PatientId1");
 
                     b.Navigation("Doctor");
 
@@ -729,7 +790,7 @@ namespace PhongKhamVIP.Migrations
             modelBuilder.Entity("PhongKhamVIP.Models.Clinical.Prescription", b =>
                 {
                     b.HasOne("PhongKhamVIP.Models.Clinical.MedicalRecord", "MedicalRecord")
-                        .WithMany()
+                        .WithMany("Prescriptions")
                         .HasForeignKey("MedicalRecordId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
@@ -858,6 +919,17 @@ namespace PhongKhamVIP.Migrations
                     b.Navigation("User");
                 });
 
+            modelBuilder.Entity("PhongKhamVIP.Models.Users.PatientProfile", b =>
+                {
+                    b.HasOne("PhongKhamVIP.Models.Users.User", "User")
+                        .WithMany()
+                        .HasForeignKey("UserId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.Navigation("User");
+                });
+
             modelBuilder.Entity("PhongKhamVIP.Models.Users.Receptionist", b =>
                 {
                     b.HasOne("PhongKhamVIP.Models.Users.User", "User")
@@ -867,6 +939,11 @@ namespace PhongKhamVIP.Migrations
                         .IsRequired();
 
                     b.Navigation("User");
+                });
+
+            modelBuilder.Entity("PhongKhamVIP.Models.Clinical.MedicalRecord", b =>
+                {
+                    b.Navigation("Prescriptions");
                 });
 
             modelBuilder.Entity("PhongKhamVIP.Models.Clinical.Prescription", b =>

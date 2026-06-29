@@ -1,59 +1,48 @@
 ﻿@model PhongKhamVIP.Models.Users.Patient
-
 @{
+    ViewData["Title"] = "Chi tiết bệnh nhân";
     Layout = "_AdminLayout";
-    ViewData["Title"] = "Chi Tiết Bệnh Nhân";
 }
 
-<div class="container mt-4" style="max-width: 850px;">
-    <div class="card shadow-sm border-0 rounded-3">
-        <div class="card-header bg-info text-white py-3 d-flex justify-content-between align-items-center">
-            <h5 class="m-0"><i class="bi bi-file-earmark-person"></i> Hồ Sơ Chi Tiết Bệnh Nhân</h5>
-            <a href="/Patient/Edit/@Model.Id" class="btn btn-light btn-sm text-dark rounded-pill px-3"><i class="bi bi-pencil-square"></i> Chỉnh sửa</a>
+<div class="container-fluid">
+    <div class="d-flex justify-content-between align-items-center mb-4">
+        <h3 class="text-primary">Thông tin chi tiết bệnh nhân</h3>
+        <div>
+            <a asp-action="Index" class="btn btn-outline-secondary">Quay lại danh sách</a>
+            <a asp-action="Edit" asp-route-id="@Model.Id" class="btn btn-warning">Chỉnh sửa</a>
         </div>
-        <div class="card-body p-4">
-            <div class="row g-3">
+    </div>
+
+    <div class="card shadow-sm border-0">
+        <div class="card-body">
+            <div class="row">
                 <div class="col-md-6">
-                    <p class="mb-1 text-muted small font-weight-bold">HỌ VÀ TÊN</p>
-                    <h5 class="text-dark font-weight-bold">@Model.FullName</h5>
+                    <h5 class="text-muted border-bottom pb-2 mb-3">Thông tin hành chính</h5>
+                    <dl class="row">
+                        <dt class="col-sm-4">Họ và tên</dt>
+                        <dd class="col-sm-8 fw-bold">@Model.FullName</dd>
+
+                        <dt class="col-sm-4">Số điện thoại</dt>
+                        <dd class="col-sm-8">@Model.Phone</dd>
+
+                        <dt class="col-sm-4">Ngày sinh</dt>
+                        <dd class="col-sm-8">@(Model.DateOfBirth?.ToString("dd/MM/yyyy") ?? "Chưa cập nhật")</dd>
+
+                        <dt class="col-sm-4">Địa chỉ</dt>
+                        <dd class="col-sm-8">@Model.Address</dd>
+                    </dl>
                 </div>
+
                 <div class="col-md-6">
-                    <p class="mb-1 text-muted small font-weight-bold">SỐ ĐIỆN THOẠI</p>
-                    <h5 class="text-primary font-weight-bold">@Model.Phone</h5>
+                    <h5 class="text-muted border-bottom pb-2 mb-3">Thông tin tài khoản</h5>
+                    <dl class="row">
+                        <dt class="col-sm-4">Tên đăng nhập</dt>
+                        
+
+                        <dt class="col-sm-4">Email</dt>
+                        <dd class="col-sm-8">@(Model.User?.Email ?? "N/A")</dd>
+                    </dl>
                 </div>
-                <div class="col-md-4">
-                    <p class="mb-1 text-muted small">Ngày sinh</p>
-                    <p class="font-weight-bold">
-                        @(Model.DateOfBirth?.ToString("dd/MM/yyyy") ?? "Chưa cập nhật")
-                    </p>
-                </div>
-                <div class="col-md-4">
-                    <p class="mb-1 text-muted small">Giới tính</p>
-                    <p><span class="badge @(Model.Gender == "Nam" ? "bg-info text-dark" : "bg-danger") px-3 py-1.5 rounded-pill">@Model.Gender</span></p>
-                </div>
-                <div class="col-md-4">
-                    <p class="mb-1 text-muted small">Mã số bảo hiểm y tế</p>
-                    <p class="font-weight-bold text-secondary">@(string.IsNullOrEmpty(Model.HealthInsuranceNumber) ? "Chưa cập nhật" : Model.HealthInsuranceNumber)</p>
-                </div>
-                <div class="col-12 border-top pt-2">
-                    <p class="mb-1 text-muted small">Địa chỉ thường trú</p>
-                    <p class="text-dark">@Model.Address</p>
-                </div>
-                <div class="col-12 border-top pt-2">
-                    <p class="mb-1 text-muted small">Tài khoản ứng dụng trực tuyến</p>
-                    <p class="font-weight-bold text-success">
-                        <i class="bi bi-shield-check"></i> @(Model.User != null ? Model.User.Username : "Hồ sơ vãng lai độc lập")
-                    </p>
-                </div>
-                <div class="col-12 border-top pt-2">
-                    <p class="mb-1 text-muted small font-weight-bold text-danger">TIỀN SỬ BỆNH LÝ & DỊ ỨNG THUỐC</p>
-                    <div class="p-3 bg-light rounded border text-danger font-weight-bold" style="white-space: pre-wrap;">
-                        @(string.IsNullOrEmpty(Model.MedicalHistory) ? "Không có ghi chú tiền sử bệnh lý." : Model.MedicalHistory)
-                    </div>
-                </div>
-            </div>
-            <div class="text-end mt-4 pt-3 border-top">
-                <a href="/Patient" class="btn btn-secondary rounded-pill px-4">Quay lại danh sách</a>
             </div>
         </div>
     </div>

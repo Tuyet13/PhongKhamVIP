@@ -29,5 +29,6 @@ namespace PhongKhamVIP.Models.Clinical
         public string Diagnosis { get; set; }
 
         public string TreatmentPlan { get; set; }
+        public virtual ICollection<Prescription> Prescriptions { get; set; }
     }
 }

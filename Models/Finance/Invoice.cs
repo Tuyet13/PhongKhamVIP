@@ -39,5 +39,6 @@ namespace PhongKhamVIP.Models.Finance
 
         // Mối quan hệ 1-N sang chi tiết các khoản thu
         public virtual ICollection<InvoiceDetail> InvoiceDetails { get; set; }
+        public DateTime CreatedAt { get; set; } = DateTime.Now;
     }
 }

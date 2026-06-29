@@ -1,5 +1,29 @@
-﻿@*
-    For more information on enabling MVC for empty projects, visit https://go.microsoft.com/fwlink/?LinkID=397860
-*@
+﻿@model IEnumerable<PhongKhamVIP.Models.Clinical.Appointment>
 @{
+    ViewData["Title"] = "Lịch hẹn của tôi";
+    Layout = "_PatientLayout";
 }
+
+<div class="container mt-4">
+    <h3>Danh sách lịch hẹn của bạn</h3>
+    <a asp-action="BookAppointment" class="btn btn-success mb-3">+ Đặt lịch mới</a>
+    <table class="table table-striped">
+        <thead>
+            <tr>
+                <th>Bác sĩ</th>
+                <th>Ngày khám</th>
+                <th>Trạng thái</th>
+            </tr>
+        </thead>
+        <tbody>
+            @foreach (var item in Model)
+            {
+                <tr>
+                    <td>@item.Doctor?.FullName</td>
+                    <td>@item.AppointmentDate.ToString("dd/MM/yyyy HH:mm")</td>
+                    <td><span class="badge bg-info">@item.Status</span></td>
+                </tr>
+            }
+        </tbody>
+    </table>
+</div>

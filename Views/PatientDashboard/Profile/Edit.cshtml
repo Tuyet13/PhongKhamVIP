@@ -1,0 +1,29 @@
+﻿@model PhongKhamVIP.Models.Users.Patient
+@{
+    ViewData["Title"] = "Chỉnh sửa hồ sơ";
+    Layout = "_PatientLayout";
+}
+
+<form asp-action="Edit" method="post" class="container mt-4">
+    @Html.AntiForgeryToken()
+    <input type="hidden" asp-for="Id" />
+    <input type="hidden" asp-for="UserId" />
+
+    <div class="mb-3">
+        <label>Họ tên</label>
+        <input asp-for="FullName" class="form-control" />
+    </div>
+    <div class="mb-3">
+        <label>Ngày sinh</label>
+        <input asp-for="DateOfBirth" type="date" class="form-control" />
+    </div>
+    <div class="mb-3">
+        <label>Giới tính</label>
+        <select asp-for="Gender" class="form-control">
+            <option value="Nam">Nam</option>
+            <option value="Nữ">Nữ</option>
+        </select>
+    </div>
+    <button type="submit" class="btn btn-success">Lưu thay đổi</button>
+    <a asp-action="Index" class="btn btn-secondary">Quay lại</a>
+</form>

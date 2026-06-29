@@ -3,63 +3,33 @@
     Layout = "~/Views/Shared/_PatientLayout.cshtml";
 }
 
-<div class="container mt-4">
-
-    <div class="text-center mb-5">
-        <h2>Xin chào @User.Identity?.Name</h2>
-        <p>Chào mừng bạn đến với hệ thống quản lý phòng khám.</p>
+<div class="dashboard-container">
+    <div class="mb-4">
+        <h3 class="text-primary fw-bold">Xin chào, Quý khách!</h3>
+        <p class="text-muted">Chào mừng bạn quay lại với hệ thống quản lý sức khỏe AM2T Clinic.</p>
     </div>
 
-    <div class="row">
-
-        <div class="col-md-3 mb-3">
-            <div class="card shadow">
-                <div class="card-body text-center">
-                    <h5>Đặt lịch khám</h5>
-                    <a asp-action="CreateAppointment"
-                       class="btn btn-primary">
-                        Truy cập
-                    </a>
+    <div class="row g-4">
+        <!-- Card Lịch hẹn -->
+        <div class="col-md-6 col-lg-3">
+            <a href="@Url.Action("MyAppointments", "PatientDashboard")" class="card-link">
+                <div class="card p-4 border-0 shadow-sm h-100 hover-effect">
+                    <div class="icon-box bg-primary-light text-primary mb-3"><i class="fa-solid fa-calendar-check fa-2x"></i></div>
+                    <h5 class="fw-bold">Lịch hẹn</h5>
+                    <p class="text-muted mb-0">Xem và quản lý lịch khám của bạn</p>
                 </div>
-            </div>
+            </a>
         </div>
 
-        <div class="col-md-3 mb-3">
-            <div class="card shadow">
-                <div class="card-body text-center">
-                    <h5>Lịch khám</h5>
-                    <a asp-action="MyAppointments"
-                       class="btn btn-success">
-                        Xem
-                    </a>
+        <!-- Card Hồ sơ -->
+        <div class="col-md-6 col-lg-3">
+            <a href="@Url.Action("MyProfile", "Profile")" class="card-link">
+                <div class="card p-4 border-0 shadow-sm h-100 hover-effect">
+                    <div class="icon-box bg-info-light text-info mb-3"><i class="fa-solid fa-user-pen fa-2x"></i></div>
+                    <h5 class="fw-bold">Hồ sơ cá nhân</h5>
+                    <p class="text-muted mb-0">Cập nhật thông tin y tế của bạn</p>
                 </div>
-            </div>
+            </a>
         </div>
-
-        <div class="col-md-3 mb-3">
-            <div class="card shadow">
-                <div class="card-body text-center">
-                    <h5>Hóa đơn</h5>
-                    <a asp-action="MyInvoices"
-                       class="btn btn-warning">
-                        Xem
-                    </a>
-                </div>
-            </div>
-        </div>
-
-        <div class="col-md-3 mb-3">
-            <div class="card shadow">
-                <div class="card-body text-center">
-                    <h5>Đơn thuốc</h5>
-                    <a asp-action="MyPrescriptions"
-                       class="btn btn-info">
-                        Xem
-                    </a>
-                </div>
-            </div>
-        </div>
-
     </div>
-
 </div>

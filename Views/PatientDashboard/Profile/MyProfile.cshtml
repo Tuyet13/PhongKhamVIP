@@ -1,0 +1,15 @@
+﻿@model PhongKhamVIP.Models.Users.Patient
+@{
+    ViewData["Title"] = "Hồ sơ cá nhân";
+    Layout = "_PatientLayout";
+}
+
+<div class="container mt-4">
+    <div class="card p-4 shadow-sm">
+        <h3 class="mb-3">Thông tin hồ sơ</h3>
+        <p><strong>Họ và tên:</strong> @Model.FullName</p>
+        <p><strong>Ngày sinh:</strong> @Model.DateOfBirth?.ToString("dd/MM/yyyy")</p>
+        <p><strong>Giới tính:</strong> @Model.Gender</p>
+        <a asp-action="Edit" class="btn btn-primary">Chỉnh sửa hồ sơ</a>
+    </div>
+</div>

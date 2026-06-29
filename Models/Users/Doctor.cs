@@ -34,5 +34,6 @@ namespace PhongKhamVIP.Models.Users
         public virtual ICollection<Attendance> Attendances { get; set; }
         public virtual ICollection<LeaveRequest> LeaveRequests { get; set; }
         public virtual ICollection<Salary> Salaries { get; set; }
+        public string FullName { get; set; }
     }
 }

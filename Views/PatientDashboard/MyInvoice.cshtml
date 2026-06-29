@@ -1,5 +1,36 @@
-﻿@*
-    For more information on enabling MVC for empty projects, visit https://go.microsoft.com/fwlink/?LinkID=397860
-*@
+﻿@model IEnumerable<PhongKhamVIP.Models.Finance.Invoice>
 @{
+    ViewData["Title"] = "Hóa đơn";
+    Layout = "_PatientLayout";
 }
+
+<div class="container mt-4">
+    <h3 class="mb-4">Lịch sử hóa đơn</h3>
+    <table class="table">
+        <thead>
+            <tr>
+                <th>Ngày</th>
+                <th>Số tiền</th>
+                <th>Trạng thái</th>
+            </tr>
+        </thead>
+        <tbody>
+            @foreach (var inv in Model)
+            {
+                <tr>
+                    <td>@inv.CreatedAt.ToString("dd/MM/yyyy")</td>
+
+                    @* Sửa 'Amount' thành 'FinalAmount' *@
+                    <td>@inv.FinalAmount.ToString("N0") VNĐ</td>
+
+                    <td>
+                        @* Sửa 'IsPaid' thành kiểm tra 'Status' *@
+                        <span class="badge @(inv.Status == "Paid" ? "bg-success" : "bg-warning")">
+                            @(inv.Status == "Paid" ? "Đã thanh toán" : "Chưa thanh toán")
+                        </span>
+                    </td>
+                </tr>
+            }
+        </tbody>
+    </table>
+</div>

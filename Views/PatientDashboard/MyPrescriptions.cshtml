@@ -1,5 +1,36 @@
-﻿@*
-    For more information on enabling MVC for empty projects, visit https://go.microsoft.com/fwlink/?LinkID=397860
-*@
+﻿@model IEnumerable<PhongKhamVIP.Models.Clinical.MedicalRecord>
 @{
+    ViewData["Title"] = "Đơn thuốc của tôi";
+    Layout = "_PatientLayout";
 }
+
+<div class="container mt-4">
+    <h3 class="mb-4">Danh sách đơn thuốc</h3>
+    @if (!Model.Any())
+    {
+        <p>Bạn chưa có đơn thuốc nào.</p>
+    }
+    else
+    {
+        <table class="table table-hover">
+            <thead><tr><th>Ngày khám</th><th>Bác sĩ</th><th>Chi tiết</th></tr></thead>
+            <tbody>
+                @foreach (var record in Model)
+                {
+                    <tr>
+                        <td>@record.CreatedAt.ToString("dd/MM/yyyy")</td>
+                        <td>@record.Doctor?.FullName</td>
+                        <td>
+                            <ul>
+                                @foreach (var p in record.Prescriptions)
+                                {
+                                    <li>@p.MedicineName - @p.Dosage</li>
+                                }
+                            </ul>
+                        </td>
+                    </tr>
+                }
+            </tbody>
+        </table>
+    }
+</div>

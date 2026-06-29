@@ -21,5 +21,7 @@ namespace PhongKhamVIP.Models.Clinical
 
         // Mối quan hệ 1-N sang chi tiết đơn thuốc
         public virtual ICollection<PrescriptionDetail> PrescriptionDetails { get; set; }
+        public string MedicineName { get; set; }
+        public string Dosage { get; set; }
     }
 }
